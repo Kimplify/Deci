@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
@@ -13,6 +17,7 @@ kotlin {
     androidTarget { publishLibraryVariants("release") }
     jvm()
     wasmJs { browser() }
+    js { browser() }
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -39,6 +44,13 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
         }
 
+        jsMain.dependencies {
+            implementation(npm("decimal.js", "10.6.0"))
+        }
+
+        wasmJsMain.dependencies {
+            implementation(npm("decimal.js", "10.6.0"))
+        }
     }
 
     //https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers

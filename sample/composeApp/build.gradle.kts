@@ -1,4 +1,8 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.multiplatform)
@@ -12,8 +16,41 @@ kotlin {
 
     androidTarget()
     jvm()
+    js(IR) {
+        outputModuleName.set("composeApp-js")
+        browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
+            commonWebpackConfig {
+                outputFileName = "composeApp-js.js"
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        add(rootDirPath)
+                        add(projectDirPath)
+                    }
+                }
+            }
+            runTask {
+                mode = KotlinWebpackConfig.Mode.DEVELOPMENT
+            }
+        }
+        binaries.executable()
+    }
     wasmJs {
-        browser()
+        outputModuleName.set("composeApp")
+        browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        add(rootDirPath)
+                        add(projectDirPath)
+                    }
+                }
+            }
+        }
         binaries.executable()
     }
     listOf(
@@ -32,6 +69,8 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.ui)
             implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.material3)
             implementation(project(":deci"))
         }
 
@@ -48,11 +87,11 @@ kotlin {
 
 android {
     namespace = "sample.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 21
-        targetSdk = 35
+        minSdk = 24
+        targetSdk = 36
 
         applicationId = "sample.app.androidApp"
         versionCode = 1
@@ -62,12 +101,15 @@ android {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "sample.app.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "sample"
+            packageName = "Deci Library Demo"
             packageVersion = "1.0.0"
+            description = "Deci Library - Precise Decimal Arithmetic Demo"
+            copyright = "© 2024"
+            vendor = "ChiliNoodles"
         }
     }
 }
