@@ -1,5 +1,6 @@
-package org.kimplify.deci
+package org.kimplify.deci.config
 
+import org.kimplify.deci.RoundingMode
 import kotlin.concurrent.Volatile
 
 /**
@@ -32,8 +33,20 @@ object DeciConfiguration {
     @Volatile
     var divisionPolicy: DeciDivisionPolicy = defaultDivisionPolicy
 
+    /**
+     * Toggle Cedar logging for literal normalization and validation events.
+     * Leave `false` (default) to skip log emission entirely.
+     */
+    @Volatile
+    var loggingEnabled: Boolean = false
+
     /** Restores [divisionPolicy] to its library default values. */
     fun resetDivisionPolicy() {
         divisionPolicy = defaultDivisionPolicy
+    }
+
+    /** Disables Cedar logging. */
+    fun disableLogging() {
+        loggingEnabled = false
     }
 }

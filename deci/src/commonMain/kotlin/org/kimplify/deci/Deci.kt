@@ -12,7 +12,7 @@ expect class Deci : Comparable<Deci> {
     constructor(value: Long)
     constructor(value: Int)
     constructor(value: Double)
-    
+
     operator fun plus(other: Deci): Deci
     operator fun minus(other: Deci): Deci
     operator fun times(other: Deci): Deci
@@ -35,14 +35,6 @@ expect class Deci : Comparable<Deci> {
         val ZERO: Deci
         val ONE: Deci
         val TEN: Deci
-
-        @Deprecated("Use constructor instead", ReplaceWith("Deci(value)"))
-        fun fromInt(value: Int): Deci
-        @Deprecated("Use constructor instead", ReplaceWith("Deci(value)"))
-        fun fromDouble(value: Double): Deci
-
-        @Deprecated("Use constructor instead", ReplaceWith("Deci(value)"))
-        fun fromStringOrThrow(value: String): Deci
 
         fun fromStringOrZero(value: String): Deci
         fun fromStringOrNull(value: String): Deci?

@@ -23,8 +23,9 @@ Deci is a Kotlin Multiplatform library that brings high‑precision decimal arit
 5. [Platform Internals](#platform-internals)
 6. [Sample Applications](#sample-applications)
 7. [Testing & Quality](#testing--quality)
-8. [Contributing](#contributing)
-9. [License](#license)
+8. [Configuration & Logging](#configuration--logging)
+9. [Contributing](#contributing)
+10. [License](#license)
 
 ## Highlights
 
@@ -221,6 +222,31 @@ Run the multiplatform test suite before submitting changes:
 ```
 
 CI-friendly flags such as `--scan`, `--stacktrace`, or `--info` are encouraged when debugging rounding edge cases.
+
+## Configuration & Logging
+
+Deci exposes a lightweight configuration object that you can tweak at runtime:
+
+```kotlin
+DeciConfiguration.divisionPolicy = DeciDivisionPolicy(
+    fractionalDigits = 6,
+    roundingMode = RoundingMode.HALF_UP
+)
+
+// Enable Cedar-backed logging (disabled by default)
+DeciConfiguration.loggingEnabled = true
+
+// Plant any Cedar tree you prefer; PlatformLogTree routes to native consoles
+Cedar.plant(PlatformLogTree())
+
+// Restore defaults when you are done
+DeciConfiguration.resetDivisionPolicy()
+DeciConfiguration.disableLogging()
+```
+
+Logs are emitted at debug level with the `Deci` tag. Follow [Cedar's README](https://github.com/Kimplify/Cedar-Logger/blob/main/README.MD)
+for tree options if you want to route them somewhere specific. Leave `loggingEnabled` as `false`
+(default) for the fastest, zero-overhead path.
 
 ## Contributing
 

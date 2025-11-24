@@ -1,6 +1,8 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
+import org.kimplify.deci.config.DeciConfiguration
+import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode as JavaRoundingMode
@@ -9,16 +11,7 @@ import java.math.RoundingMode as JavaRoundingMode
 actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
 
     actual constructor(value: String) : this(
-        value.let {
-            require(it.isNotBlank()) {
-                "Deci literal must not be blank"
-            }
-            require(DECIMAL_REGEX.matches(it.trim())) {
-                "Invalid decimal literal: '$it'"
-            }
-            val normalized = it.normalizeDecimalString()
-            BigDecimal(normalized).stripTrailingZeros()
-        }
+        BigDecimal(validateAndNormalizeDecimalLiteral(value)).stripTrailingZeros()
     )
 
     actual constructor(value: Long) : this(value.toString())
@@ -30,22 +23,12 @@ actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
         actual val ONE = Deci("1")
         actual val TEN = Deci("10")
 
-        @Throws(IllegalArgumentException::class)
-        actual fun fromStringOrThrow(value: String): Deci =
-            Deci(value)
-
         actual fun fromStringOrNull(value: String): Deci? =
-            runCatching { fromStringOrThrow(value) }
+            runCatching { Deci(value) }
                 .getOrNull()
 
-        actual fun fromStringOrZero(value: String): Deci =
-            fromStringOrNull(value) ?: ZERO
+        actual fun fromStringOrZero(value: String): Deci = fromStringOrNull(value) ?: ZERO
 
-        actual fun fromDouble(value: Double): Deci =
-            Deci(value.toString())
-
-        actual fun fromInt(value: Int): Deci =
-            Deci(value.toString())
     }
 
     private inline fun operate(

@@ -1,4 +1,4 @@
-package org.kimplify.deci
+package org.kimplify.deci.parser
 
 /**
  * Normalizes a decimal-like string into a standard form:

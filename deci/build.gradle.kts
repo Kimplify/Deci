@@ -35,6 +35,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.cedar.logger)
         }
 
         commonTest.dependencies {

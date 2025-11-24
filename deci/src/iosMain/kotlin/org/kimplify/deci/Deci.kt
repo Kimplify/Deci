@@ -3,6 +3,8 @@ package org.kimplify.deci
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.serialization.Serializable
+import org.kimplify.deci.config.DeciConfiguration
+import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 import platform.Foundation.NSDecimalNumber
 import platform.Foundation.NSDecimalNumberHandler
 import platform.Foundation.NSRoundingMode
@@ -14,16 +16,7 @@ actual class Deci private constructor(
 ) : Comparable<Deci> {
 
     actual constructor(value: String) : this(
-        value.let {
-            require(it.isNotBlank()) {
-                "Deci literal must not be blank"
-            }
-            require(DECIMAL_REGEX.matches(it.trim())) {
-                "Invalid decimal literal: '$it'"
-            }
-            val normalized = it.normalizeDecimalString()
-            NSDecimalNumber(normalized)
-        }
+        NSDecimalNumber(validateAndNormalizeDecimalLiteral(value))
     )
 
     actual constructor(value: Long) : this(value.toString())
@@ -51,22 +44,12 @@ actual class Deci private constructor(
         actual val ONE = Deci("1")
         actual val TEN = Deci("10")
 
-        actual fun fromDouble(value: Double): Deci =
-            Deci(NSDecimalNumber(value).stringValue)
-
         actual fun fromStringOrNull(value: String): Deci? =
             runCatching { Deci(value) }
                 .getOrNull()
 
         actual fun fromStringOrZero(value: String): Deci =
             fromStringOrNull(value) ?: ZERO
-
-        @Throws(IllegalArgumentException::class)
-        actual fun fromStringOrThrow(value: String): Deci =
-            Deci(value)
-
-        actual fun fromInt(value: Int): Deci =
-            Deci(value.toString())
     }
 
     private fun operate(
