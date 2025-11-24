@@ -1,7 +1,6 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
-import org.kimplify.deci.config.DeciConfiguration
 
 /**
  * Multiplatform arbitrary-precision decimal that normalizes user input and delegates
@@ -13,7 +12,7 @@ expect class Deci : Comparable<Deci> {
     constructor(value: Long)
     constructor(value: Int)
     constructor(value: Double)
-    
+
     operator fun plus(other: Deci): Deci
     operator fun minus(other: Deci): Deci
     operator fun times(other: Deci): Deci

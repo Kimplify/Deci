@@ -1,28 +1,39 @@
 package org.kimplify.deci.logging
 
-/**
- * Pluggable logger that Deci uses to report normalization and validation events.
- * Set [org.kimplify.deci.config.DeciConfiguration.logger] to an instance of this interface to observe the emitted events.
- */
-fun interface DeciLogger {
-    fun log(event: DeciLogEvent)
+import org.kimplify.deci.config.DeciConfiguration
+import org.kimplify.cedar.logging.Cedar
 
-    companion object {
-        val NoOp: DeciLogger = DeciLogger { _ -> }
+/**
+ * Internal logger that routes Deci events through Cedar.
+ */
+internal object DeciLogger {
+    private const val TAG = "Deci"
+
+    fun logLiteralNormalized(rawValue: String, normalizedValue: String) = logIfEnabled {
+        DeciLiteralNormalizedEvent(rawValue, normalizedValue)
+    }
+
+    fun logLiteralRejected(rawValue: String, reason: String) = logIfEnabled {
+        DeciLiteralRejectedEvent(rawValue, reason)
+    }
+
+    private inline fun logIfEnabled(builder: () -> DeciLogEvent) {
+        if (!DeciConfiguration.loggingEnabled) return
+        Cedar.tag(TAG).d(builder().message)
     }
 }
 
 /**
  * Describes a logging event emitted by Deci during literal processing.
  */
-sealed interface DeciLogEvent {
+internal sealed interface DeciLogEvent {
     val message: String
 }
 
 /**
  * Emitted when Deci normalizes a user-provided literal (for example, swapping commas for dots).
  */
-data class DeciLiteralNormalizedEvent(
+internal data class DeciLiteralNormalizedEvent(
     val rawValue: String,
     val normalizedValue: String
 ) : DeciLogEvent {
@@ -32,7 +43,7 @@ data class DeciLiteralNormalizedEvent(
 /**
  * Emitted when Deci rejects a literal because it fails validation.
  */
-data class DeciLiteralRejectedEvent(
+internal data class DeciLiteralRejectedEvent(
     val rawValue: String,
     val reason: String
 ) : DeciLogEvent {

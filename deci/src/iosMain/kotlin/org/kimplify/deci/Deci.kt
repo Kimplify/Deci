@@ -44,22 +44,12 @@ actual class Deci private constructor(
         actual val ONE = Deci("1")
         actual val TEN = Deci("10")
 
-        actual fun fromDouble(value: Double): Deci =
-            Deci(NSDecimalNumber(value).stringValue)
-
         actual fun fromStringOrNull(value: String): Deci? =
             runCatching { Deci(value) }
                 .getOrNull()
 
         actual fun fromStringOrZero(value: String): Deci =
             fromStringOrNull(value) ?: ZERO
-
-        @Throws(IllegalArgumentException::class)
-        actual fun fromStringOrThrow(value: String): Deci =
-            Deci(value)
-
-        actual fun fromInt(value: Int): Deci =
-            Deci(value.toString())
     }
 
     private fun operate(

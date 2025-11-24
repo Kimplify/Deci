@@ -34,6 +34,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import org.kimplify.deci.Deci
 import org.kimplify.deci.RoundingMode
+import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.extension.pow
 import org.kimplify.deci.extension.sumDeci
 

@@ -23,22 +23,12 @@ actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
         actual val ONE = Deci("1")
         actual val TEN = Deci("10")
 
-        @Throws(IllegalArgumentException::class)
-        actual fun fromStringOrThrow(value: String): Deci =
-            Deci(value)
-
         actual fun fromStringOrNull(value: String): Deci? =
-            runCatching { fromStringOrThrow(value) }
+            runCatching { Deci(value) }
                 .getOrNull()
 
-        actual fun fromStringOrZero(value: String): Deci =
-            fromStringOrNull(value) ?: ZERO
+        actual fun fromStringOrZero(value: String): Deci = fromStringOrNull(value) ?: ZERO
 
-        actual fun fromDouble(value: Double): Deci =
-            Deci(value.toString())
-
-        actual fun fromInt(value: Int): Deci =
-            Deci(value.toString())
     }
 
     private inline fun operate(

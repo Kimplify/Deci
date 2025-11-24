@@ -233,17 +233,20 @@ DeciConfiguration.divisionPolicy = DeciDivisionPolicy(
     roundingMode = RoundingMode.HALF_UP
 )
 
-DeciConfiguration.logger = DeciLogger { event ->
-    println("[Deci] ${event.message}")
-}
+// Enable Cedar-backed logging (disabled by default)
+DeciConfiguration.loggingEnabled = true
+
+// Plant any Cedar tree you prefer; PlatformLogTree routes to native consoles
+Cedar.plant(PlatformLogTree())
 
 // Restore defaults when you are done
 DeciConfiguration.resetDivisionPolicy()
-DeciConfiguration.clearLogger()
+DeciConfiguration.disableLogging()
 ```
 
-Attach a `DeciLogger` only if you need to inspect literal normalization or validation errors. Leave
-it `null` (default) for the fastest, zero-overhead path.
+Logs are emitted at debug level with the `Deci` tag. Follow [Cedar's README](https://github.com/Kimplify/Cedar-Logger/blob/main/README.MD)
+for tree options if you want to route them somewhere specific. Leave `loggingEnabled` as `false`
+(default) for the fastest, zero-overhead path.
 
 ## Contributing
 
