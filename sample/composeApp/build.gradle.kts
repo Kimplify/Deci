@@ -86,14 +86,14 @@ kotlin {
 }
 
 android {
-    namespace = "sample.app"
+    namespace = "com.app"
     compileSdk = 36
 
     defaultConfig {
         minSdk = 24
         targetSdk = 36
 
-        applicationId = "sample.app.androidApp"
+        applicationId = "org.kimplify.androidApp"
         versionCode = 1
         versionName = "1.0.0"
     }
@@ -101,7 +101,7 @@ android {
 
 compose.desktop {
     application {
-        mainClass = "sample.app.MainKt"
+        mainClass = "org.kimplify.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
@@ -109,7 +109,7 @@ compose.desktop {
             packageVersion = "1.0.0"
             description = "Deci Library - Precise Decimal Arithmetic Demo"
             copyright = "© 2024"
-            vendor = "ChiliNoodles"
+            vendor = "Kimplify"
         }
     }
 }

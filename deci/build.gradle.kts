@@ -65,7 +65,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.chilinoodles.deci"
+    namespace = "org.kimplify.deci"
     compileSdk = 35
 
     defaultConfig {
@@ -77,7 +77,7 @@ android {
 //https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html
 mavenPublishing {
     publishToMavenCentral()
-    coordinates("com.chilinoodles.deci", "deci", "1.0.0")
+    coordinates("org.kimplify.deci", "deci", "1.0.0")
 
     pom {
         name = "Deci"

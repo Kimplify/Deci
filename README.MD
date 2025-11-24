@@ -1,7 +1,7 @@
 # Deci
 > Precise decimal arithmetic for every Kotlin platform: Android, iOS, JVM, JS, and WASM.
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.chilinoodles.deci/deci)](https://central.sonatype.com/artifact/com.chilinoodles.deci/deci)
+[![Maven Central](https://img.shields.io/maven-central/v/org.kimplify.deci/deci)](https://central.sonatype.com/artifact/org.kimplify.deci/deci)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-7F52FF)](https://kotlinlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -66,7 +66,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("com.chilinoodles.deci:deci:1.0.0")
+                implementation("org.kimplify.deci:deci:1.0.0")
             }
         }
     }
@@ -77,7 +77,7 @@ kotlin {
 
 ```kotlin
 dependencies {
-    implementation("com.chilinoodles.deci:deci:1.0.0")
+    implementation("org.kimplify.deci:deci:1.0.0")
 }
 ```
 
