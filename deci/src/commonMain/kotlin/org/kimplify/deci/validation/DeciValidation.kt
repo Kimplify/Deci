@@ -1,8 +1,8 @@
 package org.kimplify.deci.validation
 
-import org.kimplify.deci.DECIMAL_REGEX
 import org.kimplify.deci.Deci
-import org.kimplify.deci.toLong
+import org.kimplify.deci.extension.toLong
+import org.kimplify.deci.parser.DECIMAL_REGEX
 
 /**
  * Validation and safety utilities for Deci.
