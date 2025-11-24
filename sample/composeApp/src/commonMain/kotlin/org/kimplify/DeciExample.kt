@@ -15,6 +15,7 @@ import org.kimplify.deci.DeciConstants
 import org.kimplify.deci.RoundingMode
 import org.kimplify.deci.bulk.averageDeci
 import org.kimplify.deci.bulk.multiplyAllBy
+import org.kimplify.deci.extension.sumDeci
 import org.kimplify.deci.sumDeci
 
 /**
