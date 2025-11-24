@@ -7,15 +7,6 @@ fun Iterable<Deci>.sumDeci(): Deci = this.fold(Deci.ZERO) { accumulated, value -
     accumulated + value
 }
 
-fun Deci.pow(exp: Int): Deci {
-    require(exp >= 0) { "Negative exponents are not supported" }
-    var result = Deci.ONE
-    repeat(exp) {
-        result *= this
-    }
-    return result
-}
-
 fun Deci.toLong(): Long = this.toDouble().toLong()
 
 /** Returns the number of digits to the right of the decimal separator in the canonical string form. */

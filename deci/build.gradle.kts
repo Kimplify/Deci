@@ -83,7 +83,7 @@ android {
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
-    coordinates("org.kimplify", "cedar-logging", deciVersion)
+    coordinates("org.kimplify", "deci", deciVersion)
 
     pom {
         name = "Deci"
