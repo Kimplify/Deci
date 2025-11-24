@@ -1,5 +1,11 @@
 package org.kimplify
 
+import org.kimplify.deci.Deci
+import org.kimplify.deci.DeciConstants
+import org.kimplify.deci.RoundingMode
+import org.kimplify.deci.bulk.averageDeci
+import org.kimplify.deci.bulk.multiplyAllBy
+import org.kimplify.deci.extension.sumDeci
 import org.kimplify.deci.formatting.formatAsPercentage
 import org.kimplify.deci.formatting.formatCurrency
 import org.kimplify.deci.formatting.formatWithThousandsSeparator
@@ -10,12 +16,6 @@ import org.kimplify.deci.statistics.mean
 import org.kimplify.deci.statistics.standardDeviation
 import org.kimplify.deci.validation.isValidDeci
 import org.kimplify.deci.validation.validateForForm
-import org.kimplify.deci.Deci
-import org.kimplify.deci.DeciConstants
-import org.kimplify.deci.RoundingMode
-import org.kimplify.deci.bulk.averageDeci
-import org.kimplify.deci.bulk.multiplyAllBy
-import org.kimplify.deci.sumDeci
 
 /**
  * Comprehensive examples demonstrating the enhanced Deci library features.
@@ -51,7 +51,11 @@ object DeciExample {
             appendLine("=== Statistical Analysis ===")
             appendLine("Monthly sales data (10 months)")
             appendLine("Average: ${average.formatCurrency()}")
-            appendLine("Standard deviation: ${stdDev.setScale(2, RoundingMode.HALF_UP).formatCurrency()}")
+            appendLine(
+                "Standard deviation: ${
+                    stdDev.setScale(2, RoundingMode.HALF_UP).formatCurrency()
+                }"
+            )
             appendLine("Total: ${total.formatCurrency()}")
             appendLine()
         }
