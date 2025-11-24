@@ -3,6 +3,8 @@ package org.kimplify.deci
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.serialization.Serializable
+import org.kimplify.deci.config.DeciConfiguration
+import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 import platform.Foundation.NSDecimalNumber
 import platform.Foundation.NSDecimalNumberHandler
 import platform.Foundation.NSRoundingMode
@@ -14,16 +16,7 @@ actual class Deci private constructor(
 ) : Comparable<Deci> {
 
     actual constructor(value: String) : this(
-        value.let {
-            require(it.isNotBlank()) {
-                "Deci literal must not be blank"
-            }
-            require(DECIMAL_REGEX.matches(it.trim())) {
-                "Invalid decimal literal: '$it'"
-            }
-            val normalized = it.normalizeDecimalString()
-            NSDecimalNumber(normalized)
-        }
+        NSDecimalNumber(validateAndNormalizeDecimalLiteral(value))
     )
 
     actual constructor(value: Long) : this(value.toString())

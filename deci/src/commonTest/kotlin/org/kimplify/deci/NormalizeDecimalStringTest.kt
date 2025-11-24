@@ -1,5 +1,6 @@
 package org.kimplify.deci
 
+import org.kimplify.deci.parser.normalizeDecimalString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

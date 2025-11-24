@@ -1,5 +1,8 @@
-package org.kimplify.deci
+package org.kimplify.deci.config
 
+import org.kimplify.deci.RoundingMode
+import org.kimplify.deci.logging.DeciLogEvent
+import org.kimplify.deci.logging.DeciLogger
 import kotlin.concurrent.Volatile
 
 /**
@@ -32,8 +35,24 @@ object DeciConfiguration {
     @Volatile
     var divisionPolicy: DeciDivisionPolicy = defaultDivisionPolicy
 
+    /**
+     * Optional logger that records literal normalization and validation events.
+     * Assign `null` (default) to disable logging entirely.
+     */
+    @Volatile
+    var logger: DeciLogger? = null
+
     /** Restores [divisionPolicy] to its library default values. */
     fun resetDivisionPolicy() {
         divisionPolicy = defaultDivisionPolicy
+    }
+
+    /** Clears the installed [DeciLogger] (if any). */
+    fun clearLogger() {
+        logger = null
+    }
+
+    internal fun logEvent(builder: () -> DeciLogEvent) {
+        logger?.log(builder())
     }
 }

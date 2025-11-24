@@ -1,6 +1,7 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
+import org.kimplify.deci.config.DeciConfiguration
 
 /**
  * Multiplatform arbitrary-precision decimal that normalizes user input and delegates
@@ -35,14 +36,6 @@ expect class Deci : Comparable<Deci> {
         val ZERO: Deci
         val ONE: Deci
         val TEN: Deci
-
-        @Deprecated("Use constructor instead", ReplaceWith("Deci(value)"))
-        fun fromInt(value: Int): Deci
-        @Deprecated("Use constructor instead", ReplaceWith("Deci(value)"))
-        fun fromDouble(value: Double): Deci
-
-        @Deprecated("Use constructor instead", ReplaceWith("Deci(value)"))
-        fun fromStringOrThrow(value: String): Deci
 
         fun fromStringOrZero(value: String): Deci
         fun fromStringOrNull(value: String): Deci?

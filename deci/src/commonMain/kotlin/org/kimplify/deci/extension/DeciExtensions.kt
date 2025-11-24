@@ -1,7 +1,6 @@
-package org.kimplify.deci
+package org.kimplify.deci.extension
 
-@Deprecated("Use Deci.fromStringOrZero(value) instead", ReplaceWith("Deci.fromStringOrZero(value)"))
-fun String.toSafeDeci(): Deci = Deci.fromStringOrZero(this)
+import org.kimplify.deci.Deci
 
 fun Iterable<Deci>.sumDeci(): Deci = this.fold(Deci.ZERO) { accumulated, value ->
     accumulated + value

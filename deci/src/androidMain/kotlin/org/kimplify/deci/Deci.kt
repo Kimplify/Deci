@@ -1,6 +1,8 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
+import org.kimplify.deci.config.DeciConfiguration
+import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode as JavaRoundingMode
@@ -9,16 +11,7 @@ import java.math.RoundingMode as JavaRoundingMode
 actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
 
     actual constructor(value: String) : this(
-        value.let {
-            require(it.isNotBlank()) {
-                "Deci literal must not be blank"
-            }
-            require(DECIMAL_REGEX.matches(it.trim())) {
-                "Invalid decimal literal: '$it'"
-            }
-            val normalized = it.normalizeDecimalString()
-            BigDecimal(normalized).stripTrailingZeros()
-        }
+        BigDecimal(validateAndNormalizeDecimalLiteral(value)).stripTrailingZeros()
     )
 
     actual constructor(value: Long) : this(value.toString())

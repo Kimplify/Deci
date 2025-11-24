@@ -34,8 +34,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import org.kimplify.deci.Deci
 import org.kimplify.deci.RoundingMode
-import org.kimplify.deci.pow
-import org.kimplify.deci.sumDeci
+import org.kimplify.deci.extension.pow
+import org.kimplify.deci.extension.sumDeci
+
+private const val MAX_FRACTIONAL_DIGITS = 20
+private const val MAX_LOG_ENTRIES = 30
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,7 +94,14 @@ fun App() {
                     DemoSection(title = "Rounding & Scale") {
                         val pi = Deci("3.14159265359")
                         DemoItem("π = $pi")
-                        DemoItem("π (2 decimals, HALF_UP) = ${pi.setScale(2, RoundingMode.HALF_UP)}")
+                        DemoItem(
+                            "π (2 decimals, HALF_UP) = ${
+                                pi.setScale(
+                                    2,
+                                    RoundingMode.HALF_UP
+                                )
+                            }"
+                        )
                         DemoItem("π (4 decimals, DOWN) = ${pi.setScale(4, RoundingMode.DOWN)}")
                     }
 
@@ -241,18 +251,8 @@ fun InteractiveDeciTester() {
                             }
                         }
                     },
-                label = {
-                    Text(
-                        "Decimal value",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                },
-                placeholder = {
-                    Text(
-                        "e.g., 1.230,98 or 1,234.56",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                },
+                label = { Text("Decimal value") },
+                placeholder = { Text("e.g., 123.45 or 1,234.56") },
                 singleLine = true,
                 isError = errorMessage != null,
                 shape = RoundedCornerShape(20.dp),

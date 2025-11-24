@@ -1,8 +1,10 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.json.Json
-import org.kimplify.deci.precision
-import org.kimplify.deci.scale
+import org.kimplify.deci.config.DeciConfiguration
+import org.kimplify.deci.config.DeciDivisionPolicy
+import org.kimplify.deci.extension.precision
+import org.kimplify.deci.extension.scale
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

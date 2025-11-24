@@ -1,6 +1,8 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
+import org.kimplify.deci.config.DeciConfiguration
+import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 
 @Serializable(with = DeciSerializer::class)
 actual class Deci private constructor(
@@ -8,16 +10,7 @@ actual class Deci private constructor(
 ) : Comparable<Deci> {
 
     actual constructor(value: String) : this(
-        value.let {
-            require(it.isNotBlank()) {
-                "Deci literal must not be blank"
-            }
-            require(DECIMAL_REGEX.matches(it.trim())) {
-                "Invalid decimal literal: '$it'"
-            }
-            val normalized = it.normalizeDecimalString()
-            DecimalJs(normalized)
-        }
+        DecimalJs(validateAndNormalizeDecimalLiteral(value))
     )
 
     actual constructor(value: Long) : this(value.toString())
