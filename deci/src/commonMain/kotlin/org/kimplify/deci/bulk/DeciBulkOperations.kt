@@ -2,7 +2,7 @@ package org.kimplify.deci.bulk
 
 import org.kimplify.deci.Deci
 import org.kimplify.deci.RoundingMode
-import org.kimplify.deci.sumDeci
+import org.kimplify.deci.extension.sumDeci
 
 /**
  * Bulk operations and collection utilities for Deci.

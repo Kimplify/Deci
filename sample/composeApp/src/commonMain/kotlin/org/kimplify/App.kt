@@ -34,9 +34,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import org.kimplify.deci.Deci
 import org.kimplify.deci.RoundingMode
-import org.kimplify.deci.config.DeciConfiguration
-import org.kimplify.deci.extension.pow
 import org.kimplify.deci.extension.sumDeci
+import org.kimplify.deci.math.pow
 
 private const val MAX_FRACTIONAL_DIGITS = 20
 private const val MAX_LOG_ENTRIES = 30
@@ -135,8 +134,8 @@ fun App() {
 
                     DemoSection(title = "Power Operations") {
                         val base = Deci("2")
-                        DemoItem("$base³ = ${base.pow(3)}")
-                        DemoItem("$base⁵ = ${base.pow(5)}")
+                        DemoItem("$base³ = ${base.pow(Deci(3))}")
+                        DemoItem("$base⁵ = ${base.pow(Deci(5))}")
                     }
 
                     DemoSection(title = "Sum of List") {

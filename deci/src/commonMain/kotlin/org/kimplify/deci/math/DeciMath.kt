@@ -3,7 +3,7 @@ package org.kimplify.deci.math
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciConstants
 import org.kimplify.deci.RoundingMode
-import org.kimplify.deci.toLong
+import org.kimplify.deci.extension.toLong
 
 
 /**
@@ -51,12 +51,34 @@ fun Deci.pow(exponent: Deci): Deci {
     return when {
         exponent.isZero() -> Deci.ONE
         exponent == Deci.ONE -> this
-        exponent.isNegative() -> Deci.ONE / this.pow(exponent.negate())
         else -> {
             val exp = exponent.toLong()
-            this.pow(Deci(exp.toInt()))
+            require(Deci(exp) == exponent) { "Exponent must be an integer: $exponent" }
+
+            if (exp < 0) {
+                Deci.ONE / powPositive(-exp.toInt())
+            } else {
+                powPositive(exp.toInt())
+            }
         }
     }
+}
+
+private fun Deci.powPositive(exponent: Int): Deci {
+    var result = Deci.ONE
+    var base = this
+    var exp = exponent
+
+    // Fast exponentiation to avoid recursion
+    while (exp > 0) {
+        if (exp and 1 == 1) {
+            result *= base
+        }
+        base *= base
+        exp = exp ushr 1
+    }
+
+    return result
 }
 
 /**
