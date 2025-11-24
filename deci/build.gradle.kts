@@ -1,5 +1,7 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import org.gradle.api.artifacts.VersionCatalog
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
@@ -10,6 +12,9 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
 }
+
+val libsCatalog: VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+val deciVersion: String = libsCatalog.findVersion("version").get().requiredVersion
 
 kotlin {
     jvmToolchain(17)
@@ -77,31 +82,39 @@ android {
 //https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html
 mavenPublishing {
     publishToMavenCentral()
-    coordinates("org.kimplify.deci", "deci", "1.0.0")
+    signAllPublications()
+    coordinates("org.kimplify", "cedar-logging", deciVersion)
 
     pom {
         name = "Deci"
-        description = "Kotlin Multiplatform library"
-        url = "github url" //todo
+        description = "Precise decimal arithmetic for Kotlin Multiplatform projects, shipping high-precision operations across every target."
+        url = "https://github.com/Kimplify/Deci"
 
         licenses {
             license {
-                name = "MIT"
+                name = "MIT License"
                 url = "https://opensource.org/licenses/MIT"
             }
         }
 
         developers {
             developer {
-                id = "" //todo
-                name = "" //todo
-                email = "" //todo
+                id = "merkost"
+                name = "Konstantin Merenkov"
+                email = "merkostdev@gmail.com"
+            }
+
+            developer {
+                id = "diogocavaiar"
+                name = "Diogo Cavaiar"
+                email = "cavaiarconsulting@gmail.com"
             }
         }
 
         scm {
-            url = "github url" //todo
+            connection = "scm:git:https://github.com/Kimplify/Deci.git"
+            developerConnection = "scm:git:ssh://git@github.com/Kimplify/Deci.git"
+            url = "https://github.com/Kimplify/Deci"
         }
     }
-    if (project.hasProperty("signing.keyId")) signAllPublications()
 }

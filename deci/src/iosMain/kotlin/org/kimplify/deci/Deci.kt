@@ -89,9 +89,10 @@ actual class Deci private constructor(
     actual operator fun div(other: Deci): Deci {
         if (other.isZero()) throw ArithmeticException("Division by zero")
         val raw = internal.decimalNumberByDividingBy(other.internal)
+        val policy = DeciConfiguration.divisionPolicy
         val handler = NSDecimalNumberHandler(
-            toNativeMode(RoundingMode.HALF_UP),
-            scale = 34,
+            toNativeMode(policy.roundingMode),
+            scale = policy.fractionalDigits.toShort(),
             raiseOnExactness = false,
             raiseOnOverflow = false,
             raiseOnUnderflow = false,

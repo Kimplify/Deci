@@ -1,6 +1,8 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.json.Json
+import org.kimplify.deci.precision
+import org.kimplify.deci.scale
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -8,6 +10,35 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DeciTest {
+
+    @Test
+    fun `scale helper counts fraction digits`() {
+        assertEquals(0, Deci("10").scale())
+        assertEquals(2, Deci("10.25").scale())
+        assertEquals(3, Deci("-0.125").scale())
+    }
+
+    @Test
+    fun `precision helper counts digits ignoring separators`() {
+        assertEquals(2, Deci("10").precision())
+        assertEquals(4, Deci("10.25").precision())
+        assertEquals(4, Deci("-0.125").precision())
+    }
+
+    @Test
+    fun `division policy can be customized and reset`() {
+        DeciConfiguration.divisionPolicy = DeciDivisionPolicy(
+            fractionalDigits = 2,
+            roundingMode = RoundingMode.DOWN
+        )
+
+        val result = Deci("1") / Deci("3")
+        assertEquals("0.33", result.toString())
+
+        DeciConfiguration.resetDivisionPolicy()
+        val defaultResult = Deci("1") / Deci("3")
+        assertEquals("0.33333333333333333333", defaultResult.toString())
+    }
 
     @Test
     fun `plus should add two values`() {

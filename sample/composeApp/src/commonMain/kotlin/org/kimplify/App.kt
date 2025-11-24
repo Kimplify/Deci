@@ -77,6 +77,7 @@ fun App() {
                     verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
                     InteractiveDeciTester()
+                    InteractiveOperationsSection()
 
                     DemoSection(title = "Basic Operations") {
                         val a = Deci("10.5")
@@ -331,6 +332,226 @@ fun InteractiveDeciTester() {
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InteractiveOperationsSection() {
+    var leftOperand by remember { mutableStateOf("12.5") }
+    var rightOperand by remember { mutableStateOf("3.25") }
+    var activeOperator by remember { mutableStateOf<Operator?>(null) }
+    var resultText by remember { mutableStateOf<String?>(null) }
+    var errorText by remember { mutableStateOf<String?>(null) }
+
+    fun refreshOutcome(selectedOperator: Operator?) {
+        if (selectedOperator == null) {
+            resultText = null
+            errorText = null
+            return
+        }
+        val (result, error) = evaluateOperation(leftOperand, rightOperand, selectedOperator)
+        resultText = result
+        errorText = error
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(28.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            Text(
+                text = "Playground: Combine Values",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            Text(
+                text = "Enter two decimals, choose an operation, and see the exact result computed by Deci.",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            OperandField(
+                label = "Left operand",
+                value = leftOperand,
+                onValueChange = {
+                    leftOperand = it
+                    refreshOutcome(activeOperator)
+                }
+            )
+
+            OperandField(
+                label = "Right operand",
+                value = rightOperand,
+                onValueChange = {
+                    rightOperand = it
+                    refreshOutcome(activeOperator)
+                }
+            )
+
+            OperatorRow(
+                activeOperator = activeOperator,
+                onOperatorSelected = { operator ->
+                    activeOperator = operator
+                    refreshOutcome(operator)
+                }
+            )
+
+            when {
+                errorText != null -> OutlinedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Text(
+                        text = errorText.orEmpty(),
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(20.dp)
+                    )
+                }
+
+                resultText != null -> OutlinedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(18.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Result",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = resultText.orEmpty(),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
+
+                else -> Text(
+                    text = "Select an operation to see the result",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+private enum class Operator(val symbol: String) {
+    Add("+"),
+    Subtract("−"),
+    Multiply("×"),
+    Divide("÷")
+}
+
+@Composable
+private fun OperandField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        placeholder = { Text("e.g., 123.45 or 1,234.56") },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp)
+    )
+}
+
+@Composable
+private fun OperatorRow(
+    activeOperator: Operator?,
+    onOperatorSelected: (Operator) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = "Pick an operation",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Operator.values().forEach { operator ->
+                val isSelected = operator == activeOperator
+                OutlinedCard(
+                    modifier = Modifier
+                        .weight(1f),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = if (isSelected)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    onClick = { onOperatorSelected(operator) }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = operator.symbol,
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = if (isSelected)
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            else
+                                MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun evaluateOperation(
+    left: String,
+    right: String,
+    operator: Operator
+): Pair<String?, String?> {
+    val leftDeci = Deci.fromStringOrNull(left)
+        ?: return null to "Left operand is invalid."
+    val rightDeci = Deci.fromStringOrNull(right)
+        ?: return null to "Right operand is invalid."
+
+    return try {
+        val result = when (operator) {
+            Operator.Add -> leftDeci + rightDeci
+            Operator.Subtract -> leftDeci - rightDeci
+            Operator.Multiply -> leftDeci * rightDeci
+            Operator.Divide -> {
+                if (rightDeci.isZero()) {
+                    return null to "Division by zero is not allowed."
+                }
+                leftDeci / rightDeci
+            }
+        }
+        "$left ${operator.symbol} $right = $result" to null
+    } catch (throwable: Throwable) {
+        null to (throwable.message ?: "Operation failed")
     }
 }
 

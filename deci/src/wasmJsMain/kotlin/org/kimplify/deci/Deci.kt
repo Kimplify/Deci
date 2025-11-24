@@ -16,12 +16,7 @@ actual class Deci private constructor(
                 "Invalid decimal literal: '$it'"
             }
             val normalized = it.normalizeDecimalString()
-            try {
-                DecimalJs(normalized)
-            } catch (e: Throwable) {
-                println("Deci constructor error for value='$it' (normalized='$normalized'): ${e.message}")
-                throw IllegalArgumentException("Failed to create DecimalJs: ${e.message}", e)
-            }
+            DecimalJs(normalized)
         }
     )
 
@@ -38,13 +33,7 @@ actual class Deci private constructor(
             Deci(value)
 
         actual fun fromStringOrNull(value: String): Deci? =
-            runCatching {
-                val result = fromStringOrThrow(value)
-                println("Deci.fromStringOrNull: Attempting to parse input='$value' => result='$result'")
-                result
-            }.onFailure { e ->
-                    println("Deci.fromStringOrNull: Error parsing input='$value': ${e.message}")
-                }
+            runCatching { fromStringOrThrow(value) }
                 .getOrNull()
 
         actual fun fromStringOrZero(value: String): Deci =
@@ -68,7 +57,10 @@ actual class Deci private constructor(
 
     actual operator fun div(other: Deci): Deci {
         if (other.isZero()) throw ArithmeticException("Division by zero")
-        return Deci(internal.div(other.internal))
+        val policy = DeciConfiguration.divisionPolicy
+        val raw = internal.div(other.internal)
+        val rounded = raw.toDecimalPlaces(policy.fractionalDigits, convert(policy.roundingMode))
+        return Deci(rounded)
     }
 
     actual fun divide(divisor: Deci, scale: Int, roundingMode: RoundingMode): Deci {
@@ -85,12 +77,7 @@ actual class Deci private constructor(
     }
 
     actual override fun toString(): String =
-        try {
-            internal.toString()
-        } catch (e: Throwable) {
-            println("Deci.toString() error: ${e.message}")
-            "Error"
-        }
+        internal.toString()
 
     actual fun toDouble(): Double =
         internal.toNumber()

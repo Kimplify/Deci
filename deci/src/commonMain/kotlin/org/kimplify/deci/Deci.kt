@@ -2,20 +2,10 @@ package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
 
-enum class RoundingMode {
-    UP,
-    DOWN,
-    CEILING,
-    FLOOR,
-    HALF_UP,
-    HALF_DOWN,
-    HALF_EVEN
-}
-
-internal val DECIMAL_REGEX = Regex(
-    """^[-+]?(?:\d{1,3}(?:[.,]\d{3})*(?:[.,]\d*)?|\d+[.,]\d*|\d+|[.,]\d+)$"""
-)
-
+/**
+ * Multiplatform arbitrary-precision decimal that normalizes user input and delegates
+ * to the most capable numeric engine available on each platform.
+ */
 @Serializable(with = DeciSerializer::class)
 expect class Deci : Comparable<Deci> {
     constructor(value: String)
@@ -58,20 +48,3 @@ expect class Deci : Comparable<Deci> {
         fun fromStringOrNull(value: String): Deci?
     }
 }
-
-@Deprecated("Use Deci.fromStringOrZero(value) instead", ReplaceWith("Deci.fromStringOrZero(value)"))
-fun String.toSafeDeci(): Deci = Deci.fromStringOrZero(this)
-
-fun Iterable<Deci>.sumDeci(): Deci = this.fold(Deci.ZERO) { acc, d -> acc + d }
-
-fun Deci.pow(exp: Int): Deci {
-    require(exp >= 0) { "Negative exponents are not supported" }
-    var result = Deci.ONE
-    repeat(exp) {
-        result *= this
-    }
-    return result
-}
-
-fun Deci.toLong(): Long = this.toDouble().toLong()
-

@@ -67,11 +67,11 @@ actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
         operate(other) { a, b, _ -> a.multiply(b) }
 
     @Throws(ArithmeticException::class)
-    actual operator fun div(other: Deci): Deci {
-        return operate(other, MathContext.DECIMAL128) { a, b, ctx ->
-            a.divide(b, ctx)
+    actual operator fun div(other: Deci): Deci =
+        operate(other) { a, b, _ ->
+            val policy = DeciConfiguration.divisionPolicy
+            a.divide(b, policy.fractionalDigits, convert(policy.roundingMode))
         }
-    }
 
     @Throws(ArithmeticException::class)
     actual fun divide(divisor: Deci, scale: Int, roundingMode: RoundingMode): Deci {
