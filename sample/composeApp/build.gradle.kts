@@ -86,14 +86,14 @@ kotlin {
 }
 
 android {
-    namespace = "org.kimplify.deci-sample"
+    namespace = "org.kimplify.deciSample"
     compileSdk = 36
 
     defaultConfig {
         minSdk = 24
         targetSdk = 36
 
-        applicationId = "org.kimplify.deci-sample"
+        applicationId = "org.kimplify.deciSample"
         versionCode = 1
         versionName = "1.0.0"
     }
