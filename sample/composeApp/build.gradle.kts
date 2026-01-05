@@ -12,7 +12,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 
     androidTarget()
     jvm()
@@ -86,14 +86,14 @@ kotlin {
 }
 
 android {
-    namespace = "com.app"
+    namespace = "org.kimplify.deci-sample"
     compileSdk = 36
 
     defaultConfig {
         minSdk = 24
         targetSdk = 36
 
-        applicationId = "org.kimplify.androidApp"
+        applicationId = "org.kimplify.deci-sample"
         versionCode = 1
         versionName = "1.0.0"
     }

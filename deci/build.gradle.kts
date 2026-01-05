@@ -17,7 +17,7 @@ val libsCatalog: VersionCatalog = extensions.getByType<VersionCatalogsExtension>
 val deciVersion: String = libsCatalog.findVersion("version").get().requiredVersion
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 
     androidTarget { publishLibraryVariants("release") }
     jvm()
@@ -74,7 +74,7 @@ kotlin {
 
 android {
     namespace = "org.kimplify.deci"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
