@@ -1,5 +1,4 @@
 [versions]
-
 version = "0.1.0"
 
 kotlin = "2.2.21"

@@ -1,6 +1,7 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -14,7 +15,12 @@ object DeciSerializer : KSerializer<Deci> {
     }
 
     override fun deserialize(decoder: Decoder): Deci {
-        return Deci.fromStringOrZero(decoder.decodeString())
+        val value = decoder.decodeString()
+        return try {
+            Deci(value)
+        } catch (e: Exception) {
+            throw SerializationException("Invalid Deci value: '$value'", e)
+        }
     }
 }
 

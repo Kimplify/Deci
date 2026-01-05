@@ -17,18 +17,10 @@ fun Iterable<Deci>.multiplyAll(): Deci {
     return this.fold(Deci.ONE) { acc, value -> acc * value }
 }
 
-/**
- * Calculates the average (arithmetic mean) of the collection.
- * 
- * @return Average value, or Deci.ZERO for empty collections
- */
-fun Iterable<Deci>.averageDeci(): Deci {
+fun Iterable<Deci>.averageDeci(): Deci? {
     val values = this.toList()
-    return if (values.isEmpty()) {
-        Deci.ZERO
-    } else {
-        values.sumDeci() / Deci(values.size)
-    }
+    if (values.isEmpty()) return null
+    return values.sumDeci() / Deci(values.size)
 }
 
 /**
@@ -79,7 +71,7 @@ fun Iterable<Deci>.multiplyAllBy(multiplier: Deci): List<Deci> {
  * @throws ArithmeticException if divisor is zero
  */
 fun Iterable<Deci>.divideAllBy(divisor: Deci): List<Deci> {
-    require(!divisor.isZero()) { "Cannot divide by zero" }
+    require(!divisor.isZero()) { "Cannot divide: divisor is zero" }
     return this.map { it / divisor }
 }
 
@@ -155,26 +147,27 @@ fun Iterable<Deci>.filterInRange(min: Deci, max: Deci): List<Deci> {
     return this.filter { it >= min && it <= max }
 }
 
-/**
- * Filters out outliers using the interquartile range (IQR) method.
- * 
- * @param multiplier IQR multiplier for outlier detection (default: 1.5)
- * @return List with outliers removed
- */
 fun Iterable<Deci>.filterOutliers(multiplier: Deci = Deci("1.5")): List<Deci> {
     val sorted = this.toList().sorted()
     if (sorted.size < 4) return sorted
-    
-    val q1Index = sorted.size / 4
-    val q3Index = (sorted.size * 3) / 4
-    val q1 = sorted[q1Index]
-    val q3 = sorted[q3Index]
+
+    val q1 = calculatePercentile(sorted, 25)
+    val q3 = calculatePercentile(sorted, 75)
     val iqr = q3 - q1
-    
+
     val lowerBound = q1 - (iqr * multiplier)
     val upperBound = q3 + (iqr * multiplier)
-    
+
     return sorted.filter { it in lowerBound..upperBound }
+}
+
+private fun calculatePercentile(sorted: List<Deci>, percentile: Int): Deci {
+    val n = sorted.size
+    val index = (percentile / 100.0) * (n - 1)
+    val lower = index.toInt()
+    val upper = (lower + 1).coerceAtMost(n - 1)
+    val fraction = Deci((index - lower).toString())
+    return sorted[lower] + (sorted[upper] - sorted[lower]) * fraction
 }
 
 /**

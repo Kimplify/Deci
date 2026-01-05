@@ -27,8 +27,7 @@ actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
             runCatching { Deci(value) }
                 .getOrNull()
 
-        actual fun fromStringOrZero(value: String): Deci =
-            fromStringOrNull(value) ?: ZERO
+        actual fun fromStringOrZero(value: String): Deci = fromStringOrNull(value) ?: ZERO
     }
 
     private inline fun operate(

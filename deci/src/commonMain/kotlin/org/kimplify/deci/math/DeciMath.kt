@@ -54,9 +54,13 @@ fun Deci.pow(exponent: Deci): Deci {
         else -> {
             val exp = exponent.toLong()
             require(Deci(exp) == exponent) { "Exponent must be an integer: $exponent" }
+            require(exp >= Int.MIN_VALUE && exp <= Int.MAX_VALUE) {
+                "Exponent $exp is outside supported range"
+            }
 
             if (exp < 0) {
-                Deci.ONE / powPositive(-exp.toInt())
+                require(exp != Long.MIN_VALUE) { "Exponent cannot be Long.MIN_VALUE" }
+                Deci.ONE / powPositive((-exp).toInt())
             } else {
                 powPositive(exp.toInt())
             }
@@ -88,7 +92,7 @@ private fun Deci.powPositive(exponent: Int): Deci {
  * @return The remainder after division
  */
 fun Deci.mod(divisor: Deci): Deci {
-    require(!divisor.isZero()) { "Division by zero in modulo operation" }
+    require(!divisor.isZero()) { "Cannot compute modulo: divisor is zero" }
     
     val quotient = (this / divisor).setScale(0, RoundingMode.DOWN)
     return this - (quotient * divisor)
@@ -101,7 +105,7 @@ fun Deci.mod(divisor: Deci): Deci {
  * @return The remainder
  */
 fun Deci.remainder(divisor: Deci): Deci {
-    require(!divisor.isZero()) { "Division by zero in remainder operation" }
+    require(!divisor.isZero()) { "Cannot compute remainder: divisor is zero" }
     
     val quotient = (this / divisor).setScale(0, RoundingMode.HALF_UP)
     return this - (quotient * divisor)
@@ -120,28 +124,35 @@ fun Deci.roundToNearest(multiple: Deci): Deci {
     return quotient * multiple
 }
 
-/**
- * Rounds this value to the specified number of significant digits.
- * 
- * @param digits Number of significant digits
- * @return Value rounded to significant digits
- */
 fun Deci.roundToSignificantDigits(digits: Int): Deci {
     require(digits > 0) { "Number of significant digits must be positive: $digits" }
-    
+
     if (this.isZero()) return Deci.ZERO
-    
-    val str = this.abs().toString()
+
+    val absValue = this.abs()
+    val str = absValue.toString()
+
+    val firstSigDigitIndex = str.indexOfFirst { it.isDigit() && it != '0' }
+    if (firstSigDigitIndex == -1) return Deci.ZERO
+
     val decimalIndex = str.indexOf('.')
-    val firstDigitIndex = str.indexOfFirst { it != '0' && it != '.' }
-    
-    return if (decimalIndex == -1 || firstDigitIndex < decimalIndex) {
-        // Integer or first significant digit is before decimal point
-        val scale = maxOf(0, digits - (decimalIndex - firstDigitIndex))
-        this.setScale(scale, RoundingMode.HALF_UP)
+
+    val magnitude = if (decimalIndex == -1) {
+        str.length - firstSigDigitIndex - 1
+    } else if (firstSigDigitIndex < decimalIndex) {
+        decimalIndex - firstSigDigitIndex - 1
     } else {
-        // First significant digit is after decimal point
-        val scale = digits + (firstDigitIndex - decimalIndex - 1)
-        this.setScale(scale, RoundingMode.HALF_UP)
+        -(firstSigDigitIndex - decimalIndex)
+    }
+
+    val targetScale = -(magnitude - digits + 1)
+
+    return if (targetScale >= 0) {
+        this.setScale(targetScale, RoundingMode.HALF_UP)
+    } else {
+        val factor = Deci.TEN.pow(Deci(-targetScale))
+        val divided = this / factor
+        val rounded = divided.setScale(0, RoundingMode.HALF_UP)
+        rounded * factor
     }
 }

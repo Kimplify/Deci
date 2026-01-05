@@ -68,60 +68,45 @@ fun Deci.formatAsPercentage(scale: Int = 1, symbol: String = "%"): String {
     return "${rounded}$symbol"
 }
 
-/**
- * Formats this Deci in scientific notation.
- * 
- * @param precision Number of decimal places in mantissa (default: 6)
- * @return Scientific notation string
- */
 fun Deci.toScientificNotation(precision: Int = 6): String {
     if (this.isZero()) return "0.0E+0"
-    
+
     val str = this.abs().toString()
+    val allDigits = str.filter { it.isDigit() }
+    val firstNonZeroIdx = allDigits.indexOfFirst { it != '0' }
+    if (firstNonZeroIdx == -1) return "0.0E+0"
+
+    val significantDigits = allDigits.substring(firstNonZeroIdx)
     val decimalIndex = str.indexOf('.')
-    
-    // Find the first non-zero digit
-    val firstDigitIndex = str.indexOfFirst { it.isDigit() && it != '0' }
-    if (firstDigitIndex == -1) return "0.0E+0"
-    
-    val exponent = if (decimalIndex == -1 || firstDigitIndex < decimalIndex) {
-        // Integer or first digit before decimal
-        str.length - firstDigitIndex - 1 - (if (decimalIndex > firstDigitIndex) 1 else 0)
+    val firstNonZeroInStr = str.indexOfFirst { it.isDigit() && it != '0' }
+
+    val exponent = if (decimalIndex == -1) {
+        str.length - firstNonZeroInStr - 1
+    } else if (firstNonZeroInStr < decimalIndex) {
+        decimalIndex - firstNonZeroInStr - 1
     } else {
-        // First digit after decimal
-        -(firstDigitIndex - decimalIndex)
+        decimalIndex - firstNonZeroInStr
     }
-    
-    val mantissaDigits = str.filter { it.isDigit() }
-    val mantissa = mantissaDigits.substring(0, 1) + 
-                  (if (precision > 0 && mantissaDigits.length > 1) {
-                      "." + mantissaDigits.substring(1).take(precision).padEnd(precision, '0')
-                  } else "")
-    
+
+    val mantissa = if (precision > 0 && significantDigits.length > 1) {
+        significantDigits[0] + "." + significantDigits.substring(1).take(precision).padEnd(precision, '0')
+    } else {
+        significantDigits[0].toString()
+    }
+
     val sign = if (this.isNegative()) "-" else ""
     val expSign = if (exponent >= 0) "+" else ""
-    
+
     return "$sign${mantissa}E$expSign$exponent"
 }
 
-/**
- * Formats this Deci with a custom pattern.
- * Simplified pattern matching:
- * - "0" = required digit
- * - "#" = optional digit
- * - "." = decimal separator
- * - "," = thousands separator
- * 
- * @param pattern The format pattern
- * @return Formatted string
- */
 fun Deci.format(pattern: String): String {
     return when (pattern) {
         "0.00" -> this.setScale(2, RoundingMode.HALF_UP).toString()
         "#,##0.00" -> this.setScale(2, RoundingMode.HALF_UP).formatWithThousandsSeparator()
         "0.0000" -> this.setScale(4, RoundingMode.HALF_UP).toString()
         "#,##0" -> this.setScale(0, RoundingMode.HALF_UP).formatWithThousandsSeparator()
-        else -> this.toString()
+        else -> throw IllegalArgumentException("Unknown format pattern: $pattern")
     }
 }
 
