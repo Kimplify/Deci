@@ -1,5 +1,6 @@
 package org.kimplify.deci
 
+import androidx.compose.runtime.Immutable
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.serialization.Serializable
@@ -11,6 +12,7 @@ import platform.Foundation.NSRoundingMode
 
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
 @Serializable(with = DeciSerializer::class)
+@Immutable
 actual class Deci private constructor(
     private val internal: NSDecimalNumber
 ) : Comparable<Deci> {

@@ -1,8 +1,11 @@
 package org.kimplify.deci
 
+import androidx.compose.runtime.Immutable
+
 /**
  * Mathematical and utility constants for Deci operations.
  */
+@Immutable
 object DeciConstants {
     /**
      * Mathematical constant π (pi) - approximately 3.14159265358979323846

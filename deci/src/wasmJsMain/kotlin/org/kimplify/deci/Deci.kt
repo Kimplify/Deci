@@ -1,10 +1,12 @@
 package org.kimplify.deci
 
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 
 @Serializable(with = DeciSerializer::class)
+@Immutable
 actual class Deci private constructor(
     private val internal: DecimalJs
 ) : Comparable<Deci> {
