@@ -8,9 +8,9 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.maven.publish)
-    alias(libs.plugins.compose)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.binary.compatibility.validator)
 }
 
 val libsCatalog: VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -31,9 +31,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.ui)
-            implementation(compose.foundation)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.serialization.json)
@@ -70,6 +67,10 @@ kotlin {
         }
     }
 
+}
+
+apiValidation {
+    nonPublicMarkers += listOf("org.kimplify.deci.ExperimentalDeciApi")
 }
 
 android {

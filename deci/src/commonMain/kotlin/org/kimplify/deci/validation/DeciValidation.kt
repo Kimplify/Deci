@@ -1,6 +1,5 @@
 package org.kimplify.deci.validation
 
-import androidx.compose.runtime.Immutable
 import org.kimplify.deci.Deci
 import org.kimplify.deci.extension.toLong
 import org.kimplify.deci.parser.DECIMAL_REGEX
@@ -199,7 +198,6 @@ fun Deci.isApproximatelyEqual(other: Deci, tolerance: Deci = Deci("0.000001")): 
  * @param mustBePositive Whether value must be positive (default: false)
  * @return Validation result with error message if invalid
  */
-@Immutable
 data class ValidationResult(val isValid: Boolean, val errorMessage: String? = null)
 
 fun Deci.validateForForm(

@@ -1,6 +1,5 @@
 package org.kimplify.deci
 
-import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
@@ -9,7 +8,6 @@ import java.math.MathContext
 import java.math.RoundingMode as JavaRoundingMode
 
 @Serializable(with = DeciSerializer::class)
-@Immutable
 actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
 
     actual constructor(value: String) : this(

@@ -1,6 +1,5 @@
 package org.kimplify.deci
 
-import androidx.compose.runtime.Immutable
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -8,7 +7,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Immutable
 object DeciSerializer : KSerializer<Deci> {
     override val descriptor = PrimitiveSerialDescriptor("Deci", PrimitiveKind.STRING)
 

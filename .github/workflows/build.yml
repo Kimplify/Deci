@@ -25,6 +25,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      - name: Lint check
+        run: ./gradlew :deci:ktlintCheck
+
+      - name: API compatibility check
+        run: ./gradlew :deci:apiCheck
+
       - name: Run JVM tests
         run: ./gradlew :deci:jvmTest
 

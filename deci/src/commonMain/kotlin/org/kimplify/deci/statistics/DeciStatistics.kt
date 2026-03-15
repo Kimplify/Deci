@@ -2,6 +2,7 @@ package org.kimplify.deci.statistics
 
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciConstants
+import org.kimplify.deci.ExperimentalDeciApi
 import org.kimplify.deci.extension.sumDeci
 import org.kimplify.deci.math.sqrt
 
@@ -14,6 +15,7 @@ import org.kimplify.deci.math.sqrt
  *
  * @return The mean value, or null if collection is empty
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.mean(): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
@@ -25,6 +27,7 @@ fun Iterable<Deci>.mean(): Deci? {
  *
  * @return The median value, or null if collection is empty
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.median(): Deci? {
     val sorted = this.toList().sorted()
     if (sorted.isEmpty()) return null
@@ -44,6 +47,7 @@ fun Iterable<Deci>.median(): Deci? {
  *
  * @return The minimum value, or null if collection is empty
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.minDeci(): Deci? {
     return this.minOrNull()
 }
@@ -53,6 +57,7 @@ fun Iterable<Deci>.minDeci(): Deci? {
  *
  * @return The maximum value, or null if collection is empty
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.maxDeci(): Deci? {
     return this.maxOrNull()
 }
@@ -62,6 +67,7 @@ fun Iterable<Deci>.maxDeci(): Deci? {
  *
  * @return The range, or null if collection is empty
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.range(): Deci? {
     val min = minDeci() ?: return null
     val max = maxDeci() ?: return null
@@ -74,6 +80,7 @@ fun Iterable<Deci>.range(): Deci? {
  * @param isPopulation True for population variance, false for sample variance
  * @return The variance, or null if collection is empty or has only one element for sample variance
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.variance(isPopulation: Boolean = false): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
@@ -95,6 +102,7 @@ fun Iterable<Deci>.variance(isPopulation: Boolean = false): Deci? {
  * @param isPopulation True for population standard deviation, false for sample standard deviation
  * @return The standard deviation, or null if variance cannot be calculated
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.standardDeviation(isPopulation: Boolean = false): Deci? {
     val variance = variance(isPopulation) ?: return null
     return variance.sqrt()
@@ -106,6 +114,7 @@ fun Iterable<Deci>.standardDeviation(isPopulation: Boolean = false): Deci? {
  * @param weights The weights for each value (must have same size as values)
  * @return The weighted average, or null if collections are empty or different sizes
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.weightedAverage(weights: List<Deci>): Deci? {
     val values = this.toList()
     if (values.isEmpty() || weights.isEmpty() || values.size != weights.size) return null
@@ -122,6 +131,7 @@ fun Iterable<Deci>.weightedAverage(weights: List<Deci>): Deci? {
  *
  * @return The harmonic mean, or null if collection is empty or contains non-positive values
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.harmonicMean(): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
@@ -137,6 +147,7 @@ fun Iterable<Deci>.harmonicMean(): Deci? {
  * @param predicate The condition to test
  * @return Number of values satisfying the predicate
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.countWhere(predicate: (Deci) -> Boolean): Int {
     return this.count(predicate)
 }
@@ -146,6 +157,7 @@ fun Iterable<Deci>.countWhere(predicate: (Deci) -> Boolean): Int {
  *
  * @return Sum of squares, or null if collection is empty
  */
+@ExperimentalDeciApi
 fun Iterable<Deci>.sumOfSquares(): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null

@@ -3,6 +3,7 @@ package org.kimplify.deci.formatting
 import org.kimplify.deci.math.pow
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciConstants
+import org.kimplify.deci.ExperimentalDeciApi
 import org.kimplify.deci.RoundingMode
 
 /**
@@ -17,6 +18,7 @@ import org.kimplify.deci.RoundingMode
  * @param thousandsSeparator Thousands separator (default: ",")
  * @return Formatted currency string
  */
+@ExperimentalDeciApi
 fun Deci.formatCurrency(
     currencySymbol: String = "$",
     scale: Int = 2,
@@ -37,6 +39,7 @@ fun Deci.formatCurrency(
  * @param separator The thousands separator (default: ",")
  * @return Formatted string with thousands separators
  */
+@ExperimentalDeciApi
 fun Deci.formatWithThousandsSeparator(separator: String = ","): String {
     val str = this.toString()
     val parts = str.split(".")
@@ -62,12 +65,14 @@ fun Deci.formatWithThousandsSeparator(separator: String = ","): String {
  * @param symbol The percentage symbol (default: "%")
  * @return Formatted percentage string
  */
+@ExperimentalDeciApi
 fun Deci.formatAsPercentage(scale: Int = 1, symbol: String = "%"): String {
     val percentage = this * DeciConstants.HUNDRED
     val rounded = percentage.setScale(scale, RoundingMode.HALF_UP)
     return "${rounded}$symbol"
 }
 
+@ExperimentalDeciApi
 fun Deci.toScientificNotation(precision: Int = 6): String {
     if (this.isZero()) return "0.0E+0"
 
@@ -100,6 +105,7 @@ fun Deci.toScientificNotation(precision: Int = 6): String {
     return "$sign${mantissa}E$expSign$exponent"
 }
 
+@ExperimentalDeciApi
 fun Deci.format(pattern: String): String {
     return when (pattern) {
         "0.00" -> this.setScale(2, RoundingMode.HALF_UP).toString()
@@ -116,6 +122,7 @@ fun Deci.format(pattern: String): String {
  * 
  * @return Number as words
  */
+@ExperimentalDeciApi
 fun Deci.toWords(): String {
     if (this.isZero()) return "zero"
     
@@ -167,6 +174,7 @@ private fun convertIntegerToWords(number: Long): String {
  * @param padLeft True to pad on the left, false for right (default: true)
  * @return Padded string
  */
+@ExperimentalDeciApi
 fun Deci.pad(width: Int, padChar: Char = ' ', padLeft: Boolean = true): String {
     val str = this.toString()
     return if (padLeft) {

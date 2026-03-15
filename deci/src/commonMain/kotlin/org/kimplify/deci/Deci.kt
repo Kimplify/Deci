@@ -1,6 +1,5 @@
 package org.kimplify.deci
 
-import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,7 +7,6 @@ import kotlinx.serialization.Serializable
  * to the most capable numeric engine available on each platform.
  */
 @Serializable(with = DeciSerializer::class)
-@Immutable
 expect class Deci : Comparable<Deci> {
     constructor(value: String)
     constructor(value: Long)
