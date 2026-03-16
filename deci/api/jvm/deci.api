@@ -82,9 +82,6 @@ public final class org/kimplify/deci/DeciSerializer : kotlinx/serialization/KSer
 	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/kimplify/deci/Deci;)V
 }
 
-public abstract interface annotation class org/kimplify/deci/ExperimentalDeciApi : java/lang/annotation/Annotation {
-}
-
 public final class org/kimplify/deci/RoundingMode : java/lang/Enum {
 	public static final field CEILING Lorg/kimplify/deci/RoundingMode;
 	public static final field DOWN Lorg/kimplify/deci/RoundingMode;
@@ -96,6 +93,36 @@ public final class org/kimplify/deci/RoundingMode : java/lang/Enum {
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lorg/kimplify/deci/RoundingMode;
 	public static fun values ()[Lorg/kimplify/deci/RoundingMode;
+}
+
+public final class org/kimplify/deci/bulk/DeciBulkOperationsKt {
+	public static final fun addToAll (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;)Ljava/util/List;
+	public static final fun applyPercentageChange (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Ljava/util/List;
+	public static synthetic fun applyPercentageChange$default (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun applyToAll (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+	public static final fun averageDeci (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun averageDeci$default (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun bottomN (Ljava/lang/Iterable;I)Ljava/util/List;
+	public static final fun cumulativeSum (Ljava/lang/Iterable;)Ljava/util/List;
+	public static final fun differences (Ljava/lang/Iterable;)Ljava/util/List;
+	public static final fun divideAllBy (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Ljava/util/List;
+	public static synthetic fun divideAllBy$default (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun filterInRange (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;)Ljava/util/List;
+	public static final fun filterOutliers (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;)Ljava/util/List;
+	public static synthetic fun filterOutliers$default (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun groupConsecutiveSimilar (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;)Ljava/util/List;
+	public static final fun movingAverage (Ljava/lang/Iterable;ILorg/kimplify/deci/DeciContext;)Ljava/util/List;
+	public static synthetic fun movingAverage$default (Ljava/lang/Iterable;ILorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun multiplyAll (Ljava/lang/Iterable;)Lorg/kimplify/deci/Deci;
+	public static final fun multiplyAllBy (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;)Ljava/util/List;
+	public static final fun normalize (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;)Ljava/util/List;
+	public static synthetic fun normalize$default (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun partitionDeci (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Lkotlin/Pair;
+	public static final fun roundAll (Ljava/lang/Iterable;ILorg/kimplify/deci/RoundingMode;)Ljava/util/List;
+	public static final fun scaleToSum (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Ljava/util/List;
+	public static synthetic fun scaleToSum$default (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun subtractFromAll (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;)Ljava/util/List;
+	public static final fun topN (Ljava/lang/Iterable;I)Ljava/util/List;
 }
 
 public final class org/kimplify/deci/config/DeciConfiguration {
@@ -179,6 +206,53 @@ public final class org/kimplify/deci/extension/DeciExtensionsKt {
 	public static final fun toLong (Lorg/kimplify/deci/Deci;)J
 	public static final fun toLongExact (Lorg/kimplify/deci/Deci;)J
 	public static final fun toLongOrNull (Lorg/kimplify/deci/Deci;)Ljava/lang/Long;
+}
+
+public final class org/kimplify/deci/formatting/DeciFormattingKt {
+	public static final fun format (Lorg/kimplify/deci/Deci;Ljava/lang/String;)Ljava/lang/String;
+	public static final fun formatAsPercentage (Lorg/kimplify/deci/Deci;ILjava/lang/String;)Ljava/lang/String;
+	public static synthetic fun formatAsPercentage$default (Lorg/kimplify/deci/Deci;ILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun formatCurrency (Lorg/kimplify/deci/Deci;Ljava/lang/String;ILjava/lang/String;)Ljava/lang/String;
+	public static synthetic fun formatCurrency$default (Lorg/kimplify/deci/Deci;Ljava/lang/String;ILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun formatWithThousandsSeparator (Lorg/kimplify/deci/Deci;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun formatWithThousandsSeparator$default (Lorg/kimplify/deci/Deci;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun pad (Lorg/kimplify/deci/Deci;ICZ)Ljava/lang/String;
+	public static synthetic fun pad$default (Lorg/kimplify/deci/Deci;ICZILjava/lang/Object;)Ljava/lang/String;
+	public static final fun toScientificNotation (Lorg/kimplify/deci/Deci;I)Ljava/lang/String;
+	public static synthetic fun toScientificNotation$default (Lorg/kimplify/deci/Deci;IILjava/lang/Object;)Ljava/lang/String;
+	public static final fun toWords (Lorg/kimplify/deci/Deci;)Ljava/lang/String;
+}
+
+public final class org/kimplify/deci/math/DeciMathKt {
+	public static final fun mod (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public static final fun pow (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun pow$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun remainder (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public static final fun roundToNearest (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public static final fun roundToSignificantDigits (Lorg/kimplify/deci/Deci;I)Lorg/kimplify/deci/Deci;
+	public static final fun sqrt (Lorg/kimplify/deci/Deci;I)Lorg/kimplify/deci/Deci;
+	public static synthetic fun sqrt$default (Lorg/kimplify/deci/Deci;IILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+}
+
+public final class org/kimplify/deci/statistics/DeciStatisticsKt {
+	public static final fun countWhere (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)I
+	public static final fun harmonicMean (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun harmonicMean$default (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun maxDeci (Ljava/lang/Iterable;)Lorg/kimplify/deci/Deci;
+	public static final fun mean (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun mean$default (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun median (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun median$default (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun minDeci (Ljava/lang/Iterable;)Lorg/kimplify/deci/Deci;
+	public static final fun range (Ljava/lang/Iterable;)Lorg/kimplify/deci/Deci;
+	public static final fun standardDeviation (Ljava/lang/Iterable;ZLorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun standardDeviation$default (Ljava/lang/Iterable;ZLorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun sumOfSquares (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun sumOfSquares$default (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun variance (Ljava/lang/Iterable;ZLorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun variance$default (Ljava/lang/Iterable;ZLorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun weightedAverage (Ljava/lang/Iterable;Ljava/util/List;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun weightedAverage$default (Ljava/lang/Iterable;Ljava/util/List;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
 }
 
 public final class org/kimplify/deci/validation/DeciValidationKt {

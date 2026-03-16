@@ -3,7 +3,6 @@ package org.kimplify.deci.math
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciConstants
 import org.kimplify.deci.DeciContext
-import org.kimplify.deci.ExperimentalDeciApi
 import org.kimplify.deci.RoundingMode
 import org.kimplify.deci.exception.DeciArithmeticException
 import org.kimplify.deci.exception.DeciDivisionByZeroException
@@ -24,7 +23,6 @@ import org.kimplify.deci.extension.toLong
  * @return Square root of this value.
  * @throws DeciArithmeticException if this value is negative.
  */
-@ExperimentalDeciApi
 fun Deci.sqrt(precision: Int = 10): Deci {
     if (this.isNegative()) throw DeciArithmeticException("Cannot calculate square root of negative number: $this")
 
@@ -63,7 +61,6 @@ fun Deci.sqrt(precision: Int = 10): Deci {
  *                the exponent is negative (requires division by the result).
  * @return This value raised to the exponent.
  */
-@ExperimentalDeciApi
 fun Deci.pow(
     exponent: Deci,
     context: DeciContext = DeciContext.DEFAULT,
@@ -111,7 +108,6 @@ private fun Deci.powPositive(exponent: Int): Deci {
  * @param divisor The divisor
  * @return The remainder after division
  */
-@ExperimentalDeciApi
 fun Deci.mod(divisor: Deci): Deci {
     if (divisor.isZero()) throw DeciDivisionByZeroException("Cannot compute modulo: divisor is zero")
 
@@ -125,7 +121,6 @@ fun Deci.mod(divisor: Deci): Deci {
  * @param divisor The divisor
  * @return The remainder
  */
-@ExperimentalDeciApi
 fun Deci.remainder(divisor: Deci): Deci {
     if (divisor.isZero()) throw DeciDivisionByZeroException("Cannot compute remainder: divisor is zero")
 
@@ -139,7 +134,6 @@ fun Deci.remainder(divisor: Deci): Deci {
  * @param multiple The multiple to round to
  * @return Value rounded to nearest multiple
  */
-@ExperimentalDeciApi
 fun Deci.roundToNearest(multiple: Deci): Deci {
     if (multiple.isZero()) throw DeciDivisionByZeroException("Cannot round to nearest zero")
 
@@ -159,7 +153,6 @@ fun Deci.roundToNearest(multiple: Deci): Deci {
  * @return a new [Deci] rounded to the specified number of significant digits.
  * @throws IllegalArgumentException if [digits] is not positive.
  */
-@ExperimentalDeciApi
 fun Deci.roundToSignificantDigits(digits: Int): Deci {
     require(digits > 0) { "Number of significant digits must be positive: $digits" }
 

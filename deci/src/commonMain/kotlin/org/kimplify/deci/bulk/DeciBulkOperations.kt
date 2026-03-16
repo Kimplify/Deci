@@ -2,7 +2,6 @@ package org.kimplify.deci.bulk
 
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciContext
-import org.kimplify.deci.ExperimentalDeciApi
 import org.kimplify.deci.RoundingMode
 import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.extension.sumDeci
@@ -16,7 +15,6 @@ import org.kimplify.deci.extension.sumDeci
  *
  * @return Product of all values, or Deci.ONE for empty collections
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.multiplyAll(): Deci {
     return this.fold(Deci.ONE) { acc, value -> acc * value }
 }
@@ -30,7 +28,6 @@ fun Iterable<Deci>.multiplyAll(): Deci {
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The average value, or null if collection is empty.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.averageDeci(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
@@ -43,7 +40,6 @@ fun Iterable<Deci>.averageDeci(context: DeciContext = DeciContext.DEFAULT): Deci
  * @param operation The operation to apply to each value
  * @return List of transformed values
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.applyToAll(operation: (Deci) -> Deci): List<Deci> {
     return this.map(operation)
 }
@@ -54,7 +50,6 @@ fun Iterable<Deci>.applyToAll(operation: (Deci) -> Deci): List<Deci> {
  * @param value Value to add to each element
  * @return List with value added to each element
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.addToAll(value: Deci): List<Deci> {
     return this.map { it + value }
 }
@@ -65,7 +60,6 @@ fun Iterable<Deci>.addToAll(value: Deci): List<Deci> {
  * @param value Value to subtract from each element
  * @return List with value subtracted from each element
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.subtractFromAll(value: Deci): List<Deci> {
     return this.map { it - value }
 }
@@ -76,7 +70,6 @@ fun Iterable<Deci>.subtractFromAll(value: Deci): List<Deci> {
  * @param multiplier Value to multiply each element by
  * @return List with each element multiplied by the value
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.multiplyAllBy(multiplier: Deci): List<Deci> {
     return this.map { it * multiplier }
 }
@@ -92,7 +85,6 @@ fun Iterable<Deci>.multiplyAllBy(multiplier: Deci): List<Deci> {
  * @return List with each element divided by the value.
  * @throws DeciDivisionByZeroException if divisor is zero.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.divideAllBy(
     divisor: Deci,
     context: DeciContext = DeciContext.DEFAULT,
@@ -111,7 +103,6 @@ fun Iterable<Deci>.divideAllBy(
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return List with percentage change applied to each element.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.applyPercentageChange(
     percentageChange: Deci,
     context: DeciContext = DeciContext.DEFAULT,
@@ -129,7 +120,6 @@ fun Iterable<Deci>.applyPercentageChange(
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return List of normalized values, or original list if all values are equal.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.normalize(context: DeciContext = DeciContext.DEFAULT): List<Deci> {
     val values = this.toList()
     if (values.isEmpty()) return values
@@ -156,7 +146,6 @@ fun Iterable<Deci>.normalize(context: DeciContext = DeciContext.DEFAULT): List<D
  * @return List of scaled values that sum to targetSum.
  * @throws DeciDivisionByZeroException if current sum is zero.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.scaleToSum(
     targetSum: Deci,
     context: DeciContext = DeciContext.DEFAULT,
@@ -178,7 +167,6 @@ fun Iterable<Deci>.scaleToSum(
  * @param roundingMode Rounding mode to use
  * @return List of rounded values
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.roundAll(
     scale: Int,
     roundingMode: RoundingMode,
@@ -193,7 +181,6 @@ fun Iterable<Deci>.roundAll(
  * @param max Maximum value (inclusive)
  * @return List of values within the range
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.filterInRange(
     min: Deci,
     max: Deci,
@@ -211,7 +198,6 @@ fun Iterable<Deci>.filterInRange(
  * @param multiplier the tolerance factor applied to the IQR (default: `1.5`).
  * @return a sorted list with outliers removed.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.filterOutliers(multiplier: Deci = Deci("1.5")): List<Deci> {
     val sorted = this.toList().sorted()
     if (sorted.size < 4) return sorted
@@ -244,7 +230,6 @@ private fun calculatePercentile(
  * @param tolerance Maximum difference between consecutive values in the same group
  * @return List of groups, where each group is a list of consecutive similar values
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.groupConsecutiveSimilar(tolerance: Deci): List<List<Deci>> {
     val values = this.toList()
     if (values.isEmpty()) return emptyList()
@@ -278,7 +263,6 @@ fun Iterable<Deci>.groupConsecutiveSimilar(tolerance: Deci): List<List<Deci>> {
  * @param predicate Function to test each element
  * @return Pair where first list contains elements that match predicate, second contains those that don't
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.partitionDeci(predicate: (Deci) -> Boolean): Pair<List<Deci>, List<Deci>> {
     return this.partition(predicate)
 }
@@ -288,7 +272,6 @@ fun Iterable<Deci>.partitionDeci(predicate: (Deci) -> Boolean): Pair<List<Deci>,
  *
  * @return List of cumulative sums
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.cumulativeSum(): List<Deci> {
     val result = mutableListOf<Deci>()
     var sum = Deci.ZERO
@@ -311,7 +294,6 @@ fun Iterable<Deci>.cumulativeSum(): List<Deci> {
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return List of moving averages (shorter than original list by windowSize - 1).
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.movingAverage(
     windowSize: Int,
     context: DeciContext = DeciContext.DEFAULT,
@@ -331,7 +313,6 @@ fun Iterable<Deci>.movingAverage(
  *
  * @return List of differences (one element shorter than original)
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.differences(): List<Deci> {
     val values = this.toList()
     if (values.size < 2) return emptyList()
@@ -345,7 +326,6 @@ fun Iterable<Deci>.differences(): List<Deci> {
  * @param n Number of top values to return
  * @return List of top N values in descending order
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.topN(n: Int): List<Deci> {
     require(n >= 0) { "N must be non-negative: $n" }
     return this.sortedDescending().take(n)
@@ -357,7 +337,6 @@ fun Iterable<Deci>.topN(n: Int): List<Deci> {
  * @param n Number of bottom values to return
  * @return List of bottom N values in ascending order
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.bottomN(n: Int): List<Deci> {
     require(n >= 0) { "N must be non-negative: $n" }
     return this.sorted().take(n)

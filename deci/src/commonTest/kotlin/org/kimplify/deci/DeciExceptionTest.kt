@@ -20,7 +20,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
-@OptIn(ExperimentalDeciApi::class)
 class DeciExceptionTest {
     // -- Hierarchy catchability --
 

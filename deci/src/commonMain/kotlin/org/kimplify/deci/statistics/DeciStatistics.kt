@@ -3,7 +3,6 @@ package org.kimplify.deci.statistics
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciConstants
 import org.kimplify.deci.DeciContext
-import org.kimplify.deci.ExperimentalDeciApi
 import org.kimplify.deci.extension.sumDeci
 import org.kimplify.deci.math.sqrt
 
@@ -20,7 +19,6 @@ import org.kimplify.deci.math.sqrt
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The mean value, or null if collection is empty.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.mean(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
@@ -37,7 +35,6 @@ fun Iterable<Deci>.mean(context: DeciContext = DeciContext.DEFAULT): Deci? {
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The median value, or null if collection is empty.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.median(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val sorted = this.toList().sorted()
     if (sorted.isEmpty()) return null
@@ -57,7 +54,6 @@ fun Iterable<Deci>.median(context: DeciContext = DeciContext.DEFAULT): Deci? {
  *
  * @return The minimum value, or null if collection is empty
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.minDeci(): Deci? {
     return this.minOrNull()
 }
@@ -67,7 +63,6 @@ fun Iterable<Deci>.minDeci(): Deci? {
  *
  * @return The maximum value, or null if collection is empty
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.maxDeci(): Deci? {
     return this.maxOrNull()
 }
@@ -77,7 +72,6 @@ fun Iterable<Deci>.maxDeci(): Deci? {
  *
  * @return The range, or null if collection is empty
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.range(): Deci? {
     val min = minDeci() ?: return null
     val max = maxDeci() ?: return null
@@ -94,7 +88,6 @@ fun Iterable<Deci>.range(): Deci? {
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The variance, or null if collection is empty or has only one element for sample variance.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.variance(
     isPopulation: Boolean = false,
     context: DeciContext = DeciContext.DEFAULT,
@@ -124,7 +117,6 @@ fun Iterable<Deci>.variance(
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The standard deviation, or null if variance cannot be calculated.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.standardDeviation(
     isPopulation: Boolean = false,
     context: DeciContext = DeciContext.DEFAULT,
@@ -143,7 +135,6 @@ fun Iterable<Deci>.standardDeviation(
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The weighted average, or null if collections are empty or different sizes.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.weightedAverage(
     weights: List<Deci>,
     context: DeciContext = DeciContext.DEFAULT,
@@ -167,7 +158,6 @@ fun Iterable<Deci>.weightedAverage(
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The harmonic mean, or null if collection is empty or contains non-positive values.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.harmonicMean(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
@@ -183,7 +173,6 @@ fun Iterable<Deci>.harmonicMean(context: DeciContext = DeciContext.DEFAULT): Dec
  * @param predicate The condition to test
  * @return Number of values satisfying the predicate
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.countWhere(predicate: (Deci) -> Boolean): Int {
     return this.count(predicate)
 }
@@ -197,7 +186,6 @@ fun Iterable<Deci>.countWhere(predicate: (Deci) -> Boolean): Int {
  * @param context The [DeciContext] controlling precision and rounding of the mean division.
  * @return Sum of squares, or null if collection is empty.
  */
-@ExperimentalDeciApi
 fun Iterable<Deci>.sumOfSquares(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null

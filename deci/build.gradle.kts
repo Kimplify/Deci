@@ -56,10 +56,6 @@ kotlin {
     }
 }
 
-apiValidation {
-    nonPublicMarkers += listOf("org.kimplify.deci.ExperimentalDeciApi")
-}
-
 android {
     namespace = "org.kimplify.deci"
     compileSdk = 36
