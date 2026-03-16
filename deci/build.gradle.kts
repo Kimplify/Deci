@@ -31,27 +31,18 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
-            implementation(libs.cedar.logger)
         }
 
         jvmMain.dependencies {
             implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.cedar.logger)
         }
 
         jsMain.dependencies {
             implementation(npm("decimal.js", "10.6.0"))
-            implementation(libs.cedar.logger)
         }
 
         wasmJsMain.dependencies {
             implementation(npm("decimal.js", "10.6.0"))
-            implementation(libs.cedar.logger)
-        }
-
-        val iosMain by getting
-        iosMain.dependencies {
-            implementation(libs.cedar.logger)
         }
     }
 }

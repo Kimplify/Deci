@@ -129,10 +129,10 @@ public final class org/kimplify/deci/config/DeciConfiguration {
 	public static final field INSTANCE Lorg/kimplify/deci/config/DeciConfiguration;
 	public final fun disableLogging ()V
 	public final fun getDivisionPolicy ()Lorg/kimplify/deci/config/DeciDivisionPolicy;
-	public final fun getLoggingEnabled ()Z
+	public final fun getLogSink ()Lorg/kimplify/deci/logging/DeciLogSink;
 	public final fun resetDivisionPolicy ()V
 	public final fun setDivisionPolicy (Lorg/kimplify/deci/config/DeciDivisionPolicy;)V
-	public final fun setLoggingEnabled (Z)V
+	public final fun setLogSink (Lorg/kimplify/deci/logging/DeciLogSink;)V
 }
 
 public final class org/kimplify/deci/config/DeciDivisionPolicy {
@@ -221,6 +221,10 @@ public final class org/kimplify/deci/formatting/DeciFormattingKt {
 	public static final fun toScientificNotation (Lorg/kimplify/deci/Deci;I)Ljava/lang/String;
 	public static synthetic fun toScientificNotation$default (Lorg/kimplify/deci/Deci;IILjava/lang/Object;)Ljava/lang/String;
 	public static final fun toWords (Lorg/kimplify/deci/Deci;)Ljava/lang/String;
+}
+
+public abstract interface class org/kimplify/deci/logging/DeciLogSink {
+	public abstract fun log (Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public final class org/kimplify/deci/math/DeciMathKt {

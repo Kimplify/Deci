@@ -3,8 +3,24 @@ package org.kimplify.deci.logging
 import org.kimplify.deci.config.DeciConfiguration
 
 /**
- * Internal logger that routes Deci events through Cedar on platforms that
- * support it, and falls back to [println] elsewhere.
+ * Callback interface for receiving Deci log events.
+ *
+ * Consumers can plug in any logging backend (Timber, SLF4J, println, etc.)
+ * by assigning an implementation to [DeciConfiguration.logSink].
+ *
+ * ```kotlin
+ * DeciConfiguration.logSink = DeciLogSink { tag, message -> println("[$tag] $message") }
+ * ```
+ */
+fun interface DeciLogSink {
+    fun log(tag: String, message: String)
+}
+
+/**
+ * Internal logger that routes Deci events through the consumer-provided
+ * [DeciLogSink] set on [DeciConfiguration.logSink].
+ *
+ * When no sink is installed (the default), log calls are no-ops.
  */
 internal object DeciLogger {
     private const val TAG = "Deci"
@@ -24,16 +40,10 @@ internal object DeciLogger {
     }
 
     private inline fun logIfEnabled(builder: () -> DeciLogEvent) {
-        if (!DeciConfiguration.loggingEnabled) return
-        logDebug(TAG, builder().message)
+        val sink = DeciConfiguration.logSink ?: return
+        sink.log(TAG, builder().message)
     }
 }
-
-/**
- * Platform-specific debug log call.
- * Uses Cedar on platforms where it is available; falls back to [println] elsewhere.
- */
-internal expect fun logDebug(tag: String, message: String)
 
 /**
  * Describes a logging event emitted by Deci during literal processing.

@@ -8,7 +8,6 @@ compose = "1.9.3"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
 androidx-activityCompose = "1.12.2"
-cedar-logger-version = "0.2.2"
 ktlint-plugin = "12.2.0"
 binary-compatibility-validator = "0.17.0"
 kotest = "6.0.0.M1"
@@ -21,7 +20,6 @@ kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-cedar-logger = { module = "org.kimplify:cedar-logging", version.ref = "cedar-logger-version" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

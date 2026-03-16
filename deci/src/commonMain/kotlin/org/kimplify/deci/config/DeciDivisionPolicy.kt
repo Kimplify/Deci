@@ -1,6 +1,7 @@
 package org.kimplify.deci.config
 
 import org.kimplify.deci.RoundingMode
+import org.kimplify.deci.logging.DeciLogSink
 import kotlin.concurrent.Volatile
 
 /**
@@ -25,7 +26,7 @@ data class DeciDivisionPolicy(
  * division scale to align with domain-specific requirements.
  *
  * **Note:** This object contains mutable state. Changes to [divisionPolicy] or
- * [loggingEnabled] are thread-safe via @Volatile but not reactive.
+ * [logSink] are thread-safe via @Volatile but not reactive.
  */
 object DeciConfiguration {
     private val defaultDivisionPolicy =
@@ -42,19 +43,25 @@ object DeciConfiguration {
     var divisionPolicy: DeciDivisionPolicy = defaultDivisionPolicy
 
     /**
-     * Toggle Cedar logging for literal normalization and validation events.
-     * Leave `false` (default) to skip log emission entirely.
+     * Consumer-provided log sink for literal normalization and validation events.
+     * Leave `null` (default) to skip log emission entirely.
+     *
+     * ```kotlin
+     * DeciConfiguration.logSink = DeciLogSink { tag, message ->
+     *     println("[$tag] $message")
+     * }
+     * ```
      */
     @Volatile
-    var loggingEnabled: Boolean = false
+    var logSink: DeciLogSink? = null
 
     /** Restores [divisionPolicy] to its library default values. */
     fun resetDivisionPolicy() {
         divisionPolicy = defaultDivisionPolicy
     }
 
-    /** Disables Cedar logging. */
+    /** Removes the installed log sink, disabling all Deci logging. */
     fun disableLogging() {
-        loggingEnabled = false
+        logSink = null
     }
 }
