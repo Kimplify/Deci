@@ -1,5 +1,6 @@
 package org.kimplify.deci.parser
 
+import org.kimplify.deci.exception.DeciParseException
 import org.kimplify.deci.logging.DeciLogger
 
 internal fun validateAndNormalizeDecimalLiteral(rawValue: String): String {
@@ -7,12 +8,12 @@ internal fun validateAndNormalizeDecimalLiteral(rawValue: String): String {
 
     if (trimmed.isEmpty()) {
         DeciLogger.logLiteralRejected(rawValue, "Value is blank or whitespace only")
-        throw IllegalArgumentException("Deci literal must not be blank")
+        throw DeciParseException(rawValue = rawValue, message = "Deci literal must not be blank")
     }
 
     if (!DECIMAL_REGEX.matches(trimmed)) {
         DeciLogger.logLiteralRejected(rawValue, "Value does not match decimal format")
-        throw IllegalArgumentException("Invalid decimal literal: '$rawValue'")
+        throw DeciParseException(rawValue = rawValue)
     }
 
     val normalized = rawValue.normalizeDecimalString()

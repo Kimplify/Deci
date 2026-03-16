@@ -1,6 +1,7 @@
 package org.kimplify.deci.validation
 
 import org.kimplify.deci.Deci
+import org.kimplify.deci.DeciContext
 import org.kimplify.deci.extension.toLong
 import org.kimplify.deci.parser.DECIMAL_REGEX
 
@@ -35,7 +36,10 @@ fun String.toDeciOrError(): Result<Deci> {
  * @param max Maximum value (inclusive)
  * @return True if this value is within the range
  */
-fun Deci.isInRange(min: Deci, max: Deci): Boolean {
+fun Deci.isInRange(
+    min: Deci,
+    max: Deci,
+): Boolean {
     require(min <= max) { "Min value ($min) must be less than or equal to max value ($max)" }
     return this >= min && this <= max
 }
@@ -47,7 +51,10 @@ fun Deci.isInRange(min: Deci, max: Deci): Boolean {
  * @param max Maximum value
  * @return This value clamped to the range [min, max]
  */
-fun Deci.clamp(min: Deci, max: Deci): Deci {
+fun Deci.clamp(
+    min: Deci,
+    max: Deci,
+): Deci {
     require(min <= max) { "Min value ($min) must be less than or equal to max value ($max)" }
     return when {
         this < min -> min
@@ -91,12 +98,20 @@ fun Deci.isOdd(): Boolean {
 /**
  * Safely divides this Deci by another, returning a default value if division by zero.
  *
- * @param divisor The divisor
- * @param default Default value to return if divisor is zero (default: Deci.ZERO)
- * @return The division result or default value
+ * Division is performed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param divisor The divisor.
+ * @param default Default value to return if divisor is zero (default: Deci.ZERO).
+ * @param context The [DeciContext] controlling precision and rounding of the division.
+ * @return The division result or default value.
  */
-fun Deci.safeDivide(divisor: Deci, default: Deci = Deci.ZERO): Deci {
-    return if (divisor.isZero()) default else this / divisor
+fun Deci.safeDivide(
+    divisor: Deci,
+    default: Deci = Deci.ZERO,
+    context: DeciContext = DeciContext.DEFAULT,
+): Deci {
+    return if (divisor.isZero()) default else this.divide(divisor, context)
 }
 
 /**
@@ -141,7 +156,10 @@ fun Deci.isValidCurrencyAmount(currency: String = "USD"): Boolean {
  * @param allowOver100 Whether percentages over 100 are allowed (default: false)
  * @return True if this is a valid percentage
  */
-fun Deci.isValidPercentage(allowNegative: Boolean = false, allowOver100: Boolean = false): Boolean {
+fun Deci.isValidPercentage(
+    allowNegative: Boolean = false,
+    allowOver100: Boolean = false,
+): Boolean {
     val min = if (allowNegative) Deci("-100") else Deci.ZERO
     val max = if (allowOver100) Deci("1000") else Deci("100") // Reasonable upper limit
     return isInRange(min, max)
@@ -185,7 +203,10 @@ fun Deci.isValidInterestRate(maxRate: Deci = Deci.ONE): Boolean {
  * @param tolerance The tolerance for comparison (default: 0.000001)
  * @return True if values are approximately equal
  */
-fun Deci.isApproximatelyEqual(other: Deci, tolerance: Deci = Deci("0.000001")): Boolean {
+fun Deci.isApproximatelyEqual(
+    other: Deci,
+    tolerance: Deci = Deci("0.000001"),
+): Boolean {
     return (this - other).abs() <= tolerance
 }
 
@@ -198,19 +219,24 @@ fun Deci.isApproximatelyEqual(other: Deci, tolerance: Deci = Deci("0.000001")): 
  * @param mustBePositive Whether value must be positive (default: false)
  * @return Validation result with error message if invalid
  */
+/**
+ * Result of a [Deci] validation check.
+ *
+ * @property isValid `true` if the value passed all validation constraints.
+ * @property errorMessage a human-readable error description, or `null` when valid.
+ */
 data class ValidationResult(val isValid: Boolean, val errorMessage: String? = null)
 
 fun Deci.validateForForm(
     minValue: Deci? = null,
     maxValue: Deci? = null,
     maxDecimalPlaces: Int? = null,
-    mustBePositive: Boolean = false
+    mustBePositive: Boolean = false,
 ): ValidationResult {
-
     if (mustBePositive && !isPositiveStrict()) {
         return ValidationResult(
             false,
-            "Value must be positive"
+            "Value must be positive",
         )
     }
 
@@ -218,7 +244,7 @@ fun Deci.validateForForm(
         if (this < min) {
             return ValidationResult(
                 false,
-                "Value must be at least $min"
+                "Value must be at least $min",
             )
         }
     }
@@ -227,7 +253,7 @@ fun Deci.validateForForm(
         if (this > max) {
             return ValidationResult(
                 false,
-                "Value must be at most $max"
+                "Value must be at most $max",
             )
         }
     }
@@ -236,7 +262,7 @@ fun Deci.validateForForm(
         if (!hasValidDecimalPlaces(places)) {
             return ValidationResult(
                 false,
-                "Value can have at most $places decimal places"
+                "Value can have at most $places decimal places",
             )
         }
     }

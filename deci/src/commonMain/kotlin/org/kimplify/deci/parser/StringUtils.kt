@@ -32,21 +32,22 @@ internal fun String.normalizeDecimalString(): String {
     val hasComma = lastCommaIndex >= 0
     val hasDot = lastDotIndex >= 0
 
-    val normalized = when {
-        !hasComma && !hasDot ->
-            normalizeInteger(unsigned)
+    val normalized =
+        when {
+            !hasComma && !hasDot ->
+                normalizeInteger(unsigned)
 
-        hasComma && !hasDot ->
-            normalizeWithDecimal(unsigned, lastCommaIndex)
+            hasComma && !hasDot ->
+                normalizeWithDecimal(unsigned, lastCommaIndex)
 
-        !hasComma && hasDot ->
-            normalizeWithDecimal(unsigned, lastDotIndex)
+            !hasComma && hasDot ->
+                normalizeWithDecimal(unsigned, lastDotIndex)
 
-        else -> {
-            val lastSeparatorIndex = maxOf(lastCommaIndex, lastDotIndex)
-            normalizeWithDecimal(unsigned, lastSeparatorIndex)
+            else -> {
+                val lastSeparatorIndex = maxOf(lastCommaIndex, lastDotIndex)
+                normalizeWithDecimal(unsigned, lastSeparatorIndex)
+            }
         }
-    }
 
     return if (isNegative) "-$normalized" else normalized
 }
@@ -55,8 +56,7 @@ internal fun String.normalizeDecimalString(): String {
  * Normalizes a string that should be treated as an integer:
  * removes any '.' or ',' characters.
  */
-private fun normalizeInteger(raw: String): String =
-    raw.filterNot { it == '.' || it == ',' }
+private fun normalizeInteger(raw: String): String = raw.filterNot { it == '.' || it == ',' }
 
 /**
  * Normalizes a string that has a decimal separator at [decimalIndex].
@@ -66,7 +66,10 @@ private fun normalizeInteger(raw: String): String =
  * - Everything after the separator is the decimal part (kept as-is).
  * - Ensures there is at least "0" before the decimal point.
  */
-private fun normalizeWithDecimal(raw: String, decimalIndex: Int): String {
+private fun normalizeWithDecimal(
+    raw: String,
+    decimalIndex: Int,
+): String {
     val integerPartRaw = raw.substring(0, decimalIndex)
     val decimalPart = raw.substring(decimalIndex + 1)
 

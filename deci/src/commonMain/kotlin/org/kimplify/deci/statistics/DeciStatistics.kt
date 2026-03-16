@@ -2,6 +2,7 @@ package org.kimplify.deci.statistics
 
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciConstants
+import org.kimplify.deci.DeciContext
 import org.kimplify.deci.ExperimentalDeciApi
 import org.kimplify.deci.extension.sumDeci
 import org.kimplify.deci.math.sqrt
@@ -13,22 +14,31 @@ import org.kimplify.deci.math.sqrt
 /**
  * Calculates the arithmetic mean (average) of the collection.
  *
- * @return The mean value, or null if collection is empty
+ * Division is performed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param context The [DeciContext] controlling precision and rounding of the division.
+ * @return The mean value, or null if collection is empty.
  */
 @ExperimentalDeciApi
-fun Iterable<Deci>.mean(): Deci? {
+fun Iterable<Deci>.mean(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
-    return values.sumDeci() / Deci(values.size)
+    return values.sumDeci().divide(Deci(values.size), context)
 }
 
 /**
  * Calculates the median (middle value) of the collection.
  *
- * @return The median value, or null if collection is empty
+ * For even-sized collections, the median is the average of the two middle values.
+ * Division is performed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param context The [DeciContext] controlling precision and rounding of the division.
+ * @return The median value, or null if collection is empty.
  */
 @ExperimentalDeciApi
-fun Iterable<Deci>.median(): Deci? {
+fun Iterable<Deci>.median(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val sorted = this.toList().sorted()
     if (sorted.isEmpty()) return null
 
@@ -36,7 +46,7 @@ fun Iterable<Deci>.median(): Deci? {
     return if (size % 2 == 0) {
         val mid1 = sorted[size / 2 - 1]
         val mid2 = sorted[size / 2]
-        (mid1 + mid2) / DeciConstants.TWO
+        (mid1 + mid2).divide(DeciConstants.TWO, context)
     } else {
         sorted[size / 2]
     }
@@ -77,68 +87,94 @@ fun Iterable<Deci>.range(): Deci? {
 /**
  * Calculates the variance of the collection.
  *
- * @param isPopulation True for population variance, false for sample variance
- * @return The variance, or null if collection is empty or has only one element for sample variance
+ * Division is performed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param isPopulation True for population variance, false for sample variance.
+ * @param context The [DeciContext] controlling precision and rounding of the division.
+ * @return The variance, or null if collection is empty or has only one element for sample variance.
  */
 @ExperimentalDeciApi
-fun Iterable<Deci>.variance(isPopulation: Boolean = false): Deci? {
+fun Iterable<Deci>.variance(
+    isPopulation: Boolean = false,
+    context: DeciContext = DeciContext.DEFAULT,
+): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
     if (!isPopulation && values.size <= 1) return null
 
-    val mean = values.mean() ?: return null
-    val sumOfSquares = values.fold(Deci.ZERO) { acc, value ->
-        val diff = value - mean
-        acc + (diff * diff)
-    }
+    val mean = values.mean(context) ?: return null
+    val sumOfSquares =
+        values.fold(Deci.ZERO) { acc, value ->
+            val diff = value - mean
+            acc + (diff * diff)
+        }
 
     val divisor = if (isPopulation) values.size else values.size - 1
-    return sumOfSquares / Deci(divisor)
+    return sumOfSquares.divide(Deci(divisor), context)
 }
 
 /**
  * Calculates the standard deviation of the collection.
  *
- * @param isPopulation True for population standard deviation, false for sample standard deviation
- * @return The standard deviation, or null if variance cannot be calculated
+ * Division is performed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param isPopulation True for population standard deviation, false for sample standard deviation.
+ * @param context The [DeciContext] controlling precision and rounding of the division.
+ * @return The standard deviation, or null if variance cannot be calculated.
  */
 @ExperimentalDeciApi
-fun Iterable<Deci>.standardDeviation(isPopulation: Boolean = false): Deci? {
-    val variance = variance(isPopulation) ?: return null
+fun Iterable<Deci>.standardDeviation(
+    isPopulation: Boolean = false,
+    context: DeciContext = DeciContext.DEFAULT,
+): Deci? {
+    val variance = variance(isPopulation, context) ?: return null
     return variance.sqrt()
 }
 
 /**
  * Calculates the weighted average of the collection.
  *
- * @param weights The weights for each value (must have same size as values)
- * @return The weighted average, or null if collections are empty or different sizes
+ * Division is performed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param weights The weights for each value (must have same size as values).
+ * @param context The [DeciContext] controlling precision and rounding of the division.
+ * @return The weighted average, or null if collections are empty or different sizes.
  */
 @ExperimentalDeciApi
-fun Iterable<Deci>.weightedAverage(weights: List<Deci>): Deci? {
+fun Iterable<Deci>.weightedAverage(
+    weights: List<Deci>,
+    context: DeciContext = DeciContext.DEFAULT,
+): Deci? {
     val values = this.toList()
     if (values.isEmpty() || weights.isEmpty() || values.size != weights.size) return null
 
     val weightedSum = values.zip(weights) { value, weight -> value * weight }.sumDeci()
     val totalWeight = weights.sumDeci()
 
-    return if (totalWeight.isZero()) null else weightedSum / totalWeight
+    return if (totalWeight.isZero()) null else weightedSum.divide(totalWeight, context)
 }
 
 /**
  * Calculates the harmonic mean of the collection.
  * Note: All values must be positive.
  *
- * @return The harmonic mean, or null if collection is empty or contains non-positive values
+ * Division is performed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param context The [DeciContext] controlling precision and rounding of the division.
+ * @return The harmonic mean, or null if collection is empty or contains non-positive values.
  */
 @ExperimentalDeciApi
-fun Iterable<Deci>.harmonicMean(): Deci? {
+fun Iterable<Deci>.harmonicMean(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
     if (values.any { it <= Deci.ZERO }) return null
 
-    val sumOfReciprocals = values.fold(Deci.ZERO) { acc, value -> acc + (Deci.ONE / value) }
-    return Deci(values.size) / sumOfReciprocals
+    val sumOfReciprocals = values.fold(Deci.ZERO) { acc, value -> acc + Deci.ONE.divide(value, context) }
+    return Deci(values.size).divide(sumOfReciprocals, context)
 }
 
 /**
@@ -155,14 +191,18 @@ fun Iterable<Deci>.countWhere(predicate: (Deci) -> Boolean): Int {
 /**
  * Calculates the sum of squares of deviations from the mean.
  *
- * @return Sum of squares, or null if collection is empty
+ * The mean is computed using the supplied [context] for scale and rounding.
+ * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP][org.kimplify.deci.RoundingMode.HALF_UP]) is used.
+ *
+ * @param context The [DeciContext] controlling precision and rounding of the mean division.
+ * @return Sum of squares, or null if collection is empty.
  */
 @ExperimentalDeciApi
-fun Iterable<Deci>.sumOfSquares(): Deci? {
+fun Iterable<Deci>.sumOfSquares(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
 
-    val mean = values.mean() ?: return null
+    val mean = values.mean(context) ?: return null
     return values.fold(Deci.ZERO) { acc, value ->
         val deviation = value - mean
         acc + (deviation * deviation)

@@ -13,5 +13,5 @@ enum class RoundingMode {
     FLOOR,
     HALF_UP,
     HALF_DOWN,
-    HALF_EVEN
+    HALF_EVEN,
 }
