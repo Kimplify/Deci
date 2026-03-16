@@ -34,11 +34,10 @@ fun Deci.sqrt(precision: Int = 10): Deci {
     var x = this.divide(DeciConstants.TWO, internalContext)
     var prevX: Deci
 
-    repeat(50) { // Max iterations to prevent infinite loops
+    repeat(50) {
         prevX = x
         x = (x + this.divide(x, internalContext)).divide(DeciConstants.TWO, internalContext)
 
-        // Check for convergence
         val diff = (x - prevX).abs()
         if (diff.setScale(precision + 2, RoundingMode.HALF_UP).isZero()) {
             return@repeat
@@ -90,7 +89,6 @@ private fun Deci.powPositive(exponent: Int): Deci {
     var base = this
     var exp = exponent
 
-    // Fast exponentiation to avoid recursion
     while (exp > 0) {
         if (exp and 1 == 1) {
             result *= base

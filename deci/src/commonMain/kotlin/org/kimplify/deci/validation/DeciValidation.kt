@@ -127,7 +127,7 @@ fun Deci.hasValidDecimalPlaces(maxDecimalPlaces: Int): Boolean {
     val decimalIndex = str.indexOf('.')
 
     return if (decimalIndex == -1) {
-        true // No decimal part
+        true
     } else {
         val decimalPart = str.substring(decimalIndex + 1)
         decimalPart.length <= maxDecimalPlaces
@@ -143,9 +143,9 @@ fun Deci.hasValidDecimalPlaces(maxDecimalPlaces: Int): Boolean {
 fun Deci.isValidCurrencyAmount(currency: String = "USD"): Boolean {
     return when (currency.uppercase()) {
         "USD", "EUR", "GBP", "CAD", "AUD" -> hasValidDecimalPlaces(2)
-        "JPY", "KRW" -> isWhole() // These currencies typically don't use decimal places
-        "BTC" -> hasValidDecimalPlaces(8) // Bitcoin precision
-        else -> hasValidDecimalPlaces(2) // Default to 2 decimal places
+        "JPY", "KRW" -> isWhole()
+        "BTC" -> hasValidDecimalPlaces(8)
+        else -> hasValidDecimalPlaces(2)
     }
 }
 
@@ -161,7 +161,7 @@ fun Deci.isValidPercentage(
     allowOver100: Boolean = false,
 ): Boolean {
     val min = if (allowNegative) Deci("-100") else Deci.ZERO
-    val max = if (allowOver100) Deci("1000") else Deci("100") // Reasonable upper limit
+    val max = if (allowOver100) Deci("1000") else Deci("100")
     return isInRange(min, max)
 }
 

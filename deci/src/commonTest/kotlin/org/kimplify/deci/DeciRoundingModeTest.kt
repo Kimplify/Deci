@@ -17,8 +17,6 @@ class DeciRoundingModeTest {
         val expected: String,
     )
 
-    // ========== setScale exhaustive table ==========
-
     @Test
     fun `setScale rounding table - positive odd-digit midpoint 1_235`() {
         val cases =
@@ -184,11 +182,8 @@ class DeciRoundingModeTest {
         assertAllCases(cases)
     }
 
-    // ========== Division rounding at 0.5 boundary ==========
-
     @Test
     fun `divide 1 by 3 scale 2 all modes`() {
-        // 1/3 = 0.333... → digit after scale is 3, below midpoint
         val cases =
             listOf(
                 Case("1", 2, RoundingMode.UP, "0.34"),
@@ -211,7 +206,6 @@ class DeciRoundingModeTest {
 
     @Test
     fun `divide 1 by 2 scale 0 all modes - exact 0_5 boundary`() {
-        // 1/2 = 0.5 → exact midpoint at scale 0
         val cases =
             listOf(
                 Case("1", 0, RoundingMode.UP, "1"),
@@ -234,7 +228,6 @@ class DeciRoundingModeTest {
 
     @Test
     fun `divide neg1 by 2 scale 0 all modes - negative 0_5 boundary`() {
-        // -1/2 = -0.5 → exact midpoint at scale 0, negative
         val cases =
             listOf(
                 Case("-1", 0, RoundingMode.UP, "-1"),
@@ -254,8 +247,6 @@ class DeciRoundingModeTest {
             )
         }
     }
-
-    // ========== Additional midpoint tests at scale 0 ==========
 
     @Test
     fun `setScale 0 on 2_5 all modes`() {
@@ -286,8 +277,6 @@ class DeciRoundingModeTest {
             )
         assertAllCases(cases)
     }
-
-    // ========== Helper ==========
 
     private fun assertAllCases(cases: List<Case>) {
         for (case in cases) {

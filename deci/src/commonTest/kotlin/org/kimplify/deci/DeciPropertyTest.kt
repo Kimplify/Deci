@@ -53,8 +53,6 @@ class DeciPropertyTest {
         return result
     }
 
-    // ========== Addition ==========
-
     @Test
     fun `addition is commutative`() =
         runTest {
@@ -95,8 +93,6 @@ class DeciPropertyTest {
             }
         }
 
-    // ========== Multiplication ==========
-
     @Test
     fun `multiplication is commutative`() =
         runTest {
@@ -108,7 +104,6 @@ class DeciPropertyTest {
     @Test
     fun `multiplication is associative`() =
         runTest {
-            // Use smaller ranges to avoid extremely large intermediate values
             val smallArb =
                 arbitrary { rs ->
                     val intPart = Arb.int(-999..999).bind()
@@ -135,8 +130,6 @@ class DeciPropertyTest {
             }
         }
 
-    // ========== Distributivity ==========
-
     @Test
     fun `multiplication distributes over addition`() =
         runTest {
@@ -158,8 +151,6 @@ class DeciPropertyTest {
             }
         }
 
-    // ========== Negation ==========
-
     @Test
     fun `double negation returns original`() =
         runTest {
@@ -167,8 +158,6 @@ class DeciPropertyTest {
                 assertEquals(a, -(-a), "a=$a")
             }
         }
-
-    // ========== Absolute Value ==========
 
     @Test
     fun `absolute value is non-negative`() =
@@ -185,8 +174,6 @@ class DeciPropertyTest {
                 assertEquals(a.abs(), (-a).abs(), "a=$a")
             }
         }
-
-    // ========== Comparison ==========
 
     @Test
     fun `comparison is antisymmetric`() =

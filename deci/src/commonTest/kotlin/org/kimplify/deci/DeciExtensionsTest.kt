@@ -17,8 +17,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class DeciExtensionsTest {
-    // -- Int.toDeci --
-
     @Test
     fun `Int toDeci creates correct value`() {
         assertEquals(Deci("42"), 42.toDeci())
@@ -34,8 +32,6 @@ class DeciExtensionsTest {
         assertEquals(Deci("-7"), (-7).toDeci())
     }
 
-    // -- Long.toDeci --
-
     @Test
     fun `Long toDeci creates correct value`() {
         assertEquals(Deci("9999999999"), 9999999999L.toDeci())
@@ -45,8 +41,6 @@ class DeciExtensionsTest {
     fun `Long toDeci handles zero`() {
         assertEquals(Deci.ZERO, 0L.toDeci())
     }
-
-    // -- String.toDeci --
 
     @Test
     fun `String toDeci creates correct value`() {
@@ -59,8 +53,6 @@ class DeciExtensionsTest {
             "not-a-number".toDeci()
         }
     }
-
-    // -- String.toDeciOrNull --
 
     @Test
     fun `String toDeciOrNull returns Deci for valid input`() {
@@ -79,8 +71,6 @@ class DeciExtensionsTest {
         assertNull("".toDeciOrNull())
     }
 
-    // -- Double.toDeci --
-
     @Test
     fun `Double toDeci creates correct value for exact doubles`() {
         assertEquals(Deci("1.5"), 1.5.toDeci())
@@ -96,8 +86,6 @@ class DeciExtensionsTest {
         assertEquals(Deci("-2.5"), (-2.5).toDeci())
     }
 
-    // -- toLong / toLongOrNull / toLongExact --
-
     @Test
     fun `toLong for exact integer`() {
         assertEquals(42L, Deci("42").toLong())
@@ -110,7 +98,6 @@ class DeciExtensionsTest {
 
     @Test
     fun `toLongOrNull returns null for non-representable value`() {
-        // A value far beyond Long range
         assertNull(Deci("99999999999999999999").toLongOrNull())
     }
 
@@ -125,8 +112,6 @@ class DeciExtensionsTest {
             Deci("99999999999999999999").toLongExact()
         }
     }
-
-    // -- scale and precision --
 
     @Test
     fun `scale of integer is zero`() {
@@ -150,8 +135,6 @@ class DeciExtensionsTest {
         assertEquals(4, Deci("0.001").precision())
     }
 
-    // -- sumDeci --
-
     @Test
     fun `sumDeci of empty list is ZERO`() {
         assertEquals(Deci.ZERO, emptyList<Deci>().sumDeci())
@@ -167,8 +150,6 @@ class DeciExtensionsTest {
     fun `sumDeci of single element`() {
         assertEquals(Deci("42"), listOf(Deci("42")).sumDeci())
     }
-
-    // -- String.toDeci edge cases --
 
     @Test
     fun `String toDeci with comma separator`() {

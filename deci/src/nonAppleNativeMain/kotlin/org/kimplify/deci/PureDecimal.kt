@@ -50,7 +50,6 @@ internal class PureDecimal private constructor(
             val digits = intPart + fracPart
             val scale = fracPart.length
 
-            // Strip leading zeros but keep at least one digit
             val stripped = digits.trimStart('0')
             val effectiveDigits = stripped.ifEmpty { "0" }
 
@@ -132,8 +131,6 @@ internal class PureDecimal private constructor(
         if (sign >= 0) this
         else PureDecimal(sign = 1, limbs = limbs.copyOf(), scale = scale)
 
-    // ── Arithmetic ────────────────────────────────────────
-
     operator fun plus(other: PureDecimal): PureDecimal {
         val (a, b) = alignScales(this, other)
         return if (a.sign == b.sign) {
@@ -168,18 +165,15 @@ internal class PureDecimal private constructor(
 
         val resultSign = if (this.sign == other.sign) 1 else -1
 
-        // We need (resultScale + 1) extra decimal digits beyond this.scale - other.scale
-        // to have a guard digit for rounding.
         val extraDigits = resultScale + 1 + other.scale - this.scale
         val scaledDividend = if (extraDigits > 0) {
             multiplyByPowerOf10(this.limbs, extraDigits)
         } else if (extraDigits < 0) {
-            multiplyByPowerOf10(this.limbs, 0) // no scaling needed, but let's keep dividend as-is
+            multiplyByPowerOf10(this.limbs, 0)
         } else {
             this.limbs.copyOf()
         }
 
-        // If extraDigits < 0, we need to scale the divisor instead
         val scaledDivisor = if (extraDigits < 0) {
             multiplyByPowerOf10(other.limbs, -extraDigits)
         } else {
@@ -188,8 +182,6 @@ internal class PureDecimal private constructor(
 
         val (quotient, remainder) = divideWithRemainder(scaledDividend, scaledDivisor)
 
-        // quotient now has (resultScale + 1) digits of precision.
-        // We need to round to resultScale digits, using the guard digit.
         val rounded = roundQuotient(quotient, remainder, scaledDivisor, resultScale, resultSign, roundingMode)
         return fromComponents(resultSign, rounded, resultScale)
     }
@@ -198,12 +190,10 @@ internal class PureDecimal private constructor(
         if (newScale == this.scale) return this
 
         return if (newScale > this.scale) {
-            // Increase scale by multiplying limbs by 10^(newScale - scale)
             val extraDigits = newScale - this.scale
             val newLimbs = multiplyByPowerOf10(this.limbs, extraDigits)
             fromComponents(sign, newLimbs, newScale)
         } else {
-            // Decrease scale: need to divide by 10^(scale - newScale) and round
             val removeDigits = this.scale - newScale
             val divisorLimbs = powerOf10Limbs(removeDigits)
             val (quotient, remainder) = divideWithRemainder(this.limbs, divisorLimbs)
@@ -229,8 +219,6 @@ internal class PureDecimal private constructor(
     override fun hashCode(): Int = stripTrailingZeros().toCanonicalString().hashCode()
 
     override fun toString(): String = toFormattedString()
-
-    // ── String conversion ─────────────────────────────────
 
     private fun toFormattedString(): String {
         val digits = limbsToDigits(limbs)
@@ -268,8 +256,6 @@ internal class PureDecimal private constructor(
         val effectiveDigits = newDigits.ifEmpty { "0" }
         return PureDecimal(sign, digitsToLimbs(effectiveDigits), scale - removable)
     }
-
-    // ── Magnitude arithmetic (unsigned) ───────────────────
 
     private fun addMagnitudes(a: LongArray, b: LongArray): LongArray {
         val maxLen = maxOf(a.size, b.size)
@@ -332,8 +318,6 @@ internal class PureDecimal private constructor(
         return len
     }
 
-    // ── Scale alignment ───────────────────────────────────
-
     private fun alignScales(a: PureDecimal, b: PureDecimal): Pair<PureDecimal, PureDecimal> {
         if (a.scale == b.scale) return a to b
         return if (a.scale > b.scale) {
@@ -345,17 +329,12 @@ internal class PureDecimal private constructor(
         }
     }
 
-    // ── Power-of-10 helpers ───────────────────────────────
-
     private fun multiplyByPowerOf10(limbs: LongArray, power: Int): LongArray {
         if (power == 0) return limbs.copyOf()
 
-        // Multiply by 10^power digit-by-digit using repeated multiply-by-10
-        // For efficiency, process LIMB_DIGITS at a time
         val fullLimbs = power / LIMB_DIGITS
         val remainderPow = power % LIMB_DIGITS
 
-        // Shift by full limbs (multiply by BASE^fullLimbs)
         var result = if (fullLimbs > 0) {
             val shifted = LongArray(limbs.size + fullLimbs)
             limbs.copyInto(shifted, destinationOffset = fullLimbs)
@@ -364,7 +343,6 @@ internal class PureDecimal private constructor(
             limbs.copyOf()
         }
 
-        // Multiply by 10^remainderPow
         if (remainderPow > 0) {
             val multiplier = pow10(remainderPow)
             result = multiplySingleLimb(result, multiplier)
@@ -399,8 +377,6 @@ internal class PureDecimal private constructor(
         return stripLeadingZeroLimbs(result)
     }
 
-    // ── Division ──────────────────────────────────────────
-
     /**
      * Schoolbook long division. Returns (quotient, remainder) as limb arrays.
      */
@@ -409,7 +385,6 @@ internal class PureDecimal private constructor(
         if (cmp < 0) return longArrayOf(0L) to dividend.copyOf()
         if (cmp == 0) return longArrayOf(1L) to longArrayOf(0L)
 
-        // Single-limb divisor optimization
         if (divisor.size == 1 || (divisor.size == 2 && divisor[1] == 0L)) {
             val d = divisor[0]
             val quotient = LongArray(dividend.size)
@@ -422,8 +397,6 @@ internal class PureDecimal private constructor(
             return stripLeadingZeroLimbs(quotient) to longArrayOf(rem)
         }
 
-        // Multi-limb division using digit-by-digit approach via string conversion
-        // This is simpler and correct; performance is acceptable for financial workloads.
         return divideByDigitConversion(dividend, divisor)
     }
 
@@ -440,7 +413,6 @@ internal class PureDecimal private constructor(
 
         for (digit in dividendDigits) {
             remainder += digit
-            // Strip leading zeros from remainder
             remainder = remainder.trimStart('0').ifEmpty { "0" }
 
             var count = 0
@@ -486,8 +458,6 @@ internal class PureDecimal private constructor(
         return result.concatToString().trimStart('0').ifEmpty { "0" }
     }
 
-    // ── Rounding ──────────────────────────────────────────
-
     /**
      * Round the quotient which has one guard digit.
      * [quotient] is the raw integer quotient from division with an extra guard digit.
@@ -503,12 +473,9 @@ internal class PureDecimal private constructor(
         resultSign: Int,
         roundingMode: RoundingMode,
     ): LongArray {
-        // The quotient has one extra guard digit that we need to round away.
-        // Extract the guard digit by dividing by 10.
         val (truncated, guardRemainder) = divideWithRemainder(quotient, longArrayOf(10L))
         val guardDigit = guardRemainder[0].toInt()
 
-        // There's additional remainder if remainder != 0
         val hasMoreAfterGuard = !(remainder.size == 1 && remainder[0] == 0L)
 
         val roundUp = shouldRoundUp(guardDigit, hasMoreAfterGuard, truncated, resultSign, roundingMode)
@@ -534,19 +501,18 @@ internal class PureDecimal private constructor(
         val discardedMoreThanHalf = guardDigit > 5 || (guardDigit == 5 && hasMoreAfterGuard)
 
         return when (roundingMode) {
-            RoundingMode.UP -> true // always round away from zero
-            RoundingMode.DOWN -> false // always truncate toward zero
-            RoundingMode.CEILING -> resultSign > 0 // round toward +infinity
-            RoundingMode.FLOOR -> resultSign < 0 // round toward -infinity
+            RoundingMode.UP -> true
+            RoundingMode.DOWN -> false
+            RoundingMode.CEILING -> resultSign > 0
+            RoundingMode.FLOOR -> resultSign < 0
             RoundingMode.HALF_UP -> discardedMoreThanHalf || discardedIsExactlyHalf
             RoundingMode.HALF_DOWN -> discardedMoreThanHalf
             RoundingMode.HALF_EVEN -> {
                 if (discardedMoreThanHalf) {
                     true
                 } else if (discardedIsExactlyHalf) {
-                    // Round to even: check if truncated quotient is odd
                     val lastDigitRem = divideWithRemainder(truncatedQuotient, longArrayOf(2L))
-                    lastDigitRem.second[0] != 0L // odd → round up
+                    lastDigitRem.second[0] != 0L
                 } else {
                     false
                 }
@@ -554,14 +520,10 @@ internal class PureDecimal private constructor(
         }
     }
 
-    // ── Digit ↔ Limb conversions ──────────────────────────
-
     private fun limbsToDigits(limbs: LongArray): String {
         if (limbs.isEmpty()) return "0"
         val sb = StringBuilder()
-        // Most significant limb first (no zero-padding)
         sb.append(limbs[limbs.size - 1])
-        // Remaining limbs zero-padded to LIMB_DIGITS
         for (i in limbs.size - 2 downTo 0) {
             sb.append(limbs[i].toString().padStart(LIMB_DIGITS, '0'))
         }

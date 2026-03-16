@@ -81,7 +81,6 @@ class DeciValidationTest {
 
     @Test
     fun `safeDivide with explicit context controls precision`() {
-        // 10 / 3 = 3.33... → with precision 2 → 3.33
         val context = DeciContext(2, RoundingMode.HALF_UP)
         val result = Deci("10").safeDivide(Deci("3"), context = context)
         assertEquals(Deci("3.33"), result)

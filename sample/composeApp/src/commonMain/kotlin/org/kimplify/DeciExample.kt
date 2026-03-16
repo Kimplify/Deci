@@ -105,7 +105,7 @@ object DeciExample {
     fun demonstrateBulkOperations(): String {
         val prices = listOf(Deci("10.99"), Deci("25.50"), Deci("15.75"), Deci("8.25"))
 
-        val withTax = prices.multiplyAllBy(Deci("1.08")) // Add 8% tax
+        val withTax = prices.multiplyAllBy(Deci("1.08"))
         val average = prices.averageDeci() ?: Deci.ZERO
         val total = prices.sumDeci()
 

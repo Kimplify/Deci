@@ -19,8 +19,6 @@ import kotlin.test.assertTrue
 class DeciSerializationTest {
     private val json = Json { encodeDefaults = true }
 
-    // ========== Format ==========
-
     @Test
     fun `serializes as JSON string not JSON number`() {
         val encoded = json.encodeToString(Deci.serializer(), Deci("123.45"))
@@ -35,8 +33,6 @@ class DeciSerializationTest {
         val encoded = json.encodeToString(Deci.serializer(), Deci("123.45"))
         assertEquals("\"123.45\"", encoded)
     }
-
-    // ========== Trailing zeros ==========
 
     @Test
     fun `setScale value round-trips correctly through serialization`() {
@@ -55,8 +51,6 @@ class DeciSerializationTest {
             "Must not use scientific notation: $encoded",
         )
     }
-
-    // ========== No scientific notation ==========
 
     @Test
     fun `large number does not use scientific notation`() {
@@ -77,8 +71,6 @@ class DeciSerializationTest {
             "Moderately small number must not use scientific notation: $encoded",
         )
     }
-
-    // ========== Round-trip ==========
 
     @Test
     fun `round-trip preserves exact value`() {
@@ -108,8 +100,6 @@ class DeciSerializationTest {
         assertEquals(Deci.ZERO, restored)
     }
 
-    // ========== Invalid input rejection ==========
-
     @Test
     fun `deserialization rejects non-numeric strings`() {
         val invalidInputs = listOf("\"foo\"", "\"abc\"", "\"\"", "\"1.2.3\"", "\"--1\"")
@@ -124,7 +114,6 @@ class DeciSerializationTest {
 
     @Test
     fun `deserialization rejects bare JSON number`() {
-        // PrimitiveKind.STRING descriptor should reject unquoted number tokens
         assertFailsWith<SerializationException> {
             json.decodeFromString(Deci.serializer(), "123.45")
         }
@@ -141,8 +130,6 @@ class DeciSerializationTest {
             }
         }
     }
-
-    // ========== Valid edge cases ==========
 
     @Test
     fun `deserializes valid numeric strings`() {

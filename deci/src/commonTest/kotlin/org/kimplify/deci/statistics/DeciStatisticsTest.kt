@@ -9,8 +9,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class DeciStatisticsTest {
-    // ========== Mean Tests ==========
-
     @Test
     fun `mean returns null for empty collection`() {
         val result = emptyList<Deci>().mean()
@@ -40,8 +38,6 @@ class DeciStatisticsTest {
         val result = listOf(Deci("-10"), Deci("10"), Deci("0")).mean()
         assertEquals(Deci("0"), result)
     }
-
-    // ========== Median Tests ==========
 
     @Test
     fun `median returns null for empty collection`() {
@@ -79,8 +75,6 @@ class DeciStatisticsTest {
         assertEquals(Deci("0.5"), result)
     }
 
-    // ========== MinDeci Tests ==========
-
     @Test
     fun `minDeci returns null for empty collection`() {
         val result = emptyList<Deci>().minDeci()
@@ -104,8 +98,6 @@ class DeciStatisticsTest {
         val result = listOf(Deci("5"), Deci("-10"), Deci("0")).minDeci()
         assertEquals(Deci("-10"), result)
     }
-
-    // ========== MaxDeci Tests ==========
 
     @Test
     fun `maxDeci returns null for empty collection`() {
@@ -131,8 +123,6 @@ class DeciStatisticsTest {
         assertEquals(Deci("-1"), result)
     }
 
-    // ========== Range Tests ==========
-
     @Test
     fun `range returns null for empty collection`() {
         val result = emptyList<Deci>().range()
@@ -156,8 +146,6 @@ class DeciStatisticsTest {
         val result = listOf(Deci("-10"), Deci("10")).range()
         assertEquals(Deci("20"), result)
     }
-
-    // ========== Variance Tests ==========
 
     @Test
     fun `variance returns null for empty collection`() {
@@ -217,8 +205,6 @@ class DeciStatisticsTest {
         assertEquals(Deci("0"), result)
     }
 
-    // ========== Standard Deviation Tests ==========
-
     @Test
     fun `standardDeviation returns null for empty collection`() {
         val result = emptyList<Deci>().standardDeviation()
@@ -250,8 +236,6 @@ class DeciStatisticsTest {
         val result = listOf(Deci("3"), Deci("3"), Deci("3")).standardDeviation()
         assertEquals(Deci("0"), result)
     }
-
-    // ========== Weighted Average Tests ==========
 
     @Test
     fun `weightedAverage returns null for empty values`() {
@@ -299,8 +283,6 @@ class DeciStatisticsTest {
         assertEquals(Deci("42"), result)
     }
 
-    // ========== Harmonic Mean Tests ==========
-
     @Test
     fun `harmonicMean returns null for empty collection`() {
         val result = emptyList<Deci>().harmonicMean()
@@ -329,7 +311,6 @@ class DeciStatisticsTest {
     fun `harmonicMean calculates correctly`() {
         val result = listOf(Deci("1"), Deci("2"), Deci("4")).harmonicMean()
         assertNotNull(result)
-        // Harmonic mean of 1, 2, 4 = 3 / (1/1 + 1/2 + 1/4) = 3 / 1.75 = 1.714285...
         assertEquals(Deci("1.71428571428571428571"), result)
     }
 
@@ -338,8 +319,6 @@ class DeciStatisticsTest {
         val result = listOf(Deci("5"), Deci("5"), Deci("5")).harmonicMean()
         assertEquals(Deci("5"), result)
     }
-
-    // ========== CountWhere Tests ==========
 
     @Test
     fun `countWhere returns zero for empty collection`() {
@@ -368,8 +347,6 @@ class DeciStatisticsTest {
         assertEquals(3, result)
     }
 
-    // ========== SumOfSquares Tests ==========
-
     @Test
     fun `sumOfSquares returns null for empty collection`() {
         val result = emptyList<Deci>().sumOfSquares()
@@ -385,7 +362,6 @@ class DeciStatisticsTest {
     @Test
     fun `sumOfSquares calculates correctly`() {
         val values = listOf(Deci("1"), Deci("2"), Deci("3"))
-        // Mean = 2, deviations: -1, 0, 1, squares: 1, 0, 1, sum = 2
         val result = values.sumOfSquares()
         assertEquals(Deci("2"), result)
     }
@@ -399,12 +375,9 @@ class DeciStatisticsTest {
     @Test
     fun `sumOfSquares handles decimal values`() {
         val values = listOf(Deci("1.5"), Deci("2.5"), Deci("3.5"))
-        // Mean = 2.5, deviations: -1, 0, 1, squares: 1, 0, 1, sum = 2
         val result = values.sumOfSquares()
         assertEquals(Deci("2"), result)
     }
-
-    // ========== Explicit DeciContext Tests ==========
 
     @Test
     fun `mean with explicit context uses specified precision`() {
@@ -416,7 +389,6 @@ class DeciStatisticsTest {
 
     @Test
     fun `mean with low precision context rounds result`() {
-        // 10 / 3 = 3.33... → with precision 2 → 3.33
         val values = listOf(Deci("1"), Deci("4"), Deci("5"))
         val context = DeciContext(2, RoundingMode.HALF_UP)
         val result = values.mean(context)
@@ -436,7 +408,6 @@ class DeciStatisticsTest {
         val values = listOf(Deci("2"), Deci("4"), Deci("4"), Deci("4"), Deci("5"), Deci("5"), Deci("7"), Deci("9"))
         val result = values.variance(isPopulation = false, context = DeciContext.BANKING)
         assertNotNull(result)
-        // With 2-digit precision and HALF_EVEN, the result may differ from default
     }
 
     @Test
@@ -472,8 +443,6 @@ class DeciStatisticsTest {
         val result = values.sumOfSquares(context)
         assertEquals(Deci("2"), result)
     }
-
-    // ========== Edge Cases and Integration Tests ==========
 
     @Test
     fun `statistics work with large numbers`() {

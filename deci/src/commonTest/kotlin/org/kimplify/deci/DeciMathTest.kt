@@ -73,21 +73,18 @@ class DeciMathTest {
 
     @Test
     fun `pow with negative exponent uses explicit context`() {
-        // 2^-3 = 1/8 = 0.125
         val result = Deci("2").pow(Deci("-3"), DeciContext(2, RoundingMode.HALF_UP))
         assertEquals(Deci("0.13"), result)
     }
 
     @Test
     fun `pow with negative exponent uses default context`() {
-        // 2^-3 = 1/8 = 0.125
         val result = Deci("2").pow(Deci("-3"))
         assertEquals(Deci("0.125"), result)
     }
 
     @Test
     fun `pow with BANKING context rounds with HALF_EVEN`() {
-        // 2^-1 = 0.5 → with HALF_EVEN, 2 digits → 0.50
         val result = Deci("2").pow(Deci("-1"), DeciContext.BANKING)
         assertEquals(Deci("0.50"), result)
     }

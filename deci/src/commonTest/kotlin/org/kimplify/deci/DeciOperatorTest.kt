@@ -8,8 +8,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class DeciOperatorTest {
-    // -- unaryMinus --
-
     @Test
     fun `unaryMinus negates positive value`() {
         assertEquals(Deci("-5"), -Deci("5"))
@@ -35,8 +33,6 @@ class DeciOperatorTest {
     fun `unaryMinus preserves scale`() {
         assertEquals(Deci("-1.50"), -Deci("1.50"))
     }
-
-    // -- rem --
 
     @Test
     fun `rem returns correct remainder`() {
@@ -76,8 +72,6 @@ class DeciOperatorTest {
     fun `rem with small decimals`() {
         assertEquals(Deci("0.1"), Deci("1.1") % Deci("0.5"))
     }
-
-    // -- Comparison operators --
 
     @Test
     fun `less than operator`() {

@@ -21,8 +21,6 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 class DeciExceptionTest {
-    // -- Hierarchy catchability --
-
     @Test
     fun `DeciParseException is catchable as DeciException`() {
         val ex = assertFailsWith<DeciException> { Deci("not-a-number") }
@@ -61,8 +59,6 @@ class DeciExceptionTest {
         }
     }
 
-    // -- Property access --
-
     @Test
     fun `DeciParseException carries rawValue`() {
         val ex = assertFailsWith<DeciParseException> { Deci("abc") }
@@ -100,8 +96,6 @@ class DeciExceptionTest {
         assertEquals("xxx", ex.pattern)
     }
 
-    // -- Serialization exception --
-
     @Test
     fun `DeciSerializationException wraps DeciParseException cause`() {
         val parseEx = DeciParseException("bad")
@@ -110,8 +104,6 @@ class DeciExceptionTest {
         assertNotNull(serEx.cause)
         assertIs<DeciParseException>(serEx.cause)
     }
-
-    // -- Math exceptions --
 
     @Test
     fun `sqrt of negative throws DeciArithmeticException`() {
@@ -132,8 +124,6 @@ class DeciExceptionTest {
     fun `roundToNearest zero throws DeciDivisionByZeroException`() {
         assertFailsWith<DeciDivisionByZeroException> { Deci("5").roundToNearest(Deci.ZERO) }
     }
-
-    // -- Division exceptions in divide function --
 
     @Test
     fun `divide function with zero divisor throws DeciDivisionByZeroException`() {
