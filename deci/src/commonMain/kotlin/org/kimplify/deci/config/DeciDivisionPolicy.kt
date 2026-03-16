@@ -11,7 +11,7 @@ import kotlin.concurrent.Volatile
  */
 data class DeciDivisionPolicy(
     val fractionalDigits: Int,
-    val roundingMode: RoundingMode
+    val roundingMode: RoundingMode,
 ) {
     init {
         require(fractionalDigits >= 0) {
@@ -28,11 +28,16 @@ data class DeciDivisionPolicy(
  * [loggingEnabled] are thread-safe via @Volatile but not reactive.
  */
 object DeciConfiguration {
-    private val defaultDivisionPolicy = DeciDivisionPolicy(
-        fractionalDigits = 20,
-        roundingMode = RoundingMode.HALF_UP
-    )
+    private val defaultDivisionPolicy =
+        DeciDivisionPolicy(
+            fractionalDigits = 20,
+            roundingMode = RoundingMode.HALF_UP,
+        )
 
+    @Deprecated(
+        message = "Use DeciContext and the divide(other, context) overload instead.",
+        replaceWith = ReplaceWith("DeciContext", "org.kimplify.deci.DeciContext"),
+    )
     @Volatile
     var divisionPolicy: DeciDivisionPolicy = defaultDivisionPolicy
 
