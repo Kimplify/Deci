@@ -10,6 +10,7 @@ public final class org/kimplify/deci/Deci : java/lang/Comparable {
 	public fun compareTo (Lorg/kimplify/deci/Deci;)I
 	public final fun div (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
 	public final fun divide (Lorg/kimplify/deci/Deci;ILorg/kimplify/deci/RoundingMode;)Lorg/kimplify/deci/Deci;
+	public final fun divide (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun isNegative ()Z
@@ -20,10 +21,12 @@ public final class org/kimplify/deci/Deci : java/lang/Comparable {
 	public final fun minus (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
 	public final fun negate ()Lorg/kimplify/deci/Deci;
 	public final fun plus (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public final fun rem (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
 	public final fun setScale (ILorg/kimplify/deci/RoundingMode;)Lorg/kimplify/deci/Deci;
 	public final fun times (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
 	public final fun toDouble ()D
 	public fun toString ()Ljava/lang/String;
+	public final fun unaryMinus ()Lorg/kimplify/deci/Deci;
 }
 
 public final class org/kimplify/deci/Deci$Companion {
@@ -48,6 +51,26 @@ public final class org/kimplify/deci/DeciConstants {
 	public final fun getPI ()Lorg/kimplify/deci/Deci;
 	public final fun getTHOUSAND ()Lorg/kimplify/deci/Deci;
 	public final fun getTWO ()Lorg/kimplify/deci/Deci;
+}
+
+public final class org/kimplify/deci/DeciContext {
+	public static final field Companion Lorg/kimplify/deci/DeciContext$Companion;
+	public fun <init> (ILorg/kimplify/deci/RoundingMode;)V
+	public final fun component1 ()I
+	public final fun component2 ()Lorg/kimplify/deci/RoundingMode;
+	public final fun copy (ILorg/kimplify/deci/RoundingMode;)Lorg/kimplify/deci/DeciContext;
+	public static synthetic fun copy$default (Lorg/kimplify/deci/DeciContext;ILorg/kimplify/deci/RoundingMode;ILjava/lang/Object;)Lorg/kimplify/deci/DeciContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPrecision ()I
+	public final fun getRoundingMode ()Lorg/kimplify/deci/RoundingMode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/kimplify/deci/DeciContext$Companion {
+	public final fun getBANKING ()Lorg/kimplify/deci/DeciContext;
+	public final fun getCURRENCY_USD ()Lorg/kimplify/deci/DeciContext;
+	public final fun getDEFAULT ()Lorg/kimplify/deci/DeciContext;
 }
 
 public final class org/kimplify/deci/DeciSerializer : kotlinx/serialization/KSerializer {
@@ -98,10 +121,61 @@ public final class org/kimplify/deci/config/DeciDivisionPolicy {
 	public fun toString ()Ljava/lang/String;
 }
 
+public class org/kimplify/deci/exception/DeciArithmeticException : org/kimplify/deci/exception/DeciException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/kimplify/deci/exception/DeciDivisionByZeroException : org/kimplify/deci/exception/DeciArithmeticException {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public abstract class org/kimplify/deci/exception/DeciException : java/lang/RuntimeException {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/kimplify/deci/exception/DeciFormatException : org/kimplify/deci/exception/DeciException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getPattern ()Ljava/lang/String;
+}
+
+public final class org/kimplify/deci/exception/DeciOverflowException : org/kimplify/deci/exception/DeciArithmeticException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getValue ()Ljava/lang/String;
+}
+
+public final class org/kimplify/deci/exception/DeciParseException : org/kimplify/deci/exception/DeciException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getRawValue ()Ljava/lang/String;
+}
+
+public final class org/kimplify/deci/exception/DeciScaleException : org/kimplify/deci/exception/DeciException {
+	public fun <init> (ILjava/lang/String;)V
+	public synthetic fun <init> (ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getScale ()I
+}
+
+public final class org/kimplify/deci/exception/DeciSerializationException : org/kimplify/deci/exception/DeciException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getRawValue ()Ljava/lang/String;
+}
+
 public final class org/kimplify/deci/extension/DeciExtensionsKt {
 	public static final fun precision (Lorg/kimplify/deci/Deci;)I
 	public static final fun scale (Lorg/kimplify/deci/Deci;)I
 	public static final fun sumDeci (Ljava/lang/Iterable;)Lorg/kimplify/deci/Deci;
+	public static final fun toDeci (D)Lorg/kimplify/deci/Deci;
+	public static final fun toDeci (I)Lorg/kimplify/deci/Deci;
+	public static final fun toDeci (J)Lorg/kimplify/deci/Deci;
+	public static final fun toDeci (Ljava/lang/String;)Lorg/kimplify/deci/Deci;
+	public static final fun toDeciOrNull (Ljava/lang/String;)Lorg/kimplify/deci/Deci;
 	public static final fun toLong (Lorg/kimplify/deci/Deci;)J
 	public static final fun toLongExact (Lorg/kimplify/deci/Deci;)J
 	public static final fun toLongOrNull (Lorg/kimplify/deci/Deci;)Ljava/lang/Long;
@@ -126,8 +200,8 @@ public final class org/kimplify/deci/validation/DeciValidationKt {
 	public static synthetic fun isValidPercentage$default (Lorg/kimplify/deci/Deci;ZZILjava/lang/Object;)Z
 	public static final fun isValidTaxRate (Lorg/kimplify/deci/Deci;)Z
 	public static final fun isWhole (Lorg/kimplify/deci/Deci;)Z
-	public static final fun safeDivide (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
-	public static synthetic fun safeDivide$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun safeDivide (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun safeDivide$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
 	public static final fun toDeciOrError (Ljava/lang/String;)Ljava/lang/Object;
 	public static final fun validateForForm (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Ljava/lang/Integer;Z)Lorg/kimplify/deci/validation/ValidationResult;
 	public static synthetic fun validateForForm$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Ljava/lang/Integer;ZILjava/lang/Object;)Lorg/kimplify/deci/validation/ValidationResult;
