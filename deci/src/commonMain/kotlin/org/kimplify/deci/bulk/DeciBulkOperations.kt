@@ -129,7 +129,7 @@ fun Iterable<Deci>.normalize(context: DeciContext = DeciContext.DEFAULT): List<D
     val range = max - min
 
     return if (range.isZero()) {
-        values // All values are the same
+        values
     } else {
         values.map { (it - min).divide(range, context) }
     }
