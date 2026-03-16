@@ -1,9 +1,10 @@
 rootProject.name = "Deci"
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
-            content { 
+            content {
               	includeGroupByRegex("com\\.android.*")
               	includeGroupByRegex("com\\.google.*")
               	includeGroupByRegex("androidx.*")

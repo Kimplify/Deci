@@ -1,72 +1,59 @@
-@file:OptIn(ExperimentalWasmDsl::class)
-
-import org.gradle.api.artifacts.VersionCatalog
-import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-
 plugins {
-    alias(libs.plugins.multiplatform)
-    alias(libs.plugins.android.library)
+    id("deci.kmp.library")
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.ktlint)
-    alias(libs.plugins.binary.compatibility.validator)
 }
 
-val libsCatalog: VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+val libsCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 val deciVersion: String = libsCatalog.findVersion("version").get().requiredVersion
 
 kotlin {
-    jvmToolchain(21)
-
-    androidTarget { publishLibraryVariants("release") }
-    jvm()
-    wasmJs { browser() }
-    js { browser() }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    applyDefaultHierarchyTemplate()
-
     sourceSets {
+        // Custom intermediate source set for Linux + Windows (non-Apple native)
+        val nonAppleNativeMain by creating { dependsOn(nativeMain.get()) }
+        val linuxX64Main by getting { dependsOn(nonAppleNativeMain) }
+        val mingwX64Main by getting { dependsOn(nonAppleNativeMain) }
+
+        val nonAppleNativeTest by creating { dependsOn(commonTest.get()) }
+        val linuxX64Test by getting { dependsOn(nonAppleNativeTest) }
+        val mingwX64Test by getting { dependsOn(nonAppleNativeTest) }
+
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.cedar.logger)
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.kotest.property)
         }
 
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.cedar.logger)
         }
 
         jvmMain.dependencies {
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.cedar.logger)
         }
 
         jsMain.dependencies {
             implementation(npm("decimal.js", "10.6.0"))
+            implementation(libs.cedar.logger)
         }
 
         wasmJsMain.dependencies {
             implementation(npm("decimal.js", "10.6.0"))
+            implementation(libs.cedar.logger)
+        }
+
+        val iosMain by getting
+        iosMain.dependencies {
+            implementation(libs.cedar.logger)
         }
     }
-
-    //https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers
-    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
-        compilations["main"].compileTaskProvider.configure {
-            compilerOptions {
-                freeCompilerArgs.add("-Xexport-kdoc")
-            }
-        }
-    }
-
 }
 
 apiValidation {
@@ -82,8 +69,8 @@ android {
     }
 }
 
-//Publishing your Kotlin Multiplatform library to Maven Central
-//https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html
+// Publishing your Kotlin Multiplatform library to Maven Central
+// https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
