@@ -1,16 +1,18 @@
 package org.kimplify.deci
 
-import org.kimplify.deci.math.sqrt
-import org.kimplify.deci.math.pow
+import org.kimplify.deci.exception.DeciArithmeticException
+import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.math.mod
+import org.kimplify.deci.math.pow
+import org.kimplify.deci.math.remainder
 import org.kimplify.deci.math.roundToNearest
 import org.kimplify.deci.math.roundToSignificantDigits
+import org.kimplify.deci.math.sqrt
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class DeciMathTest {
-
     @Test
     fun `sqrt calculates square root correctly`() {
         assertEquals(Deci("2"), Deci("4").sqrt(0))
@@ -22,7 +24,7 @@ class DeciMathTest {
 
     @Test
     fun `sqrt throws for negative numbers`() {
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<DeciArithmeticException> {
             Deci("-1").sqrt()
         }
     }
@@ -43,7 +45,7 @@ class DeciMathTest {
 
     @Test
     fun `mod throws for zero divisor`() {
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<DeciDivisionByZeroException> {
             Deci("5").mod(Deci.ZERO)
         }
     }
@@ -66,6 +68,39 @@ class DeciMathTest {
     fun `roundToSignificantDigits requires positive digits`() {
         assertFailsWith<IllegalArgumentException> {
             Deci("123").roundToSignificantDigits(0)
+        }
+    }
+
+    @Test
+    fun `pow with negative exponent uses explicit context`() {
+        // 2^-3 = 1/8 = 0.125
+        val result = Deci("2").pow(Deci("-3"), DeciContext(2, RoundingMode.HALF_UP))
+        assertEquals(Deci("0.13"), result)
+    }
+
+    @Test
+    fun `pow with negative exponent uses default context`() {
+        // 2^-3 = 1/8 = 0.125
+        val result = Deci("2").pow(Deci("-3"))
+        assertEquals(Deci("0.125"), result)
+    }
+
+    @Test
+    fun `pow with BANKING context rounds with HALF_EVEN`() {
+        // 2^-1 = 0.5 → with HALF_EVEN, 2 digits → 0.50
+        val result = Deci("2").pow(Deci("-1"), DeciContext.BANKING)
+        assertEquals(Deci("0.50"), result)
+    }
+
+    @Test
+    fun `remainder works correctly`() {
+        assertEquals(Deci.ZERO, Deci("6").remainder(Deci("3")))
+    }
+
+    @Test
+    fun `remainder throws for zero divisor`() {
+        assertFailsWith<DeciDivisionByZeroException> {
+            Deci("5").remainder(Deci.ZERO)
         }
     }
 }

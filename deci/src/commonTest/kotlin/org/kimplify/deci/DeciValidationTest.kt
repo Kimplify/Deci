@@ -18,7 +18,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class DeciValidationTest {
-
     @Test
     fun `isValidDeci validates strings correctly`() {
         assertTrue("123.45".isValidDeci())
@@ -81,6 +80,21 @@ class DeciValidationTest {
     }
 
     @Test
+    fun `safeDivide with explicit context controls precision`() {
+        // 10 / 3 = 3.33... → with precision 2 → 3.33
+        val context = DeciContext(2, RoundingMode.HALF_UP)
+        val result = Deci("10").safeDivide(Deci("3"), context = context)
+        assertEquals(Deci("3.33"), result)
+    }
+
+    @Test
+    fun `safeDivide with BANKING context uses HALF_EVEN`() {
+        // 1 / 4 = 0.25 → with BANKING (2 digits, HALF_EVEN) → 0.25
+        val result = Deci("1").safeDivide(Deci("4"), context = DeciContext.BANKING)
+        assertEquals(Deci("0.25"), result)
+    }
+
+    @Test
     fun `hasValidDecimalPlaces checks decimal places correctly`() {
         assertTrue(Deci("123.45").hasValidDecimalPlaces(2))
         assertTrue(Deci("123.4").hasValidDecimalPlaces(2))
@@ -112,12 +126,13 @@ class DeciValidationTest {
     fun `validateForForm returns correct validation results`() {
         val value = Deci("50")
 
-        val validResult = value.validateForForm(
-            minValue = Deci("0"),
-            maxValue = Deci("100"),
-            maxDecimalPlaces = 2,
-            mustBePositive = true
-        )
+        val validResult =
+            value.validateForForm(
+                minValue = Deci("0"),
+                maxValue = Deci("100"),
+                maxDecimalPlaces = 2,
+                mustBePositive = true,
+            )
         assertTrue(validResult.isValid)
 
         val invalidResult = Deci("-10").validateForForm(mustBePositive = true)

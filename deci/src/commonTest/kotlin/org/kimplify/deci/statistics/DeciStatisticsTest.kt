@@ -1,13 +1,14 @@
 package org.kimplify.deci.statistics
 
 import org.kimplify.deci.Deci
+import org.kimplify.deci.DeciContext
+import org.kimplify.deci.RoundingMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class DeciStatisticsTest {
-
     // ========== Mean Tests ==========
 
     @Test
@@ -178,14 +179,34 @@ class DeciStatisticsTest {
 
     @Test
     fun `sample variance calculates correctly`() {
-        val result = listOf(Deci("2"), Deci("4"), Deci("4"), Deci("4"), Deci("5"), Deci("5"), Deci("7"), Deci("9")).variance(isPopulation = false)
+        val result =
+            listOf(
+                Deci("2"),
+                Deci("4"),
+                Deci("4"),
+                Deci("4"),
+                Deci("5"),
+                Deci("5"),
+                Deci("7"),
+                Deci("9"),
+            ).variance(isPopulation = false)
         assertNotNull(result)
         assertEquals(Deci("4.57142857142857142857"), result)
     }
 
     @Test
     fun `population variance calculates correctly`() {
-        val result = listOf(Deci("2"), Deci("4"), Deci("4"), Deci("4"), Deci("5"), Deci("5"), Deci("7"), Deci("9")).variance(isPopulation = true)
+        val result =
+            listOf(
+                Deci("2"),
+                Deci("4"),
+                Deci("4"),
+                Deci("4"),
+                Deci("5"),
+                Deci("5"),
+                Deci("7"),
+                Deci("9"),
+            ).variance(isPopulation = true)
         assertNotNull(result)
         assertEquals(Deci("4"), result)
     }
@@ -380,6 +401,75 @@ class DeciStatisticsTest {
         val values = listOf(Deci("1.5"), Deci("2.5"), Deci("3.5"))
         // Mean = 2.5, deviations: -1, 0, 1, squares: 1, 0, 1, sum = 2
         val result = values.sumOfSquares()
+        assertEquals(Deci("2"), result)
+    }
+
+    // ========== Explicit DeciContext Tests ==========
+
+    @Test
+    fun `mean with explicit context uses specified precision`() {
+        val values = listOf(Deci("1"), Deci("2"), Deci("3"))
+        val context = DeciContext(2, RoundingMode.HALF_UP)
+        val result = values.mean(context)
+        assertEquals(Deci("2"), result)
+    }
+
+    @Test
+    fun `mean with low precision context rounds result`() {
+        // 10 / 3 = 3.33... → with precision 2 → 3.33
+        val values = listOf(Deci("1"), Deci("4"), Deci("5"))
+        val context = DeciContext(2, RoundingMode.HALF_UP)
+        val result = values.mean(context)
+        assertEquals(Deci("3.33"), result)
+    }
+
+    @Test
+    fun `median with explicit context uses specified precision`() {
+        val values = listOf(Deci("1"), Deci("2"), Deci("3"), Deci("4"))
+        val context = DeciContext(2, RoundingMode.HALF_UP)
+        val result = values.median(context)
+        assertEquals(Deci("2.5"), result)
+    }
+
+    @Test
+    fun `variance with BANKING context uses HALF_EVEN rounding`() {
+        val values = listOf(Deci("2"), Deci("4"), Deci("4"), Deci("4"), Deci("5"), Deci("5"), Deci("7"), Deci("9"))
+        val result = values.variance(isPopulation = false, context = DeciContext.BANKING)
+        assertNotNull(result)
+        // With 2-digit precision and HALF_EVEN, the result may differ from default
+    }
+
+    @Test
+    fun `weightedAverage with explicit context`() {
+        val values = listOf(Deci("70"), Deci("80"), Deci("90"))
+        val weights = listOf(Deci("0.2"), Deci("0.3"), Deci("0.5"))
+        val context = DeciContext(2, RoundingMode.HALF_UP)
+        val result = values.weightedAverage(weights, context)
+        assertEquals(Deci("83"), result)
+    }
+
+    @Test
+    fun `harmonicMean with explicit context`() {
+        val values = listOf(Deci("1"), Deci("2"), Deci("4"))
+        val context = DeciContext(2, RoundingMode.HALF_UP)
+        val result = values.harmonicMean(context)
+        assertNotNull(result)
+        assertEquals(Deci("1.71"), result)
+    }
+
+    @Test
+    fun `standardDeviation with explicit context`() {
+        val values = listOf(Deci("2"), Deci("4"), Deci("4"), Deci("4"), Deci("5"), Deci("5"), Deci("7"), Deci("9"))
+        val result = values.standardDeviation(isPopulation = false, context = DeciContext.DEFAULT)
+        assertNotNull(result)
+        assertEquals(Deci("2.1380899353"), result)
+    }
+
+    @Test
+    fun `sumOfSquares with explicit context`() {
+        val values = listOf(Deci("1"), Deci("2"), Deci("3"))
+        val context = DeciContext(2, RoundingMode.HALF_UP)
+        val result = values.sumOfSquares(context)
         assertEquals(Deci("2"), result)
     }
 

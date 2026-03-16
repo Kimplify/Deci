@@ -3,6 +3,9 @@ package org.kimplify.deci
 import kotlinx.serialization.json.Json
 import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.config.DeciDivisionPolicy
+import org.kimplify.deci.exception.DeciDivisionByZeroException
+import org.kimplify.deci.exception.DeciParseException
+import org.kimplify.deci.exception.DeciScaleException
 import org.kimplify.deci.extension.precision
 import org.kimplify.deci.extension.scale
 import kotlin.test.Test
@@ -12,7 +15,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DeciTest {
-
     @Test
     fun `scale helper counts fraction digits`() {
         assertEquals(0, Deci("10").scale())
@@ -29,10 +31,11 @@ class DeciTest {
 
     @Test
     fun `division policy can be customized and reset`() {
-        DeciConfiguration.divisionPolicy = DeciDivisionPolicy(
-            fractionalDigits = 2,
-            roundingMode = RoundingMode.DOWN
-        )
+        DeciConfiguration.divisionPolicy =
+            DeciDivisionPolicy(
+                fractionalDigits = 2,
+                roundingMode = RoundingMode.DOWN,
+            )
 
         val result = Deci("1") / Deci("3")
         assertEquals("0.33", result.toString())
@@ -65,7 +68,7 @@ class DeciTest {
 
     @Test
     fun `div should throw on division by zero`() {
-        assertFailsWith<ArithmeticException> {
+        assertFailsWith<DeciDivisionByZeroException> {
             Deci("1") / Deci("0")
         }
     }
@@ -101,8 +104,8 @@ class DeciTest {
     }
 
     @Test
-    fun `invalid string literal throws IllegalArgumentException`() {
-        assertFailsWith<IllegalArgumentException> {
+    fun `invalid string literal throws DeciParseException`() {
+        assertFailsWith<DeciParseException> {
             Deci("")
         }
     }
@@ -117,11 +120,11 @@ class DeciTest {
     fun `setScale UP rounds away from zero`() {
         assertEquals(
             Deci("1.24"),
-            Deci("1.231").setScale(2, RoundingMode.UP)
+            Deci("1.231").setScale(2, RoundingMode.UP),
         )
         assertEquals(
             Deci("-1.24"),
-            Deci("-1.231").setScale(2, RoundingMode.UP)
+            Deci("-1.231").setScale(2, RoundingMode.UP),
         )
     }
 
@@ -129,11 +132,11 @@ class DeciTest {
     fun `setScale DOWN truncates toward zero`() {
         assertEquals(
             Deci("1.23"),
-            Deci("1.239").setScale(2, RoundingMode.DOWN)
+            Deci("1.239").setScale(2, RoundingMode.DOWN),
         )
         assertEquals(
             Deci("-1.23"),
-            Deci("-1.239").setScale(2, RoundingMode.DOWN)
+            Deci("-1.239").setScale(2, RoundingMode.DOWN),
         )
     }
 
@@ -141,19 +144,19 @@ class DeciTest {
     fun `setScale CEILING and FLOOR behave per infinities`() {
         assertEquals(
             Deci("1.24"),
-            Deci("1.231").setScale(2, RoundingMode.CEILING)
+            Deci("1.231").setScale(2, RoundingMode.CEILING),
         )
         assertEquals(
             Deci("-1.23"),
-            Deci("-1.239").setScale(2, RoundingMode.CEILING)
+            Deci("-1.239").setScale(2, RoundingMode.CEILING),
         )
         assertEquals(
             Deci("1.23"),
-            Deci("1.239").setScale(2, RoundingMode.FLOOR)
+            Deci("1.239").setScale(2, RoundingMode.FLOOR),
         )
         assertEquals(
             Deci("-1.24"),
-            Deci("-1.231").setScale(2, RoundingMode.FLOOR)
+            Deci("-1.231").setScale(2, RoundingMode.FLOOR),
         )
     }
 
@@ -161,7 +164,7 @@ class DeciTest {
     fun `setScale HALF_UP rounds ties up`() {
         assertEquals(
             Deci("1.24"),
-            Deci("1.235").setScale(2, RoundingMode.HALF_UP)
+            Deci("1.235").setScale(2, RoundingMode.HALF_UP),
         )
     }
 
@@ -169,7 +172,7 @@ class DeciTest {
     fun `setScale HALF_DOWN rounds ties down`() {
         assertEquals(
             Deci("1.23"),
-            Deci("1.235").setScale(2, RoundingMode.HALF_DOWN)
+            Deci("1.235").setScale(2, RoundingMode.HALF_DOWN),
         )
     }
 
@@ -177,11 +180,11 @@ class DeciTest {
     fun `setScale HALF_EVEN does banker's rounding`() {
         assertEquals(
             Deci("1.22"),
-            Deci("1.225").setScale(2, RoundingMode.HALF_EVEN)
+            Deci("1.225").setScale(2, RoundingMode.HALF_EVEN),
         )
         assertEquals(
             Deci("1.24"),
-            Deci("1.235").setScale(2, RoundingMode.HALF_EVEN)
+            Deci("1.235").setScale(2, RoundingMode.HALF_EVEN),
         )
     }
 
@@ -189,7 +192,7 @@ class DeciTest {
     fun `divide scale 0 HALF_UP at 5 boundary`() {
         assertEquals(
             Deci("1"),
-            Deci("1").divide(Deci("2"), scale = 0, roundingMode = RoundingMode.HALF_UP)
+            Deci("1").divide(Deci("2"), scale = 0, roundingMode = RoundingMode.HALF_UP),
         )
     }
 
@@ -197,34 +200,34 @@ class DeciTest {
     fun `divide scale 0 HALF_DOWN at 5 boundary`() {
         assertEquals(
             Deci("0"),
-            Deci("1").divide(Deci("2"), scale = 0, roundingMode = RoundingMode.HALF_DOWN)
+            Deci("1").divide(Deci("2"), scale = 0, roundingMode = RoundingMode.HALF_DOWN),
         )
     }
 
     @Test
-    fun `operator div throws ArithmeticException on zero divisor`() {
-        assertFailsWith<ArithmeticException> {
+    fun `operator div throws DeciDivisionByZeroException on zero divisor`() {
+        assertFailsWith<DeciDivisionByZeroException> {
             Deci("5") / Deci("0")
         }
     }
 
     @Test
-    fun `divide throws ArithmeticException on zero divisor`() {
-        assertFailsWith<ArithmeticException> {
+    fun `divide throws DeciDivisionByZeroException on zero divisor`() {
+        assertFailsWith<DeciDivisionByZeroException> {
             Deci("5").divide(Deci("0"), scale = 2, roundingMode = RoundingMode.HALF_UP)
         }
     }
 
     @Test
-    fun `divide negative scale throws IllegalArgumentException`() {
-        assertFailsWith<IllegalArgumentException> {
+    fun `divide negative scale throws DeciScaleException`() {
+        assertFailsWith<DeciScaleException> {
             Deci("1").divide(Deci("2"), scale = -1, roundingMode = RoundingMode.UP)
         }
     }
 
     @Test
-    fun `setScale negative scale throws IllegalArgumentException`() {
-        assertFailsWith<IllegalArgumentException> {
+    fun `setScale negative scale throws DeciScaleException`() {
+        assertFailsWith<DeciScaleException> {
             Deci("1.23").setScale(-1, RoundingMode.DOWN)
         }
     }
@@ -233,7 +236,7 @@ class DeciTest {
     fun `constructor replaces comma with dot`() {
         assertEquals(
             Deci("1.23"),
-            Deci("1,23")
+            Deci("1,23"),
         )
     }
 
@@ -280,23 +283,22 @@ class DeciTest {
     }
 
     @Test fun `trailing zeros are preserved only when setScale`() {
-        assertEquals("1.23",   Deci("1.2300").toString())
+        assertEquals("1.23", Deci("1.2300").toString())
     }
 
     @Test fun `invalid string formats throw`() {
         listOf("", "foo", "1.2.3", ".", "-").forEach { bad ->
-            assertFailsWith<IllegalArgumentException> { Deci(bad) }
+            assertFailsWith<DeciParseException> { Deci(bad) }
         }
     }
 
     @Test fun `divide by zero always throws`() {
-        assertFailsWith<ArithmeticException> { Deci("1").divide(Deci("0"), 2, RoundingMode.UP) }
-        assertFailsWith<ArithmeticException> { Deci("5") / Deci("0") }
+        assertFailsWith<DeciDivisionByZeroException> { Deci("1").divide(Deci("0"), 2, RoundingMode.UP) }
+        assertFailsWith<DeciDivisionByZeroException> { Deci("5") / Deci("0") }
     }
 
     @Test fun `negative scale in divide and setScale throws`() {
-        assertFailsWith<IllegalArgumentException> { Deci("1").divide(Deci("2"), -1, RoundingMode.UP) }
-        assertFailsWith<IllegalArgumentException> { Deci("1.23").setScale(-5, RoundingMode.DOWN) }
+        assertFailsWith<DeciScaleException> { Deci("1").divide(Deci("2"), -1, RoundingMode.UP) }
+        assertFailsWith<DeciScaleException> { Deci("1.23").setScale(-5, RoundingMode.DOWN) }
     }
 }
-
