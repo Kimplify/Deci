@@ -77,6 +77,8 @@ actual class Deci private constructor(
 
     actual override fun toString(): String = internal.toString()
 
+    actual fun toPlainString(): String = internal.toFixed()
+
     actual fun toDouble(): Double = internal.toNumber()
 
     actual fun isZero(): Boolean = internal.isZero()
@@ -99,7 +101,7 @@ actual class Deci private constructor(
 
     override fun equals(other: Any?): Boolean = this === other || (other is Deci && compareTo(other) == 0)
 
-    override fun hashCode(): Int = internal.toString().hashCode()
+    override fun hashCode(): Int = internal.toFixed().hashCode()
 
     private fun convert(mode: RoundingMode): Int =
         when (mode) {

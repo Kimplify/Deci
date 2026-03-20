@@ -118,6 +118,8 @@ actual class Deci private constructor(
 
     actual override fun toString(): String = internal.stringValue
 
+    actual fun toPlainString(): String = internal.stringValue
+
     actual fun toDouble(): Double = internal.doubleValue
 
     actual fun isZero(): Boolean = internal.compare(NSDecimalNumber.zero) == 0L

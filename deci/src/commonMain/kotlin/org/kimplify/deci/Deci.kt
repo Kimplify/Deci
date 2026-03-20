@@ -130,10 +130,22 @@ expect class Deci : Comparable<Deci> {
     ): Deci
 
     /**
-     * Returns the canonical string representation of this [Deci], preserving
-     * trailing zeros (e.g. `"1.50"` stays `"1.50"`).
+     * Returns the string representation of this [Deci].
+     *
+     * For very large or very small values, the result may use scientific notation
+     * (e.g. `"1E+20"`) depending on the platform. Use [toPlainString] when a
+     * plain decimal string is required.
      */
     override fun toString(): String
+
+    /**
+     * Returns the string representation of this [Deci] without scientific notation,
+     * preserving the scale (e.g. `"1.50"` stays `"1.50"`).
+     *
+     * Unlike [toString], this method never uses exponential notation regardless
+     * of the value's magnitude.
+     */
+    fun toPlainString(): String
 
     /**
      * Converts this [Deci] to a [Double].

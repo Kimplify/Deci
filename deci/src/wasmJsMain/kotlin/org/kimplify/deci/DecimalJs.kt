@@ -33,4 +33,6 @@ external class DecimalJs(value: String) {
     fun abs(): DecimalJs
 
     fun neg(): DecimalJs
+
+    fun toFixed(): String
 }

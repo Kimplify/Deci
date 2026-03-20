@@ -255,10 +255,10 @@ class DeciTest {
         assertEquals(Deci("10"), Deci.TEN)
     }
 
-    @Test fun `toDouble and toString roundtrip for simple values`() {
+    @Test fun `toDouble and toPlainString roundtrip for simple values`() {
         listOf("0", "1.5", "-2.75").forEach { s ->
             val d = Deci(s)
-            assertEquals(s, d.toString())
+            assertEquals(s, d.toPlainString())
             assertEquals(s.toDouble(), d.toDouble())
         }
     }
@@ -282,8 +282,18 @@ class DeciTest {
         assertEquals(Deci.ZERO, Deci("-0"))
     }
 
-    @Test fun `trailing zeros are preserved only when setScale`() {
-        assertEquals("1.23", Deci("1.2300").toString())
+    @Test fun `trailing zeros are stripped by constructor`() {
+        assertEquals("1.23", Deci("1.2300").toPlainString())
+    }
+
+    @Test fun `toPlainString never uses scientific notation`() {
+        assertEquals("100000000000000000000", Deci("100000000000000000000").toPlainString())
+        assertEquals("0.000000001", Deci("0.000000001").toPlainString())
+    }
+
+    @Test fun `toString may use scientific notation for extreme values`() {
+        val large = Deci("100000000000000000000")
+        assertEquals(large, Deci(large.toPlainString()))
     }
 
     @Test fun `invalid string formats throw`() {

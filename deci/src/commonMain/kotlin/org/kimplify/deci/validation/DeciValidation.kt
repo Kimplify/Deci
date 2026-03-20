@@ -69,7 +69,7 @@ fun Deci.clamp(
  * @return True if this is a whole number
  */
 fun Deci.isWhole(): Boolean {
-    val str = this.toString()
+    val str = this.toPlainString()
     return !str.contains('.') || str.endsWith(".0") || str.substringAfter('.').all { it == '0' }
 }
 
@@ -123,7 +123,7 @@ fun Deci.safeDivide(
 fun Deci.hasValidDecimalPlaces(maxDecimalPlaces: Int): Boolean {
     require(maxDecimalPlaces >= 0) { "Max decimal places must be non-negative: $maxDecimalPlaces" }
 
-    val str = this.toString()
+    val str = this.toPlainString()
     val decimalIndex = str.indexOf('.')
 
     return if (decimalIndex == -1) {
@@ -244,7 +244,7 @@ fun Deci.validateForForm(
         if (this < min) {
             return ValidationResult(
                 false,
-                "Value must be at least $min",
+                "Value must be at least ${min.toPlainString()}",
             )
         }
     }
@@ -253,7 +253,7 @@ fun Deci.validateForForm(
         if (this > max) {
             return ValidationResult(
                 false,
-                "Value must be at most $max",
+                "Value must be at most ${max.toPlainString()}",
             )
         }
     }

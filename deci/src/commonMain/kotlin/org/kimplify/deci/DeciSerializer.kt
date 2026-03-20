@@ -27,7 +27,7 @@ object DeciSerializer : KSerializer<Deci> {
         encoder: Encoder,
         value: Deci,
     ) {
-        encoder.encodeString(value.toString())
+        encoder.encodeString(value.toPlainString())
     }
 
     override fun deserialize(decoder: Decoder): Deci {

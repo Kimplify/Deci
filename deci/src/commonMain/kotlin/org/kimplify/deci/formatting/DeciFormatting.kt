@@ -38,7 +38,7 @@ fun Deci.formatCurrency(
  * @return Formatted string with thousands separators
  */
 fun Deci.formatWithThousandsSeparator(separator: String = ","): String {
-    val str = this.toString()
+    val str = this.toPlainString()
     val parts = str.split(".")
     val integerPart = parts[0]
     val decimalPart = if (parts.size > 1) ".${parts[1]}" else ""
@@ -69,7 +69,7 @@ fun Deci.formatAsPercentage(
 ): String {
     val percentage = this * DeciConstants.HUNDRED
     val rounded = percentage.setScale(scale, RoundingMode.HALF_UP)
-    return "${rounded}$symbol"
+    return "${rounded.toPlainString()}$symbol"
 }
 
 /**
@@ -91,7 +91,7 @@ fun Deci.formatAsPercentage(
 fun Deci.toScientificNotation(precision: Int = 6): String {
     if (this.isZero()) return "0.0E+0"
 
-    val str = this.abs().toString()
+    val str = this.abs().toPlainString()
     val allDigits = str.filter { it.isDigit() }
     val firstNonZeroIdx = allDigits.indexOfFirst { it != '0' }
     if (firstNonZeroIdx == -1) return "0.0E+0"
@@ -141,9 +141,9 @@ fun Deci.toScientificNotation(precision: Int = 6): String {
  */
 fun Deci.format(pattern: String): String {
     return when (pattern) {
-        "0.00" -> this.setScale(2, RoundingMode.HALF_UP).toString()
+        "0.00" -> this.setScale(2, RoundingMode.HALF_UP).toPlainString()
         "#,##0.00" -> this.setScale(2, RoundingMode.HALF_UP).formatWithThousandsSeparator()
-        "0.0000" -> this.setScale(4, RoundingMode.HALF_UP).toString()
+        "0.0000" -> this.setScale(4, RoundingMode.HALF_UP).toPlainString()
         "#,##0" -> this.setScale(0, RoundingMode.HALF_UP).formatWithThousandsSeparator()
         else -> throw DeciFormatException(pattern = pattern)
     }
@@ -160,7 +160,7 @@ fun Deci.toWords(): String {
 
     val isNegative = this.isNegative()
     val abs = this.abs()
-    val parts = abs.toString().split(".")
+    val parts = abs.toPlainString().split(".")
     val integerPart = parts[0].toLongOrNull() ?: return "number too large"
 
     val result =
@@ -216,7 +216,7 @@ fun Deci.pad(
     padChar: Char = ' ',
     padLeft: Boolean = true,
 ): String {
-    val str = this.toString()
+    val str = this.toPlainString()
     return if (padLeft) {
         str.padStart(width, padChar)
     } else {
