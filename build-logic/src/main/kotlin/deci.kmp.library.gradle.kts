@@ -22,10 +22,6 @@ kotlin {
     macosX64()
     macosArm64()
 
-    // Non-Apple native targets
-    linuxX64()
-    mingwX64()
-
     applyDefaultHierarchyTemplate()
 
     // https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers

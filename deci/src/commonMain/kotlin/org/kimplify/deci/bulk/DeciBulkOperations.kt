@@ -186,7 +186,7 @@ fun Iterable<Deci>.filterInRange(
     max: Deci,
 ): List<Deci> {
     require(min <= max) { "Min value must be less than or equal to max value" }
-    return this.filter { it >= min && it <= max }
+    return this.filter { it in min..max }
 }
 
 /**

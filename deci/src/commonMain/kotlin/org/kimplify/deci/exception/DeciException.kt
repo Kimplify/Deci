@@ -7,7 +7,7 @@ package org.kimplify.deci.exception
  * Prefer catching a more specific subclass when only a subset of errors
  * is expected.
  */
-public sealed class DeciException(
+sealed class DeciException(
     message: String,
     cause: Throwable? = null,
 ) : RuntimeException(message, cause)
@@ -17,8 +17,8 @@ public sealed class DeciException(
  *
  * @property rawValue The original string that failed parsing.
  */
-public class DeciParseException(
-    public val rawValue: String,
+class DeciParseException(
+    val rawValue: String,
     message: String = "Invalid decimal literal: '$rawValue'",
     cause: Throwable? = null,
 ) : DeciException(message, cause)
@@ -27,7 +27,7 @@ public class DeciParseException(
  * Thrown when a Deci arithmetic operation is mathematically undefined
  * or produces an unrepresentable result.
  */
-public open class DeciArithmeticException(
+open class DeciArithmeticException(
     message: String,
     cause: Throwable? = null,
 ) : DeciException(message, cause)
@@ -35,7 +35,7 @@ public open class DeciArithmeticException(
 /**
  * Thrown specifically when a division operation has a zero divisor.
  */
-public class DeciDivisionByZeroException(
+class DeciDivisionByZeroException(
     message: String = "Division by zero",
     cause: Throwable? = null,
 ) : DeciArithmeticException(message, cause)
@@ -46,8 +46,8 @@ public class DeciDivisionByZeroException(
  *
  * @property value String representation of the Deci that overflowed.
  */
-public class DeciOverflowException(
-    public val value: String,
+class DeciOverflowException(
+    val value: String,
     message: String = "Deci value $value is outside representable range",
     cause: Throwable? = null,
 ) : DeciArithmeticException(message, cause)
@@ -57,8 +57,8 @@ public class DeciOverflowException(
  *
  * @property scale The invalid scale value that was supplied.
  */
-public class DeciScaleException(
-    public val scale: Int,
+class DeciScaleException(
+    val scale: Int,
     message: String = "Scale must be non-negative: $scale",
 ) : DeciException(message)
 
@@ -67,8 +67,8 @@ public class DeciScaleException(
  *
  * @property pattern The pattern string that was not recognized.
  */
-public class DeciFormatException(
-    public val pattern: String,
+class DeciFormatException(
+    val pattern: String,
     message: String = "Unknown format pattern: $pattern",
 ) : DeciException(message)
 
@@ -77,8 +77,8 @@ public class DeciFormatException(
  *
  * @property rawValue The string that could not be deserialized.
  */
-public class DeciSerializationException(
-    public val rawValue: String,
+class DeciSerializationException(
+    val rawValue: String,
     message: String = "Invalid Deci value: '$rawValue'",
     cause: Throwable? = null,
 ) : DeciException(message, cause)

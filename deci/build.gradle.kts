@@ -9,15 +9,6 @@ val deciVersion: String = libsCatalog.findVersion("version").get().requiredVersi
 
 kotlin {
     sourceSets {
-        // Custom intermediate source set for Linux + Windows (non-Apple native)
-        val nonAppleNativeMain by creating { dependsOn(nativeMain.get()) }
-        val linuxX64Main by getting { dependsOn(nonAppleNativeMain) }
-        val mingwX64Main by getting { dependsOn(nonAppleNativeMain) }
-
-        val nonAppleNativeTest by creating { dependsOn(commonTest.get()) }
-        val linuxX64Test by getting { dependsOn(nonAppleNativeTest) }
-        val mingwX64Test by getting { dependsOn(nonAppleNativeTest) }
-
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
