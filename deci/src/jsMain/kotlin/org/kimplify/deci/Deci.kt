@@ -9,6 +9,7 @@ import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 @Serializable(with = DeciSerializer::class)
 actual class Deci private constructor(
     private val internal: DecimalJs,
+    private val _scale: Int? = null,
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
         DecimalJs(validateAndNormalizeDecimalLiteral(value)),
@@ -59,7 +60,7 @@ actual class Deci private constructor(
         if (divisor.isZero()) throw DeciDivisionByZeroException()
         val result = internal.div(divisor.internal)
         val rounded = result.toDecimalPlaces(scale, convert(roundingMode))
-        return Deci(rounded)
+        return Deci(rounded, scale)
     }
 
     actual fun divide(
@@ -72,12 +73,15 @@ actual class Deci private constructor(
         roundingMode: RoundingMode,
     ): Deci {
         if (scale < 0) throw DeciScaleException(scale)
-        return Deci(internal.toDecimalPlaces(scale, convert(roundingMode)))
+        return Deci(internal.toDecimalPlaces(scale, convert(roundingMode)), scale)
     }
 
     actual override fun toString(): String = internal.toString()
 
-    actual fun toPlainString(): String = internal.toFixed()
+    actual fun toPlainString(): String {
+        val scale = _scale
+        return if (scale != null) internal.toFixed(scale) else internal.toFixed()
+    }
 
     actual fun toDouble(): Double = internal.toNumber()
 
@@ -85,7 +89,7 @@ actual class Deci private constructor(
 
     actual fun isNegative(): Boolean = internal.isNegative()
 
-    actual fun isPositive(): Boolean = internal.isPositive()
+    actual fun isPositive(): Boolean = !internal.isZero() && internal.isPositive()
 
     actual fun abs(): Deci = Deci(internal.abs())
 

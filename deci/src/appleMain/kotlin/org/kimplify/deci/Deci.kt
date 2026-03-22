@@ -15,6 +15,7 @@ import platform.Foundation.NSRoundingMode
 @Serializable(with = DeciSerializer::class)
 actual class Deci private constructor(
     private val internal: NSDecimalNumber,
+    private val _scale: Int? = null,
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
         NSDecimalNumber(validateAndNormalizeDecimalLiteral(value)),
@@ -24,21 +25,58 @@ actual class Deci private constructor(
     actual constructor(value: Int) : this(value.toString())
     actual constructor(value: Double) : this(value.toString())
 
-    private fun NSDecimalNumber.roundedTo(
+    private fun roundWithHandler(
+        value: NSDecimalNumber,
         scale: Int,
-        roundingMode: RoundingMode,
+        nativeMode: NSRoundingMode,
     ): NSDecimalNumber {
-        val native = toNativeMode(roundingMode)
         val handler =
             NSDecimalNumberHandler(
-                native,
+                nativeMode,
                 scale.toShort(),
                 raiseOnExactness = false,
                 raiseOnOverflow = false,
                 raiseOnUnderflow = false,
                 raiseOnDivideByZero = false,
             )
-        return this.decimalNumberByRoundingAccordingToBehavior(handler)
+        return value.decimalNumberByRoundingAccordingToBehavior(handler)
+    }
+
+    private fun roundDecimal(
+        value: NSDecimalNumber,
+        scale: Int,
+        roundingMode: RoundingMode,
+    ): NSDecimalNumber {
+        if (roundingMode == RoundingMode.HALF_DOWN) {
+            return roundHalfDown(value, scale)
+        }
+        return roundWithHandler(value, scale, toNativeMode(roundingMode))
+    }
+
+    private fun roundHalfDown(
+        value: NSDecimalNumber,
+        scale: Int,
+    ): NSDecimalNumber {
+        val halfUpResult = roundWithHandler(value, scale, NSRoundingMode.NSRoundPlain)
+        val isNeg = value.compare(NSDecimalNumber.zero) < 0L
+        val downMode =
+            if (isNeg) NSRoundingMode.NSRoundUp else NSRoundingMode.NSRoundDown
+        val downResult = roundWithHandler(value, scale, downMode)
+
+        if (halfUpResult.compare(downResult) == 0L) return halfUpResult
+
+        val diff = value.decimalNumberBySubtracting(downResult)
+        val absDiff =
+            if (diff.compare(NSDecimalNumber.zero) < 0L) {
+                diff.decimalNumberByMultiplyingBy(NSDecimalNumber(-1))
+            } else {
+                diff
+            }
+        val midpoint =
+            NSDecimalNumber(string = "5")
+                .decimalNumberByMultiplyingByPowerOf10((-scale - 1).toShort())
+
+        return if (absDiff.compare(midpoint) == 0L) downResult else halfUpResult
     }
 
     actual companion object {
@@ -94,8 +132,8 @@ actual class Deci private constructor(
         roundingMode: RoundingMode,
     ): Deci {
         if (scale < 0) throw DeciScaleException(scale)
-        val rounded = internal.roundedTo(scale, roundingMode)
-        return Deci(rounded)
+        val rounded = roundDecimal(internal, scale, roundingMode)
+        return Deci(rounded, scale)
     }
 
     actual operator fun rem(other: Deci): Deci {
@@ -112,13 +150,21 @@ actual class Deci private constructor(
         if (divisor.isZero()) throw DeciDivisionByZeroException()
         if (scale < 0) throw DeciScaleException(scale)
         val raw = internal.decimalNumberByDividingBy(divisor.internal)
-        val rounded = raw.roundedTo(scale, roundingMode)
-        return Deci(rounded.stringValue)
+        val rounded = roundDecimal(raw, scale, roundingMode)
+        return Deci(rounded, scale)
     }
 
     actual override fun toString(): String = internal.stringValue
 
-    actual fun toPlainString(): String = internal.stringValue
+    actual fun toPlainString(): String {
+        val str = internal.stringValue
+        val scale = _scale ?: return str
+        if (scale == 0) return str.split(".")[0]
+        val parts = str.split(".")
+        val intPart = parts[0]
+        val fracPart = if (parts.size > 1) parts[1] else ""
+        return "$intPart.${fracPart.padEnd(scale, '0')}"
+    }
 
     actual fun toDouble(): Double = internal.doubleValue
 
@@ -168,7 +214,7 @@ actual class Deci private constructor(
             RoundingMode.FLOOR -> NSRoundingMode.NSRoundDown
 
             RoundingMode.HALF_UP -> NSRoundingMode.NSRoundPlain
-            RoundingMode.HALF_DOWN -> NSRoundingMode.NSRoundDown
+            RoundingMode.HALF_DOWN -> error("HALF_DOWN is handled by roundHalfDown()")
             RoundingMode.HALF_EVEN -> NSRoundingMode.NSRoundBankers
         }
 }

@@ -167,6 +167,7 @@ class DeciStatisticsTest {
 
     @Test
     fun `sample variance calculates correctly`() {
+        val context = DeciContext(precision = 10, roundingMode = RoundingMode.HALF_UP)
         val result =
             listOf(
                 Deci("2"),
@@ -177,9 +178,9 @@ class DeciStatisticsTest {
                 Deci("5"),
                 Deci("7"),
                 Deci("9"),
-            ).variance(isPopulation = false)
+            ).variance(isPopulation = false, context = context)
         assertNotNull(result)
-        assertEquals(Deci("4.57142857142857142857"), result)
+        assertEquals(Deci("4.5714285714"), result)
     }
 
     @Test
@@ -309,9 +310,10 @@ class DeciStatisticsTest {
 
     @Test
     fun `harmonicMean calculates correctly`() {
-        val result = listOf(Deci("1"), Deci("2"), Deci("4")).harmonicMean()
+        val context = DeciContext(precision = 10, roundingMode = RoundingMode.HALF_UP)
+        val result = listOf(Deci("1"), Deci("2"), Deci("4")).harmonicMean(context)
         assertNotNull(result)
-        assertEquals(Deci("1.71428571428571428571"), result)
+        assertEquals(Deci("1.7142857143"), result)
     }
 
     @Test
