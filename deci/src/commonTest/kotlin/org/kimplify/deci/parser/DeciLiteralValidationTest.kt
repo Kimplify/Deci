@@ -4,6 +4,8 @@ import org.kimplify.deci.exception.DeciParseException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class DeciLiteralValidationTest {
     // --- validateAndNormalizeDecimalLiteral ---
@@ -119,47 +121,47 @@ class DeciLiteralValidationTest {
 
     @Test
     fun `regex matches simple integers`() {
-        assert(DECIMAL_REGEX.matches("0"))
-        assert(DECIMAL_REGEX.matches("123"))
-        assert(DECIMAL_REGEX.matches("-456"))
+        assertTrue(DECIMAL_REGEX.matches("0"))
+        assertTrue(DECIMAL_REGEX.matches("123"))
+        assertTrue(DECIMAL_REGEX.matches("-456"))
     }
 
     @Test
     fun `regex matches decimals`() {
-        assert(DECIMAL_REGEX.matches("0.1"))
-        assert(DECIMAL_REGEX.matches("123.456"))
-        assert(DECIMAL_REGEX.matches("-0.789"))
+        assertTrue(DECIMAL_REGEX.matches("0.1"))
+        assertTrue(DECIMAL_REGEX.matches("123.456"))
+        assertTrue(DECIMAL_REGEX.matches("-0.789"))
     }
 
     @Test
     fun `regex matches leading decimal point`() {
-        assert(DECIMAL_REGEX.matches(".1"))
-        assert(DECIMAL_REGEX.matches(",5"))
-        assert(DECIMAL_REGEX.matches("-.5"))
+        assertTrue(DECIMAL_REGEX.matches(".1"))
+        assertTrue(DECIMAL_REGEX.matches(",5"))
+        assertTrue(DECIMAL_REGEX.matches("-.5"))
     }
 
     @Test
     fun `regex matches thousands separated values`() {
-        assert(DECIMAL_REGEX.matches("1,230.98"))
-        assert(DECIMAL_REGEX.matches("1.230,98"))
-        assert(DECIMAL_REGEX.matches("1,234,567.89"))
+        assertTrue(DECIMAL_REGEX.matches("1,230.98"))
+        assertTrue(DECIMAL_REGEX.matches("1.230,98"))
+        assertTrue(DECIMAL_REGEX.matches("1,234,567.89"))
     }
 
     @Test
     fun `regex rejects empty string`() {
-        assert(!DECIMAL_REGEX.matches(""))
+        assertFalse(DECIMAL_REGEX.matches(""))
     }
 
     @Test
     fun `regex rejects non-numeric`() {
-        assert(!DECIMAL_REGEX.matches("abc"))
-        assert(!DECIMAL_REGEX.matches("--1"))
+        assertFalse(DECIMAL_REGEX.matches("abc"))
+        assertFalse(DECIMAL_REGEX.matches("--1"))
     }
 
     @Test
     fun `regex rejects lone separators`() {
-        assert(!DECIMAL_REGEX.matches("."))
-        assert(!DECIMAL_REGEX.matches(","))
+        assertFalse(DECIMAL_REGEX.matches("."))
+        assertFalse(DECIMAL_REGEX.matches(","))
     }
 
     // --- normalizeDecimalString ---
