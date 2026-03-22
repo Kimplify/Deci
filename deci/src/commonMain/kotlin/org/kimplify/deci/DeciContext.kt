@@ -45,5 +45,36 @@ data class DeciContext(
                 precision = 2,
                 roundingMode = RoundingMode.HALF_EVEN,
             )
+
+        /** EUR currency context: 2 fractional digits, HALF_EVEN (banker's rounding). */
+        val CURRENCY_EUR =
+            DeciContext(
+                precision = 2,
+                roundingMode = RoundingMode.HALF_EVEN,
+            )
+
+        /** JPY currency context: 0 fractional digits, HALF_UP. */
+        val CURRENCY_JPY =
+            DeciContext(
+                precision = 0,
+                roundingMode = RoundingMode.HALF_UP,
+            )
+
+        /** BTC cryptocurrency context: 8 fractional digits, HALF_UP. */
+        val CURRENCY_BTC =
+            DeciContext(
+                precision = 8,
+                roundingMode = RoundingMode.HALF_UP,
+            )
+
+        /** Returns a [DeciContext] appropriate for the given ISO 4217 currency code. */
+        fun forCurrency(currencyCode: String): DeciContext =
+            when (currencyCode.uppercase()) {
+                "USD", "GBP", "CAD", "AUD" -> CURRENCY_USD
+                "EUR" -> CURRENCY_EUR
+                "JPY", "KRW" -> CURRENCY_JPY
+                "BTC" -> CURRENCY_BTC
+                else -> CURRENCY_USD
+            }
     }
 }

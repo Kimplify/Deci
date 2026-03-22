@@ -21,9 +21,7 @@ fun String.isValidDeci(): Boolean {
  *
  * @return Result containing the Deci value or an exception
  */
-fun String.toDeciOrError(): Result<Deci> {
-    return runCatching { Deci(this) }
-}
+fun String.toDeciOrError(): Result<Deci> = runCatching { Deci(this) }
 
 /**
  * Checks if this Deci is within the specified range (inclusive).
@@ -106,9 +104,7 @@ fun Deci.safeDivide(
     divisor: Deci,
     default: Deci = Deci.ZERO,
     context: DeciContext = DeciContext.DEFAULT,
-): Deci {
-    return if (divisor.isZero()) default else this.divide(divisor, context)
-}
+): Deci = if (divisor.isZero()) default else this.divide(divisor, context)
 
 /**
  * Checks if this Deci has the specified number of decimal places or fewer.
@@ -136,14 +132,13 @@ fun Deci.hasValidDecimalPlaces(maxDecimalPlaces: Int): Boolean {
  * @param currency Currency code for validation rules (default: "USD")
  * @return True if the value meets currency precision requirements
  */
-fun Deci.isValidCurrencyAmount(currency: String = "USD"): Boolean {
-    return when (currency.uppercase()) {
+fun Deci.isValidCurrencyAmount(currency: String = "USD"): Boolean =
+    when (currency.uppercase()) {
         "USD", "EUR", "GBP", "CAD", "AUD" -> hasValidDecimalPlaces(2)
         "JPY", "KRW" -> isWhole()
         "BTC" -> hasValidDecimalPlaces(8)
         else -> hasValidDecimalPlaces(2)
     }
-}
 
 /**
  * Validates that this Deci is a valid percentage (0-100).
@@ -188,9 +183,7 @@ fun Deci.isValidTaxRate(): Boolean = isInRange(Deci.ZERO, Deci.ONE)
  * @param maxRate Maximum allowed rate (default: 1.0 for 100%)
  * @return True if this is a valid interest rate
  */
-fun Deci.isValidInterestRate(maxRate: Deci = Deci.ONE): Boolean {
-    return isInRange(Deci.ZERO, maxRate)
-}
+fun Deci.isValidInterestRate(maxRate: Deci = Deci.ONE): Boolean = isInRange(Deci.ZERO, maxRate)
 
 /**
  * Checks if this Deci is "approximately equal" to another within a tolerance.
@@ -202,9 +195,7 @@ fun Deci.isValidInterestRate(maxRate: Deci = Deci.ONE): Boolean {
 fun Deci.isApproximatelyEqual(
     other: Deci,
     tolerance: Deci = Deci("0.000001"),
-): Boolean {
-    return (this - other).abs() <= tolerance
-}
+): Boolean = (this - other).abs() <= tolerance
 
 /**
  * Result of a [Deci] validation check.
@@ -223,6 +214,18 @@ data class ValidationResult(val isValid: Boolean, val errorMessage: String? = nu
  * @param mustBePositive Whether value must be positive (default: false)
  * @return Validation result with error message if invalid
  */
+
+/**
+ * Result of a [Deci] validation check.
+ *
+ * @property isValid `true` if the value passed all validation constraints.
+ * @property errorMessage a human-readable error description, or `null` when valid.
+ */
+data class ValidationResult(
+    val isValid: Boolean,
+    val errorMessage: String? = null,
+)
+
 fun Deci.validateForForm(
     minValue: Deci? = null,
     maxValue: Deci? = null,

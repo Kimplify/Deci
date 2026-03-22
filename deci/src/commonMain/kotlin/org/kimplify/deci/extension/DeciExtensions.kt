@@ -43,10 +43,9 @@ fun Deci.toLongOrNull(): Long? {
  * @return the integer part of this value as a [Long].
  * @throws DeciOverflowException if the integer part is outside the [Long] range.
  */
-fun Deci.toLongExact(): Long {
-    return toLongOrNull()
+fun Deci.toLongExact(): Long =
+    toLongOrNull()
         ?: throw DeciOverflowException(value = this.toString())
-}
 
 /**
  * Returns the number of digits to the right of the decimal separator in the canonical string form.
@@ -98,3 +97,41 @@ fun String.toDeciOrNull(): Deci? = Deci.fromStringOrNull(this)
  * whenever exact representation is required.
  */
 fun Double.toDeci(): Deci = Deci(this)
+
+/** Returns this Deci if non-null, or [Deci.ZERO] otherwise. */
+fun Deci?.orZero(): Deci = this ?: Deci.ZERO
+
+/** Returns this Deci if non-null, or [Deci.ONE] otherwise. */
+fun Deci?.orOne(): Deci = this ?: Deci.ONE
+
+/** Returns this Deci if non-null, or [default] otherwise. */
+fun Deci?.orDefault(default: Deci): Deci = this ?: default
+
+/**
+ * Converts this [Deci] to an [Int] by truncating the fractional part.
+ *
+ * @throws [org.kimplify.deci.exception.DeciOverflowException] if the integer part is outside the [Int] range.
+ */
+fun Deci.toInt(): Int {
+    val long = toLong()
+    if (long < Int.MIN_VALUE || long > Int.MAX_VALUE) {
+        throw DeciOverflowException(value = this.toString())
+    }
+    return long.toInt()
+}
+
+/**
+ * Converts this [Deci] to an [Int], or returns `null` if the integer part is outside the [Int] range.
+ */
+fun Deci.toIntOrNull(): Int? {
+    val long = toLongOrNull() ?: return null
+    return if (long in Int.MIN_VALUE..Int.MAX_VALUE) long.toInt() else null
+}
+
+/**
+ * Converts this [Deci] to a [Float].
+ *
+ * **Note:** Precision may be lost for values that cannot be exactly represented
+ * as a 32-bit IEEE 754 floating-point number.
+ */
+fun Deci.toFloat(): Float = toDouble().toFloat()

@@ -11,9 +11,7 @@ import org.kimplify.deci.extension.sumDeci
  *
  * @return Product of all values, or Deci.ONE for empty collections
  */
-fun Iterable<Deci>.multiplyAll(): Deci {
-    return this.fold(Deci.ONE) { acc, value -> acc * value }
-}
+fun Iterable<Deci>.multiplyAll(): Deci = this.fold(Deci.ONE) { acc, value -> acc * value }
 
 /**
  * Calculates the average of the collection.
@@ -24,6 +22,11 @@ fun Iterable<Deci>.multiplyAll(): Deci {
  * @param context The [DeciContext] controlling precision and rounding of the division.
  * @return The average value, or null if collection is empty.
  */
+@Deprecated(
+    message = "Use mean() from org.kimplify.deci.statistics instead",
+    replaceWith = ReplaceWith("mean(context)", "org.kimplify.deci.statistics.mean"),
+    level = DeprecationLevel.WARNING,
+)
 fun Iterable<Deci>.averageDeci(context: DeciContext = DeciContext.DEFAULT): Deci? {
     val values = this.toList()
     if (values.isEmpty()) return null
@@ -36,9 +39,7 @@ fun Iterable<Deci>.averageDeci(context: DeciContext = DeciContext.DEFAULT): Deci
  * @param operation The operation to apply to each value
  * @return List of transformed values
  */
-fun Iterable<Deci>.applyToAll(operation: (Deci) -> Deci): List<Deci> {
-    return this.map(operation)
-}
+fun Iterable<Deci>.applyToAll(operation: (Deci) -> Deci): List<Deci> = this.map(operation)
 
 /**
  * Adds the same value to all elements in the collection.
@@ -46,9 +47,7 @@ fun Iterable<Deci>.applyToAll(operation: (Deci) -> Deci): List<Deci> {
  * @param value Value to add to each element
  * @return List with value added to each element
  */
-fun Iterable<Deci>.addToAll(value: Deci): List<Deci> {
-    return this.map { it + value }
-}
+fun Iterable<Deci>.addToAll(value: Deci): List<Deci> = this.map { it + value }
 
 /**
  * Subtracts the same value from all elements in the collection.
@@ -56,9 +55,7 @@ fun Iterable<Deci>.addToAll(value: Deci): List<Deci> {
  * @param value Value to subtract from each element
  * @return List with value subtracted from each element
  */
-fun Iterable<Deci>.subtractFromAll(value: Deci): List<Deci> {
-    return this.map { it - value }
-}
+fun Iterable<Deci>.subtractFromAll(value: Deci): List<Deci> = this.map { it - value }
 
 /**
  * Multiplies all elements in the collection by the same value.
@@ -66,9 +63,7 @@ fun Iterable<Deci>.subtractFromAll(value: Deci): List<Deci> {
  * @param multiplier Value to multiply each element by
  * @return List with each element multiplied by the value
  */
-fun Iterable<Deci>.multiplyAllBy(multiplier: Deci): List<Deci> {
-    return this.map { it * multiplier }
-}
+fun Iterable<Deci>.multiplyAllBy(multiplier: Deci): List<Deci> = this.map { it * multiplier }
 
 /**
  * Divides all elements in the collection by the same value.
@@ -166,9 +161,7 @@ fun Iterable<Deci>.scaleToSum(
 fun Iterable<Deci>.roundAll(
     scale: Int,
     roundingMode: RoundingMode,
-): List<Deci> {
-    return this.map { it.setScale(scale, roundingMode) }
-}
+): List<Deci> = this.map { it.setScale(scale, roundingMode) }
 
 /**
  * Filters values within the specified range (inclusive).
@@ -213,11 +206,12 @@ private fun calculatePercentile(
     percentile: Int,
 ): Deci {
     val n = sorted.size
-    val index = (percentile / 100.0) * (n - 1)
-    val lower = index.toInt()
-    val upper = (lower + 1).coerceAtMost(n - 1)
-    val fraction = Deci((index - lower).toString())
-    return sorted[lower] + (sorted[upper] - sorted[lower]) * fraction
+    val index = Deci(percentile).divide(Deci("100"), DeciContext.DEFAULT) * Deci(n - 1)
+    val lower = index.setScale(0, RoundingMode.DOWN)
+    val lowerIdx = lower.toString().toLong().toInt()
+    val upper = (lowerIdx + 1).coerceAtMost(n - 1)
+    val fraction = index - lower
+    return sorted[lowerIdx] + (sorted[upper] - sorted[lowerIdx]) * fraction
 }
 
 /**
@@ -259,9 +253,7 @@ fun Iterable<Deci>.groupConsecutiveSimilar(tolerance: Deci): List<List<Deci>> {
  * @param predicate Function to test each element
  * @return Pair where first list contains elements that match predicate, second contains those that don't
  */
-fun Iterable<Deci>.partitionDeci(predicate: (Deci) -> Boolean): Pair<List<Deci>, List<Deci>> {
-    return this.partition(predicate)
-}
+fun Iterable<Deci>.partitionDeci(predicate: (Deci) -> Boolean): Pair<List<Deci>, List<Deci>> = this.partition(predicate)
 
 /**
  * Creates a cumulative sum list where each element is the sum of all previous elements.

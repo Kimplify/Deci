@@ -285,4 +285,46 @@ class DeciExtensionsExtendedTest {
     fun `Double toDeci negative`() {
         assertEquals(Deci("-2.5"), (-2.5).toDeci())
     }
+
+    @Test
+    fun `orZero returns value when non-null`() {
+        val value: Deci? = Deci("5")
+        assertEquals(Deci("5"), value.orZero())
+    }
+
+    @Test
+    fun `orZero returns ZERO when null`() {
+        val value: Deci? = null
+        assertEquals(Deci.ZERO, value.orZero())
+    }
+
+    @Test
+    fun `orOne returns ONE when null`() {
+        val value: Deci? = null
+        assertEquals(Deci.ONE, value.orOne())
+    }
+
+    @Test
+    fun `orDefault returns default when null`() {
+        val value: Deci? = null
+        assertEquals(Deci("99"), value.orDefault(Deci("99")))
+    }
+
+    @Test
+    fun `toInt converts correctly`() {
+        assertEquals(42, Deci("42").toInt())
+        assertEquals(-7, Deci("-7").toInt())
+        assertEquals(0, Deci("0.99").toInt())
+    }
+
+    @Test
+    fun `toIntOrNull returns null for overflow`() {
+        assertNull(Deci("99999999999").toIntOrNull())
+        assertEquals(42, Deci("42").toIntOrNull())
+    }
+
+    @Test
+    fun `toFloat converts correctly`() {
+        assertEquals(1.5f, Deci("1.5").toFloat())
+    }
 }

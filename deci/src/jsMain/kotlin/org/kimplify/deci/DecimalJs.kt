@@ -8,7 +8,9 @@ import kotlin.js.JsName
 import kotlin.js.JsNonModule
 
 @JsName("default")
-external class DecimalJs(value: String) {
+external class DecimalJs(
+    value: String,
+) {
     fun add(other: DecimalJs): DecimalJs
 
     fun sub(other: DecimalJs): DecimalJs
@@ -38,5 +40,5 @@ external class DecimalJs(value: String) {
 
     fun neg(): DecimalJs
 
-    fun toFixed(): String
+    fun toFixed(digits: Int): String
 }

@@ -307,13 +307,24 @@ class DeciFormattingTest {
     }
 
     @Test
-    fun `toWords number too large`() {
-        assertEquals("number too large", Deci("1000").toWords())
+    fun `toWords handles thousands`() {
+        assertEquals("one thousand", Deci("1000").toWords())
+        assertEquals("one thousand two hundred thirty four", Deci("1234").toWords())
+        assertEquals("ninety nine thousand nine hundred ninety nine", Deci("99999").toWords())
     }
 
     @Test
-    fun `toWords ignores fractional part`() {
-        assertEquals("forty two", Deci("42.99").toWords())
+    fun `toWords handles millions and beyond`() {
+        assertEquals("one million", Deci("1000000").toWords())
+        assertEquals("one million two hundred thirty four thousand five hundred sixty seven", Deci("1234567").toWords())
+        assertEquals("one billion", Deci("1000000000").toWords())
+    }
+
+    @Test
+    fun `toWords handles fractional part`() {
+        assertEquals("forty two point nine nine", Deci("42.99").toWords())
+        assertEquals("one point five", Deci("1.5").toWords())
+        assertEquals("zero point one two three", Deci("0.123").toWords())
     }
 
     // --- pad ---

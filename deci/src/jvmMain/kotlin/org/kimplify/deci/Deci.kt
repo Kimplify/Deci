@@ -11,7 +11,9 @@ import java.math.MathContext
 import java.math.RoundingMode as JavaRoundingMode
 
 @Serializable(with = DeciSerializer::class)
-actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
+actual class Deci(
+    private val internal: BigDecimal,
+) : Comparable<Deci> {
     actual constructor(value: String) : this(
         BigDecimal(validateAndNormalizeDecimalLiteral(value)).stripTrailingZeros(),
     )
@@ -76,11 +78,12 @@ actual class Deci(private val internal: BigDecimal) : Comparable<Deci> {
         if (divisor.isZero()) throw DeciDivisionByZeroException()
         return try {
             Deci(
-                internal.divide(
-                    divisor.internal,
-                    scale,
-                    convert(roundingMode),
-                ).toPlainString(),
+                internal
+                    .divide(
+                        divisor.internal,
+                        scale,
+                        convert(roundingMode),
+                    ).toPlainString(),
             )
         } catch (_: ArithmeticException) {
             throw DeciArithmeticException("Division produced a non-terminating decimal expansion")

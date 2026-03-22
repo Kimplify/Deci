@@ -170,7 +170,15 @@ class DeciMathExtendedTest {
     @Test
     fun `remainder with decimal values`() {
         val result = Deci("5.5").remainder(Deci("2"))
-        assertEquals(Deci("-0.5"), result)
+        assertEquals(Deci("1.5"), result)
+    }
+
+    @Test
+    fun `remainder truncates quotient toward zero`() {
+        assertEquals(Deci("2"), Deci("5").remainder(Deci("3")))
+        assertEquals(Deci("-2"), Deci("-5").remainder(Deci("3")))
+        assertEquals(Deci("3"), Deci("7").remainder(Deci("4")))
+        assertEquals(Deci("1"), Deci("10").remainder(Deci("3")))
     }
 
     // --- roundToNearest extended ---

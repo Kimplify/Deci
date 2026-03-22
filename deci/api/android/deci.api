@@ -69,7 +69,11 @@ public final class org/kimplify/deci/DeciContext {
 }
 
 public final class org/kimplify/deci/DeciContext$Companion {
+	public final fun forCurrency (Ljava/lang/String;)Lorg/kimplify/deci/DeciContext;
 	public final fun getBANKING ()Lorg/kimplify/deci/DeciContext;
+	public final fun getCURRENCY_BTC ()Lorg/kimplify/deci/DeciContext;
+	public final fun getCURRENCY_EUR ()Lorg/kimplify/deci/DeciContext;
+	public final fun getCURRENCY_JPY ()Lorg/kimplify/deci/DeciContext;
 	public final fun getCURRENCY_USD ()Lorg/kimplify/deci/DeciContext;
 	public final fun getDEFAULT ()Lorg/kimplify/deci/DeciContext;
 }
@@ -196,6 +200,9 @@ public final class org/kimplify/deci/exception/DeciSerializationException : org/
 }
 
 public final class org/kimplify/deci/extension/DeciExtensionsKt {
+	public static final fun orDefault (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public static final fun orOne (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public static final fun orZero (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
 	public static final fun precision (Lorg/kimplify/deci/Deci;)I
 	public static final fun scale (Lorg/kimplify/deci/Deci;)I
 	public static final fun sumDeci (Ljava/lang/Iterable;)Lorg/kimplify/deci/Deci;
@@ -204,9 +211,53 @@ public final class org/kimplify/deci/extension/DeciExtensionsKt {
 	public static final fun toDeci (J)Lorg/kimplify/deci/Deci;
 	public static final fun toDeci (Ljava/lang/String;)Lorg/kimplify/deci/Deci;
 	public static final fun toDeciOrNull (Ljava/lang/String;)Lorg/kimplify/deci/Deci;
+	public static final fun toFloat (Lorg/kimplify/deci/Deci;)F
+	public static final fun toInt (Lorg/kimplify/deci/Deci;)I
+	public static final fun toIntOrNull (Lorg/kimplify/deci/Deci;)Ljava/lang/Integer;
 	public static final fun toLong (Lorg/kimplify/deci/Deci;)J
 	public static final fun toLongExact (Lorg/kimplify/deci/Deci;)J
 	public static final fun toLongOrNull (Lorg/kimplify/deci/Deci;)Ljava/lang/Long;
+}
+
+public final class org/kimplify/deci/extension/DeciOperatorExtensionsKt {
+	public static final fun d (I)Lorg/kimplify/deci/Deci;
+	public static final fun d (J)Lorg/kimplify/deci/Deci;
+	public static final fun d (Ljava/lang/String;)Lorg/kimplify/deci/Deci;
+	public static final fun minus (Lorg/kimplify/deci/Deci;I)Lorg/kimplify/deci/Deci;
+	public static final fun minus (Lorg/kimplify/deci/Deci;J)Lorg/kimplify/deci/Deci;
+	public static final fun plus (Lorg/kimplify/deci/Deci;I)Lorg/kimplify/deci/Deci;
+	public static final fun plus (Lorg/kimplify/deci/Deci;J)Lorg/kimplify/deci/Deci;
+	public static final fun times (ILorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public static final fun times (JLorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
+	public static final fun times (Lorg/kimplify/deci/Deci;I)Lorg/kimplify/deci/Deci;
+	public static final fun times (Lorg/kimplify/deci/Deci;J)Lorg/kimplify/deci/Deci;
+}
+
+public final class org/kimplify/deci/financial/DeciAllocationKt {
+	public static final fun allocate (Lorg/kimplify/deci/Deci;ILorg/kimplify/deci/DeciContext;)Ljava/util/List;
+	public static synthetic fun allocate$default (Lorg/kimplify/deci/Deci;ILorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun allocateByRatios (Lorg/kimplify/deci/Deci;Ljava/util/List;Lorg/kimplify/deci/DeciContext;)Ljava/util/List;
+	public static synthetic fun allocateByRatios$default (Lorg/kimplify/deci/Deci;Ljava/util/List;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
+}
+
+public final class org/kimplify/deci/financial/DeciPercentageKt {
+	public static final fun grossMargin (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun grossMargin$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun markup (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun markup$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun percentageChangeTo (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun percentageChangeTo$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+}
+
+public final class org/kimplify/deci/financial/DeciTaxKt {
+	public static final fun preTax (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun preTax$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun taxAmount (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun taxAmount$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun withDiscount (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun withDiscount$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
+	public static final fun withTax (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
+	public static synthetic fun withTax$default (Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
 }
 
 public final class org/kimplify/deci/formatting/DeciFormattingKt {

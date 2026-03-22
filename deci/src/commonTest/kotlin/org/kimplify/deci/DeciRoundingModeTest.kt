@@ -278,6 +278,21 @@ class DeciRoundingModeTest {
         assertAllCases(cases)
     }
 
+    @Test
+    fun `setScale rounding table - zero value`() {
+        val cases =
+            listOf(
+                Case("0.0", 0, RoundingMode.UP, "0"),
+                Case("0.0", 0, RoundingMode.DOWN, "0"),
+                Case("0.0", 0, RoundingMode.CEILING, "0"),
+                Case("0.0", 0, RoundingMode.FLOOR, "0"),
+                Case("0.0", 0, RoundingMode.HALF_UP, "0"),
+                Case("0.0", 0, RoundingMode.HALF_DOWN, "0"),
+                Case("0.0", 0, RoundingMode.HALF_EVEN, "0"),
+            )
+        assertAllCases(cases)
+    }
+
     private fun assertAllCases(cases: List<Case>) {
         for (case in cases) {
             val result = Deci(case.input).setScale(case.scale, case.mode)

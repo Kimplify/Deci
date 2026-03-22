@@ -15,6 +15,7 @@ import platform.Foundation.NSRoundingMode
 @Serializable(with = DeciSerializer::class)
 actual class Deci private constructor(
     private val internal: NSDecimalNumber,
+    private val targetScale: Int = -1,
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
         NSDecimalNumber(validateAndNormalizeDecimalLiteral(value)),
@@ -94,8 +95,16 @@ actual class Deci private constructor(
         roundingMode: RoundingMode,
     ): Deci {
         if (scale < 0) throw DeciScaleException(scale)
-        val rounded = internal.roundedTo(scale, roundingMode)
-        return Deci(rounded)
+        if (roundingMode == RoundingMode.HALF_DOWN) {
+            // NSDecimalNumber lacks HALF_DOWN. Emulate: same as HALF_UP except at
+            // exact midpoints, where we round toward zero (DOWN) instead.
+            val up = setScale(scale, RoundingMode.HALF_UP)
+            val down = setScale(scale, RoundingMode.DOWN)
+            if (up == down) return up
+            // Equidistant from both → exact midpoint → use DOWN
+            return if ((this - down).abs() == (up - this).abs()) down else up
+        }
+        return Deci(internal.roundedTo(scale, roundingMode), targetScale = scale)
     }
 
     actual operator fun rem(other: Deci): Deci {
@@ -111,12 +120,25 @@ actual class Deci private constructor(
     ): Deci {
         if (divisor.isZero()) throw DeciDivisionByZeroException()
         if (scale < 0) throw DeciScaleException(scale)
+        if (roundingMode == RoundingMode.HALF_DOWN) {
+            // Compute raw quotient, then delegate to setScale which handles HALF_DOWN
+            val raw = Deci(internal.decimalNumberByDividingBy(divisor.internal).stringValue)
+            return raw.setScale(scale, RoundingMode.HALF_DOWN)
+        }
         val raw = internal.decimalNumberByDividingBy(divisor.internal)
-        val rounded = raw.roundedTo(scale, roundingMode)
-        return Deci(rounded.stringValue)
+        return Deci(raw.roundedTo(scale, roundingMode), targetScale = scale)
     }
 
-    actual override fun toString(): String = internal.stringValue
+    actual override fun toString(): String {
+        val str = internal.stringValue
+        if (targetScale <= 0) return str
+        val dotIndex = str.indexOf('.')
+        if (dotIndex < 0) {
+            return "$str.${"0".repeat(targetScale)}"
+        }
+        val currentScale = str.length - dotIndex - 1
+        return if (currentScale >= targetScale) str else str + "0".repeat(targetScale - currentScale)
+    }
 
     actual fun toPlainString(): String = internal.stringValue
 
@@ -142,23 +164,23 @@ actual class Deci private constructor(
 
     override fun equals(other: Any?): Boolean = this === other || (other is Deci && compareTo(other) == 0)
 
-    override fun hashCode(): Int =
-        internal
-            .decimalNumberByRoundingAccordingToBehavior(NSDecimalNumberHandler.defaultDecimalNumberHandler())
-            .stringValue
-            .hashCode()
+    override fun hashCode(): Int {
+        val s = internal.stringValue
+        val normalized = if ('.' in s) s.trimEnd('0').trimEnd('.') else s
+        return normalized.hashCode()
+    }
 
     private fun toNativeMode(mode: RoundingMode): NSRoundingMode =
         when (mode) {
             RoundingMode.UP ->
-                if (isPositive()) {
+                if (!isNegative()) {
                     NSRoundingMode.NSRoundUp
                 } else {
                     NSRoundingMode.NSRoundDown
                 }
 
             RoundingMode.DOWN ->
-                if (isPositive()) {
+                if (!isNegative()) {
                     NSRoundingMode.NSRoundDown
                 } else {
                     NSRoundingMode.NSRoundUp
@@ -168,7 +190,7 @@ actual class Deci private constructor(
             RoundingMode.FLOOR -> NSRoundingMode.NSRoundDown
 
             RoundingMode.HALF_UP -> NSRoundingMode.NSRoundPlain
-            RoundingMode.HALF_DOWN -> NSRoundingMode.NSRoundDown
+            RoundingMode.HALF_DOWN -> NSRoundingMode.NSRoundPlain
             RoundingMode.HALF_EVEN -> NSRoundingMode.NSRoundBankers
         }
 }

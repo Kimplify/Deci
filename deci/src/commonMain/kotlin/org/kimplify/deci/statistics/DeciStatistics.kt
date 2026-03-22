@@ -50,18 +50,14 @@ fun Iterable<Deci>.median(context: DeciContext = DeciContext.DEFAULT): Deci? {
  *
  * @return The minimum value, or null if collection is empty
  */
-fun Iterable<Deci>.minDeci(): Deci? {
-    return this.minOrNull()
-}
+fun Iterable<Deci>.minDeci(): Deci? = this.minOrNull()
 
 /**
  * Finds the maximum value in the collection.
  *
  * @return The maximum value, or null if collection is empty
  */
-fun Iterable<Deci>.maxDeci(): Deci? {
-    return this.maxOrNull()
-}
+fun Iterable<Deci>.maxDeci(): Deci? = this.maxOrNull()
 
 /**
  * Calculates the range (max - min) of the collection.
@@ -92,7 +88,7 @@ fun Iterable<Deci>.variance(
     if (values.isEmpty()) return null
     if (!isPopulation && values.size <= 1) return null
 
-    val mean = values.mean(context) ?: return null
+    val mean = values.sumDeci().divide(Deci(values.size), context)
     val sumOfSquares =
         values.fold(Deci.ZERO) { acc, value ->
             val diff = value - mean
@@ -169,9 +165,7 @@ fun Iterable<Deci>.harmonicMean(context: DeciContext = DeciContext.DEFAULT): Dec
  * @param predicate The condition to test
  * @return Number of values satisfying the predicate
  */
-fun Iterable<Deci>.countWhere(predicate: (Deci) -> Boolean): Int {
-    return this.count(predicate)
-}
+fun Iterable<Deci>.countWhere(predicate: (Deci) -> Boolean): Int = this.count(predicate)
 
 /**
  * Calculates the sum of squares of deviations from the mean.
@@ -186,7 +180,7 @@ fun Iterable<Deci>.sumOfSquares(context: DeciContext = DeciContext.DEFAULT): Dec
     val values = this.toList()
     if (values.isEmpty()) return null
 
-    val mean = values.mean(context) ?: return null
+    val mean = values.sumDeci().divide(Deci(values.size), context)
     return values.fold(Deci.ZERO) { acc, value ->
         val deviation = value - mean
         acc + (deviation * deviation)

@@ -9,6 +9,7 @@ import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 @Serializable(with = DeciSerializer::class)
 actual class Deci private constructor(
     private val internal: DecimalJs,
+    private val targetScale: Int = -1,
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
         DecimalJs(validateAndNormalizeDecimalLiteral(value)),
@@ -59,7 +60,7 @@ actual class Deci private constructor(
         if (divisor.isZero()) throw DeciDivisionByZeroException()
         val result = internal.div(divisor.internal)
         val rounded = result.toDecimalPlaces(scale, convert(roundingMode))
-        return Deci(rounded)
+        return Deci(rounded, targetScale = scale)
     }
 
     actual fun divide(
@@ -72,10 +73,13 @@ actual class Deci private constructor(
         roundingMode: RoundingMode,
     ): Deci {
         if (scale < 0) throw DeciScaleException(scale)
-        return Deci(internal.toDecimalPlaces(scale, convert(roundingMode)))
+        return Deci(internal.toDecimalPlaces(scale, convert(roundingMode)), targetScale = scale)
     }
 
-    actual override fun toString(): String = internal.toString()
+    actual override fun toString(): String {
+        if (targetScale <= 0) return internal.toString()
+        return internal.toFixed(targetScale)
+    }
 
     actual fun toPlainString(): String = internal.toFixed()
 

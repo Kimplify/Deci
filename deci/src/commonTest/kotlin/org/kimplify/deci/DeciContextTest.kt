@@ -55,4 +55,29 @@ class DeciContextTest {
         val result = Deci("1").divide(Deci("4"), DeciContext.BANKING)
         assertEquals(Deci("0.25"), result)
     }
+
+    @Test
+    fun `CURRENCY_EUR has 2 decimal places with HALF_EVEN`() {
+        assertEquals(2, DeciContext.CURRENCY_EUR.precision)
+        assertEquals(RoundingMode.HALF_EVEN, DeciContext.CURRENCY_EUR.roundingMode)
+    }
+
+    @Test
+    fun `CURRENCY_JPY has 0 decimal places`() {
+        assertEquals(0, DeciContext.CURRENCY_JPY.precision)
+    }
+
+    @Test
+    fun `CURRENCY_BTC has 8 decimal places`() {
+        assertEquals(8, DeciContext.CURRENCY_BTC.precision)
+    }
+
+    @Test
+    fun `forCurrency returns correct context`() {
+        assertEquals(DeciContext.CURRENCY_USD, DeciContext.forCurrency("USD"))
+        assertEquals(DeciContext.CURRENCY_EUR, DeciContext.forCurrency("EUR"))
+        assertEquals(DeciContext.CURRENCY_JPY, DeciContext.forCurrency("JPY"))
+        assertEquals(DeciContext.CURRENCY_BTC, DeciContext.forCurrency("BTC"))
+        assertEquals(DeciContext.CURRENCY_USD, DeciContext.forCurrency("UNKNOWN"))
+    }
 }

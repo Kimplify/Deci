@@ -311,4 +311,18 @@ class DeciTest {
         assertFailsWith<DeciScaleException> { Deci("1").divide(Deci("2"), -1, RoundingMode.UP) }
         assertFailsWith<DeciScaleException> { Deci("1.23").setScale(-5, RoundingMode.DOWN) }
     }
+
+    @Test
+    fun `hashCode is consistent for numerically equal values`() {
+        assertEquals(Deci("1.0").hashCode(), Deci("1.00").hashCode())
+        assertEquals(Deci("1").hashCode(), Deci("1.0").hashCode())
+        assertEquals(Deci("100").hashCode(), Deci("100.0").hashCode())
+    }
+
+    @Test
+    fun `hashSet contains works for numerically equal values`() {
+        val set = hashSetOf(Deci("1.0"))
+        assertTrue(set.contains(Deci("1.00")))
+        assertTrue(set.contains(Deci("1")))
+    }
 }

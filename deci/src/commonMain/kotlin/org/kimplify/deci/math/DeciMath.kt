@@ -59,8 +59,8 @@ fun Deci.sqrt(precision: Int = 10): Deci {
 fun Deci.pow(
     exponent: Deci,
     context: DeciContext = DeciContext.DEFAULT,
-): Deci {
-    return when {
+): Deci =
+    when {
         exponent.isZero() -> Deci.ONE
         exponent == Deci.ONE -> this
         else -> {
@@ -78,7 +78,6 @@ fun Deci.pow(
             }
         }
     }
-}
 
 private fun Deci.powPositive(exponent: Int): Deci {
     var result = Deci.ONE
@@ -118,7 +117,7 @@ fun Deci.mod(divisor: Deci): Deci {
 fun Deci.remainder(divisor: Deci): Deci {
     if (divisor.isZero()) throw DeciDivisionByZeroException("Cannot compute remainder: divisor is zero")
 
-    val quotient = (this / divisor).setScale(0, RoundingMode.HALF_UP)
+    val quotient = (this / divisor).setScale(0, RoundingMode.DOWN)
     return this - (quotient * divisor)
 }
 

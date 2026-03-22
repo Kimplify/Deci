@@ -1,16 +1,16 @@
 [versions]
 version = "0.2.0"
 
-kotlin = "2.2.21"
+kotlin = "2.3.20"
 agp = "8.13.2"
-maven-publish = "0.35.0"
-compose = "1.9.3"
+maven-publish = "0.36.0"
+compose = "1.10.2"
 kotlinx-coroutines = "1.10.2"
-kotlinx-serialization = "1.9.0"
-androidx-activityCompose = "1.12.2"
-ktlint-plugin = "12.2.0"
-binary-compatibility-validator = "0.17.0"
-kotest = "6.0.0.M1"
+kotlinx-serialization = "1.10.0"
+androidx-activityCompose = "1.13.0"
+ktlint-plugin = "14.0.1"
+binary-compatibility-validator = "0.18.1"
+kotest = "6.1.7"
 
 [libraries]
 

@@ -43,7 +43,8 @@ fun Deci.formatWithThousandsSeparator(separator: String = ","): String {
     val digits = if (isNegative) integerPart.substring(1) else integerPart
 
     val formattedInteger =
-        digits.reversed()
+        digits
+            .reversed()
             .chunked(3)
             .joinToString(separator)
             .reversed()
@@ -135,15 +136,14 @@ fun Deci.toScientificNotation(precision: Int = 6): String {
  * @return the formatted string.
  * @throws [org.kimplify.deci.exception.DeciFormatException] if [pattern] is not a recognized format.
  */
-fun Deci.format(pattern: String): String {
-    return when (pattern) {
+fun Deci.format(pattern: String): String =
+    when (pattern) {
         "0.00" -> this.setScale(2, RoundingMode.HALF_UP).toPlainString()
         "#,##0.00" -> this.setScale(2, RoundingMode.HALF_UP).formatWithThousandsSeparator()
         "0.0000" -> this.setScale(4, RoundingMode.HALF_UP).toPlainString()
         "#,##0" -> this.setScale(0, RoundingMode.HALF_UP).formatWithThousandsSeparator()
         else -> throw DeciFormatException(pattern = pattern)
     }
-}
 
 /**
  * Converts this Deci to words (English).
@@ -159,8 +159,15 @@ fun Deci.toWords(): String {
     val parts = abs.toPlainString().split(".")
     val integerPart = parts[0].toLongOrNull() ?: return "number too large"
 
-    val result =
-        convertIntegerToWords(integerPart)
+    val fractionalPart =
+        if (parts.size > 1 && parts[1].any { it != '0' }) {
+            val digitNames = arrayOf("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+            " point " + parts[1].map { digitNames[it.digitToInt()] }.joinToString(" ")
+        } else {
+            ""
+        }
+
+    val result = convertIntegerToWords(integerPart) + fractionalPart
 
     return if (isNegative) "negative $result" else result
 }
@@ -171,8 +178,16 @@ private fun convertIntegerToWords(number: Long): String {
     val ones = arrayOf("", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
     val teens =
         arrayOf(
-            "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
-            "sixteen", "seventeen", "eighteen", "nineteen",
+            "ten",
+            "eleven",
+            "twelve",
+            "thirteen",
+            "fourteen",
+            "fifteen",
+            "sixteen",
+            "seventeen",
+            "eighteen",
+            "nineteen",
         )
     val tens = arrayOf("", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety")
 
@@ -197,6 +212,30 @@ private fun convertIntegerToWords(number: Long): String {
                 } else {
                     ""
                 }
+        }
+        number < 1_000_000 -> {
+            val thousands = number / 1000
+            val remainder = number % 1000
+            convertIntegerToWords(thousands) + " thousand" +
+                if (remainder > 0) " ${convertIntegerToWords(remainder)}" else ""
+        }
+        number < 1_000_000_000 -> {
+            val millions = number / 1_000_000
+            val remainder = number % 1_000_000
+            convertIntegerToWords(millions) + " million" +
+                if (remainder > 0) " ${convertIntegerToWords(remainder)}" else ""
+        }
+        number < 1_000_000_000_000 -> {
+            val billions = number / 1_000_000_000
+            val remainder = number % 1_000_000_000
+            convertIntegerToWords(billions) + " billion" +
+                if (remainder > 0) " ${convertIntegerToWords(remainder)}" else ""
+        }
+        number < 1_000_000_000_000_000 -> {
+            val trillions = number / 1_000_000_000_000
+            val remainder = number % 1_000_000_000_000
+            convertIntegerToWords(trillions) + " trillion" +
+                if (remainder > 0) " ${convertIntegerToWords(remainder)}" else ""
         }
         else -> "number too large"
     }
