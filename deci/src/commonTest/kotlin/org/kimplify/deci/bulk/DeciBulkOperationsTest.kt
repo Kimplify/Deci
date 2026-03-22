@@ -11,7 +11,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DeciBulkOperationsTest {
-
     // --- multiplyAll ---
 
     @Test
@@ -520,20 +519,33 @@ class DeciBulkOperationsTest {
 
     @Test
     fun `filterOutliers removes extreme outliers`() {
-        val values = listOf(
-            Deci("10"), Deci("11"), Deci("12"), Deci("13"),
-            Deci("14"), Deci("15"), Deci("100"),
-        )
+        val values =
+            listOf(
+                Deci("10"),
+                Deci("11"),
+                Deci("12"),
+                Deci("13"),
+                Deci("14"),
+                Deci("15"),
+                Deci("100"),
+            )
         val result = values.filterOutliers()
         assertTrue(Deci("100") !in result)
     }
 
     @Test
     fun `filterOutliers keeps values within IQR bounds`() {
-        val values = listOf(
-            Deci("1"), Deci("2"), Deci("3"), Deci("4"),
-            Deci("5"), Deci("6"), Deci("7"), Deci("8"),
-        )
+        val values =
+            listOf(
+                Deci("1"),
+                Deci("2"),
+                Deci("3"),
+                Deci("4"),
+                Deci("5"),
+                Deci("6"),
+                Deci("7"),
+                Deci("8"),
+            )
         val result = values.filterOutliers()
         assertEquals(values, result)
     }
@@ -547,10 +559,16 @@ class DeciBulkOperationsTest {
 
     @Test
     fun `filterOutliers with custom multiplier adjusts sensitivity`() {
-        val values = listOf(
-            Deci("10"), Deci("11"), Deci("12"), Deci("13"),
-            Deci("14"), Deci("15"), Deci("30"),
-        )
+        val values =
+            listOf(
+                Deci("10"),
+                Deci("11"),
+                Deci("12"),
+                Deci("13"),
+                Deci("14"),
+                Deci("15"),
+                Deci("30"),
+            )
         val strictResult = values.filterOutliers(Deci("0.5"))
         val lenientResult = values.filterOutliers(Deci("5"))
         assertTrue(strictResult.size <= lenientResult.size)
@@ -558,10 +576,16 @@ class DeciBulkOperationsTest {
 
     @Test
     fun `filterOutliers removes lower outliers too`() {
-        val values = listOf(
-            Deci("-100"), Deci("10"), Deci("11"), Deci("12"),
-            Deci("13"), Deci("14"), Deci("15"),
-        )
+        val values =
+            listOf(
+                Deci("-100"),
+                Deci("10"),
+                Deci("11"),
+                Deci("12"),
+                Deci("13"),
+                Deci("14"),
+                Deci("15"),
+            )
         val result = values.filterOutliers()
         assertTrue(Deci("-100") !in result)
     }

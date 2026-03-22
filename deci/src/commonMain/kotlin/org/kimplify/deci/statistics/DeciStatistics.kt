@@ -7,10 +7,6 @@ import org.kimplify.deci.extension.sumDeci
 import org.kimplify.deci.math.sqrt
 
 /**
- * Statistical operations for collections of Deci values.
- */
-
-/**
  * Calculates the arithmetic mean (average) of the collection.
  *
  * Division is performed using the supplied [context] for scale and rounding.

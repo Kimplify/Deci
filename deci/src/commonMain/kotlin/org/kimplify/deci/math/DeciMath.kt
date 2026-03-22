@@ -9,10 +9,6 @@ import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.extension.toLong
 
 /**
- * Basic mathematical operations for Deci.
- */
-
-/**
  * Calculates the square root of this [Deci] using Newton's method.
  *
  * Intermediate divisions use an internal [DeciContext] with extra precision

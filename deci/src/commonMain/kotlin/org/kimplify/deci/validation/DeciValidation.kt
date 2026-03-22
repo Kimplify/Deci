@@ -6,10 +6,6 @@ import org.kimplify.deci.extension.toLong
 import org.kimplify.deci.parser.DECIMAL_REGEX
 
 /**
- * Validation and safety utilities for Deci.
- */
-
-/**
  * Checks if this string represents a valid Deci value.
  *
  * @return True if the string can be parsed as a Deci, false otherwise
@@ -211,6 +207,14 @@ fun Deci.isApproximatelyEqual(
 }
 
 /**
+ * Result of a [Deci] validation check.
+ *
+ * @property isValid `true` if the value passed all validation constraints.
+ * @property errorMessage a human-readable error description, or `null` when valid.
+ */
+data class ValidationResult(val isValid: Boolean, val errorMessage: String? = null)
+
+/**
  * Validates input for form fields with specific requirements.
  *
  * @param minValue Minimum allowed value (optional)
@@ -219,14 +223,6 @@ fun Deci.isApproximatelyEqual(
  * @param mustBePositive Whether value must be positive (default: false)
  * @return Validation result with error message if invalid
  */
-/**
- * Result of a [Deci] validation check.
- *
- * @property isValid `true` if the value passed all validation constraints.
- * @property errorMessage a human-readable error description, or `null` when valid.
- */
-data class ValidationResult(val isValid: Boolean, val errorMessage: String? = null)
-
 fun Deci.validateForForm(
     minValue: Deci? = null,
     maxValue: Deci? = null,

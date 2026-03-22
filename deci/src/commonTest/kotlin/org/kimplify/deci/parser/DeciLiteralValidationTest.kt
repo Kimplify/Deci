@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class DeciLiteralValidationTest {
-
     // --- validateAndNormalizeDecimalLiteral ---
 
     @Test

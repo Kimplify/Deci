@@ -10,7 +10,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class DeciValidationExtendedTest {
-
     // --- isValidDeci extended ---
 
     @Test
@@ -496,12 +495,13 @@ class DeciValidationExtendedTest {
 
     @Test
     fun `validateForForm all valid`() {
-        val result = Deci("50").validateForForm(
-            minValue = Deci("0"),
-            maxValue = Deci("100"),
-            maxDecimalPlaces = 2,
-            mustBePositive = true,
-        )
+        val result =
+            Deci("50").validateForForm(
+                minValue = Deci("0"),
+                maxValue = Deci("100"),
+                maxDecimalPlaces = 2,
+                mustBePositive = true,
+            )
         assertTrue(result.isValid)
     }
 

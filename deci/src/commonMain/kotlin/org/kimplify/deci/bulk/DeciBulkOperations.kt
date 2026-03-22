@@ -7,10 +7,6 @@ import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.extension.sumDeci
 
 /**
- * Bulk operations and collection utilities for Deci.
- */
-
-/**
  * Multiplies all values in the collection together.
  *
  * @return Product of all values, or Deci.ONE for empty collections

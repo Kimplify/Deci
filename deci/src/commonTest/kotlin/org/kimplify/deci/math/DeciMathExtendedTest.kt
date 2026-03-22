@@ -11,7 +11,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class DeciMathExtendedTest {
-
     // --- sqrt extended ---
 
     @Test

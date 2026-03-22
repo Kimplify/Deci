@@ -13,7 +13,10 @@ import org.kimplify.deci.config.DeciConfiguration
  * ```
  */
 fun interface DeciLogSink {
-    fun log(tag: String, message: String)
+    fun log(
+        tag: String,
+        message: String,
+    )
 }
 
 /**

@@ -6,10 +6,6 @@ import org.kimplify.deci.RoundingMode
 import org.kimplify.deci.exception.DeciFormatException
 
 /**
- * Formatting and display utilities for Deci.
- */
-
-/**
  * Formats this Deci as a currency string.
  *
  * @param currencySymbol The currency symbol to use (default: "$")
@@ -174,7 +170,10 @@ private fun convertIntegerToWords(number: Long): String {
 
     val ones = arrayOf("", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
     val teens =
-        arrayOf("ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen")
+        arrayOf(
+            "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+            "sixteen", "seventeen", "eighteen", "nineteen",
+        )
     val tens = arrayOf("", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety")
 
     return when {
