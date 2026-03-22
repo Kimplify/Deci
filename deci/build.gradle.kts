@@ -56,7 +56,8 @@ mavenPublishing {
 
     pom {
         name = "Deci"
-        description = "Precise decimal arithmetic for Kotlin Multiplatform projects, shipping high-precision operations across every target."
+        description = "Precise decimal arithmetic for Kotlin Multiplatform projects, " +
+            "shipping high-precision operations across every target."
         url = "https://github.com/Kimplify/Deci"
 
         licenses {
