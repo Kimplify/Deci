@@ -1,10 +1,6 @@
-<p align="center">
-  <img src="deci-logo.svg" alt="Deci" width="430" />
-</p>
+<img src="deci-logo.svg" alt="Deci" width="430" />
 
-<p align="center">
-  Precise decimal arithmetic for every Kotlin platform: Android, iOS, JVM, JS, WASM, and Native.
-</p>
+> Precise decimal arithmetic for every Kotlin platform: Android, iOS, JVM, JS, WASM, and Native.
 
 [![Maven Central](https://img.shields.io/maven-central/v/org.kimplify/deci)](https://central.sonatype.com/artifact/org.kimplify/deci)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-7F52FF)](https://kotlinlang.org)
