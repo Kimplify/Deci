@@ -36,5 +36,7 @@ external class DecimalJs(
 
     fun neg(): DecimalJs
 
+    fun toFixed(): String
+
     fun toFixed(digits: Int): String
 }

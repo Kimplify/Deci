@@ -214,18 +214,6 @@ data class ValidationResult(val isValid: Boolean, val errorMessage: String? = nu
  * @param mustBePositive Whether value must be positive (default: false)
  * @return Validation result with error message if invalid
  */
-
-/**
- * Result of a [Deci] validation check.
- *
- * @property isValid `true` if the value passed all validation constraints.
- * @property errorMessage a human-readable error description, or `null` when valid.
- */
-data class ValidationResult(
-    val isValid: Boolean,
-    val errorMessage: String? = null,
-)
-
 fun Deci.validateForForm(
     minValue: Deci? = null,
     maxValue: Deci? = null,

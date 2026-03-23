@@ -15,7 +15,7 @@ import platform.Foundation.NSRoundingMode
 @Serializable(with = DeciSerializer::class)
 actual class Deci private constructor(
     private val internal: NSDecimalNumber,
-    private val targetScale: Int = -1,
+    private val _scale: Int? = null,
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
         NSDecimalNumber(validateAndNormalizeDecimalLiteral(value)),
@@ -25,21 +25,58 @@ actual class Deci private constructor(
     actual constructor(value: Int) : this(value.toString())
     actual constructor(value: Double) : this(value.toString())
 
-    private fun NSDecimalNumber.roundedTo(
+    private fun roundWithHandler(
+        value: NSDecimalNumber,
         scale: Int,
-        roundingMode: RoundingMode,
+        nativeMode: NSRoundingMode,
     ): NSDecimalNumber {
-        val native = toNativeMode(roundingMode)
         val handler =
             NSDecimalNumberHandler(
-                native,
+                nativeMode,
                 scale.toShort(),
                 raiseOnExactness = false,
                 raiseOnOverflow = false,
                 raiseOnUnderflow = false,
                 raiseOnDivideByZero = false,
             )
-        return this.decimalNumberByRoundingAccordingToBehavior(handler)
+        return value.decimalNumberByRoundingAccordingToBehavior(handler)
+    }
+
+    private fun roundDecimal(
+        value: NSDecimalNumber,
+        scale: Int,
+        roundingMode: RoundingMode,
+    ): NSDecimalNumber {
+        if (roundingMode == RoundingMode.HALF_DOWN) {
+            return roundHalfDown(value, scale)
+        }
+        return roundWithHandler(value, scale, toNativeMode(roundingMode))
+    }
+
+    private fun roundHalfDown(
+        value: NSDecimalNumber,
+        scale: Int,
+    ): NSDecimalNumber {
+        val halfUpResult = roundWithHandler(value, scale, NSRoundingMode.NSRoundPlain)
+        val isNeg = value.compare(NSDecimalNumber.zero) < 0L
+        val downMode =
+            if (isNeg) NSRoundingMode.NSRoundUp else NSRoundingMode.NSRoundDown
+        val downResult = roundWithHandler(value, scale, downMode)
+
+        if (halfUpResult.compare(downResult) == 0L) return halfUpResult
+
+        val diff = value.decimalNumberBySubtracting(downResult)
+        val absDiff =
+            if (diff.compare(NSDecimalNumber.zero) < 0L) {
+                diff.decimalNumberByMultiplyingBy(NSDecimalNumber(-1))
+            } else {
+                diff
+            }
+        val midpoint =
+            NSDecimalNumber(string = "5")
+                .decimalNumberByMultiplyingByPowerOf10((-scale - 1).toShort())
+
+        return if (absDiff.compare(midpoint) == 0L) downResult else halfUpResult
     }
 
     actual companion object {
@@ -95,16 +132,8 @@ actual class Deci private constructor(
         roundingMode: RoundingMode,
     ): Deci {
         if (scale < 0) throw DeciScaleException(scale)
-        if (roundingMode == RoundingMode.HALF_DOWN) {
-            // NSDecimalNumber lacks HALF_DOWN. Emulate: same as HALF_UP except at
-            // exact midpoints, where we round toward zero (DOWN) instead.
-            val up = setScale(scale, RoundingMode.HALF_UP)
-            val down = setScale(scale, RoundingMode.DOWN)
-            if (up == down) return up
-            // Equidistant from both → exact midpoint → use DOWN
-            return if ((this - down).abs() == (up - this).abs()) down else up
-        }
-        return Deci(internal.roundedTo(scale, roundingMode), targetScale = scale)
+        val rounded = roundDecimal(internal, scale, roundingMode)
+        return Deci(rounded, scale)
     }
 
     actual operator fun rem(other: Deci): Deci {
@@ -126,21 +155,31 @@ actual class Deci private constructor(
             return raw.setScale(scale, RoundingMode.HALF_DOWN)
         }
         val raw = internal.decimalNumberByDividingBy(divisor.internal)
-        return Deci(raw.roundedTo(scale, roundingMode), targetScale = scale)
+        val rounded = roundDecimal(raw, scale, roundingMode)
+        return Deci(rounded, scale)
     }
 
     actual override fun toString(): String {
         val str = internal.stringValue
-        if (targetScale <= 0) return str
+        val scale = _scale ?: return str
+        if (scale <= 0) return str
         val dotIndex = str.indexOf('.')
         if (dotIndex < 0) {
-            return "$str.${"0".repeat(targetScale)}"
+            return "$str.${"0".repeat(scale)}"
         }
         val currentScale = str.length - dotIndex - 1
-        return if (currentScale >= targetScale) str else str + "0".repeat(targetScale - currentScale)
+        return if (currentScale >= scale) str else str + "0".repeat(scale - currentScale)
     }
 
-    actual fun toPlainString(): String = internal.stringValue
+    actual fun toPlainString(): String {
+        val str = internal.stringValue
+        val scale = _scale ?: return str
+        if (scale == 0) return str.split(".")[0]
+        val parts = str.split(".")
+        val intPart = parts[0]
+        val fracPart = if (parts.size > 1) parts[1] else ""
+        return "$intPart.${fracPart.padEnd(scale, '0')}"
+    }
 
     actual fun toDouble(): Double = internal.doubleValue
 
