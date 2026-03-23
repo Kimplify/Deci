@@ -1,7 +1,5 @@
 <img src="deci-logo.svg" alt="Deci" width="430" />
 
-> Precise decimal arithmetic for every Kotlin platform: Android, iOS, JVM, JS, WASM, and Native.
-
 [![Maven Central](https://img.shields.io/maven-central/v/org.kimplify/deci)](https://central.sonatype.com/artifact/org.kimplify/deci)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-7F52FF)](https://kotlinlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
