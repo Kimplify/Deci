@@ -203,7 +203,10 @@ fun Deci.isApproximatelyEqual(
  * @property isValid `true` if the value passed all validation constraints.
  * @property errorMessage a human-readable error description, or `null` when valid.
  */
-data class ValidationResult(val isValid: Boolean, val errorMessage: String? = null)
+data class ValidationResult(
+    val isValid: Boolean,
+    val errorMessage: String? = null,
+)
 
 /**
  * Validates input for form fields with specific requirements.
