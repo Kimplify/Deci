@@ -48,19 +48,14 @@ fun FinancialScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        // Section 1: Tax Calculator
         TaxCalculatorSection()
 
-        // Section 2: Discount Calculator
         DiscountCalculatorSection()
 
-        // Section 3: Money Allocation
         MoneyAllocationSection()
 
-        // Section 4: Allocation by Ratios
         AllocationByRatiosSection()
 
-        // Section 5: Percentage & Margins
         PercentageAndMarginsSection()
     }
 }
@@ -300,19 +295,16 @@ private fun AllocationByRatiosSection() {
 @Composable
 private fun PercentageAndMarginsSection() {
     DemoSection(title = "Percentage & Margins") {
-        // Percentage change
         val from = Deci("80")
         val to = Deci("100")
         val change = from.percentageChangeTo(to)
         DemoItem("\$80 -> \$100: ${change.setScale(2, RoundingMode.HALF_UP)}% change")
 
-        // Gross margin
         val revenue = Deci("500")
         val cost = Deci("300")
         val margin = grossMargin(revenue, cost)
         DemoItem("Gross margin (revenue=$revenue, cost=$cost): ${margin.setScale(2, RoundingMode.HALF_UP)}%")
 
-        // Markup
         val markupVal = markup(revenue, cost)
         DemoItem("Markup (price=$revenue, cost=$cost): ${markupVal.setScale(2, RoundingMode.HALF_UP)}%")
     }
