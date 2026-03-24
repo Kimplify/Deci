@@ -58,22 +58,16 @@ fun ValidationScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        // Section 1: Interactive Form Validator
         FormValidatorSection()
 
-        // Section 2: String Validation
         StringValidationSection()
 
-        // Section 3: Value Validation
         ValueValidationSection()
 
-        // Section 4: Financial Validation
         FinancialValidationSection()
 
-        // Section 5: Approximate Equality & Safe Division
         ApproximateEqualitySection()
 
-        // Section 6: Serialization
         SerializationSection()
     }
 }
