@@ -3,6 +3,7 @@ package org.kimplify.deci.statistics
 import org.kimplify.deci.Deci
 import org.kimplify.deci.DeciConstants
 import org.kimplify.deci.DeciContext
+import org.kimplify.deci.RoundingMode
 import org.kimplify.deci.extension.sumDeci
 import org.kimplify.deci.math.sqrt
 
@@ -155,7 +156,8 @@ fun Iterable<Deci>.harmonicMean(context: DeciContext = DeciContext.DEFAULT): Dec
     if (values.isEmpty()) return null
     if (values.any { it <= Deci.ZERO }) return null
 
-    val sumOfReciprocals = values.fold(Deci.ZERO) { acc, value -> acc + Deci.ONE.divide(value, context) }
+    val internalContext = DeciContext(context.precision + 10, RoundingMode.HALF_UP)
+    val sumOfReciprocals = values.fold(Deci.ZERO) { acc, value -> acc + Deci.ONE.divide(value, internalContext) }
     return Deci(values.size).divide(sumOfReciprocals, context)
 }
 
