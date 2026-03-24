@@ -8,6 +8,12 @@ val libsCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 val deciVersion: String = libsCatalog.findVersion("version").get().requiredVersion
 
 kotlin {
+    androidLibrary {
+        namespace = "org.kimplify.deci"
+        compileSdk = 36
+        minSdk = 21
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -38,20 +44,11 @@ kotlin {
     }
 }
 
-android {
-    namespace = "org.kimplify.deci"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 21
-    }
-}
-
 // Publishing your Kotlin Multiplatform library to Maven Central
 // https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html
 mavenPublishing {
     publishToMavenCentral()
-    signAllPublications()
+    //signAllPublications()
     coordinates("org.kimplify", "deci", deciVersion)
 
     pom {
