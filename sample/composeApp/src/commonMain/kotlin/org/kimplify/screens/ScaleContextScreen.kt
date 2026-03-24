@@ -42,13 +42,10 @@ fun ScaleContextScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        // Section 1: Scale Explorer
         ScaleExplorerSection()
 
-        // Section 2: DeciContext Presets
         DeciContextPresetsSection()
 
-        // Section 3: Division with Context
         DivisionWithContextSection()
     }
 }
