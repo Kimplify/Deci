@@ -55,6 +55,7 @@ deci/
 - **No nullable returns** — arithmetic operations never return `null`; throw a typed exception on illegal operations (e.g. divide by zero).
 - **Operator overloading** — implement `+`, `-`, `*`, `/`, `%`, `unaryMinus`, and comparison operators on `Decimal`.
 - **Extension functions** — prefer extension functions over utility classes for conversions (e.g. `Int.toDecimal()`, `String.toDecimal()`).
+- **No inline comments** — do not add comments in the middle of code blocks; code should be self-explanatory.
 
 ### Precision & Rounding
 - Never perform rounding implicitly — always require an explicit `RoundingMode` when a result must be rounded.
