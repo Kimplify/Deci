@@ -8,13 +8,18 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.kmp.library)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
     jvmToolchain(21)
 
-    androidTarget()
+    androidLibrary {
+        namespace = "org.kimplify.deci.sample.shared"
+        compileSdk = 36
+        minSdk = 24
+    }
     jvm()
     js(IR) {
         outputModuleName.set("composeApp-js")
@@ -71,31 +76,15 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(project(":deci"))
-        }
-
-        androidMain.dependencies {
-            implementation(libs.androidx.activityCompose)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
 
-    }
-}
-
-android {
-    namespace = "org.kimplify.deciSample"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 24
-        targetSdk = 36
-
-        applicationId = "org.kimplify.deciSample"
-        versionCode = 1
-        versionName = "1.0.0"
     }
 }
 

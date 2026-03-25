@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.1] - 2026-03-24
+
+### Fixed
+
+- **`harmonicMean()` no longer crashes with low-precision contexts** — calling
+  `harmonicMean(DeciContext.CURRENCY_USD)` on large values (e.g., 1200) caused a
+  `DeciDivisionByZeroException` because reciprocals like `1/1200` rounded to `0.00`
+  at 2 decimal places. Intermediate reciprocal calculations now use extra internal
+  precision (`context.precision + 10`), matching the pattern already used by `sqrt()`.
+
+### Changed
+
+- **Sample app restructured** into a 5-tab navigation app (Core, Scale & Context,
+  Financial, Format & Stats, Validation) showcasing all library features.
+
 ## [0.2.0] - 2026-03-20
 
 ### Breaking Changes

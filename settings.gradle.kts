@@ -34,4 +34,5 @@ dependencyResolutionManagement {
 }
 include(":deci")
 include(":sample:composeApp")
+include(":sample:androidApp")
 

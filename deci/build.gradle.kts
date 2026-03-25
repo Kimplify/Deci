@@ -8,6 +8,12 @@ val libsCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 val deciVersion: String = libsCatalog.findVersion("version").get().requiredVersion
 
 kotlin {
+    androidLibrary {
+        namespace = "org.kimplify.deci"
+        compileSdk = 36
+        minSdk = 21
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -35,15 +41,6 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(npm("decimal.js", "10.6.0"))
         }
-    }
-}
-
-android {
-    namespace = "org.kimplify.deci"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 21
     }
 }
 

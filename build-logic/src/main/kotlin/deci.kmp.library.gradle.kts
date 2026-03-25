@@ -2,7 +2,7 @@
 
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
-    id("com.android.library")
+    id("com.android.kotlin.multiplatform.library")
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
 }
@@ -10,7 +10,6 @@ plugins {
 kotlin {
     jvmToolchain(21)
 
-    androidTarget { publishLibraryVariants("release") }
     jvm()
     js { browser() }
     wasmJs { browser() }
