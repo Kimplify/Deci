@@ -15,7 +15,7 @@ actual class Deci(
     private val internal: BigDecimal,
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
-        BigDecimal(validateAndNormalizeDecimalLiteral(value)).stripTrailingZeros(),
+        BigDecimal(validateAndNormalizeDecimalLiteral(value)),
     )
 
     actual constructor(value: Long) : this(value.toString())
