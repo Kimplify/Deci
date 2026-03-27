@@ -1,5 +1,35 @@
 # Changelog
 
+## [Unreleased]
+
+### Breaking Changes
+
+- **`toPlainString()` removed** — `toString()` is now the single string representation
+  method. It never uses scientific notation and preserves trailing zeros (e.g.
+  `Deci("1.50").toString()` returns `"1.50"`). This reverts the 0.2.0 change that
+  introduced scientific notation in `toString()`.
+
+- **Trailing zeros are now preserved** — `Deci("1.2300").toString()` returns `"1.2300"`,
+  not `"1.23"`. The constructor no longer strips trailing zeros on JVM/Android.
+
+### Migration Guide
+
+If you adopted `toPlainString()` from 0.2.0, simply revert to `toString()`:
+
+```kotlin
+// 0.2.0
+val text = myDeci.toPlainString()
+
+// Now
+val text = myDeci.toString()
+```
+
+`toString()` now behaves like the old `toPlainString()` — plain decimal, no scientific
+notation, scale preserved. String interpolation (`"$deci"`) also works as expected.
+
+**Serialization is unaffected** — `DeciSerializer` continues to produce plain decimal
+strings in JSON.
+
 ## [0.2.1] - 2026-03-24
 
 ### Fixed
