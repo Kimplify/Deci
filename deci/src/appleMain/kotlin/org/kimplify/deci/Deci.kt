@@ -171,16 +171,6 @@ actual class Deci private constructor(
         return if (currentScale >= scale) str else str + "0".repeat(scale - currentScale)
     }
 
-    actual fun toPlainString(): String {
-        val str = internal.stringValue
-        val scale = _scale ?: return str
-        if (scale == 0) return str.split(".")[0]
-        val parts = str.split(".")
-        val intPart = parts[0]
-        val fracPart = if (parts.size > 1) parts[1] else ""
-        return "$intPart.${fracPart.padEnd(scale, '0')}"
-    }
-
     actual fun toDouble(): Double = internal.doubleValue
 
     actual fun isZero(): Boolean = internal.compare(NSDecimalNumber.zero) == 0L
