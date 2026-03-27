@@ -281,7 +281,7 @@ private fun SerializationSection() {
         DemoItem("Deserialized: $deserialized")
         DemoItem(
             "Trailing zeros preserved: ${
-                original.toPlainString() == deserialized.toPlainString()
+                original.toString() == deserialized.toString()
             }",
         )
 
