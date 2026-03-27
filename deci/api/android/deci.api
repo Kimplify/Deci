@@ -25,7 +25,6 @@ public final class org/kimplify/deci/Deci : java/lang/Comparable {
 	public final fun setScale (ILorg/kimplify/deci/RoundingMode;)Lorg/kimplify/deci/Deci;
 	public final fun times (Lorg/kimplify/deci/Deci;)Lorg/kimplify/deci/Deci;
 	public final fun toDouble ()D
-	public final fun toPlainString ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 	public final fun unaryMinus ()Lorg/kimplify/deci/Deci;
 }

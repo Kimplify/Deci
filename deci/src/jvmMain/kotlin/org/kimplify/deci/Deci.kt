@@ -15,7 +15,7 @@ actual class Deci(
     private val internal: BigDecimal,
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
-        BigDecimal(validateAndNormalizeDecimalLiteral(value)).stripTrailingZeros(),
+        BigDecimal(validateAndNormalizeDecimalLiteral(value)),
     )
 
     actual constructor(value: Long) : this(value.toString())
@@ -103,9 +103,7 @@ actual class Deci(
         return Deci(internal.setScale(scale, convert(roundingMode)))
     }
 
-    actual override fun toString(): String = internal.toString()
-
-    actual fun toPlainString(): String = internal.toPlainString()
+    actual override fun toString(): String = internal.toPlainString()
 
     actual fun toDouble(): Double = internal.toDouble()
 

@@ -78,3 +78,17 @@ private fun normalizeWithDecimal(
 
     return "$safeInteger.$decimalPart"
 }
+
+/**
+ * Extracts the scale (number of digits after the decimal point) from a normalized decimal string.
+ *
+ * Examples:
+ *  "1.2300"  -> 4
+ *  "123"     -> 0
+ *  "-2.5"    -> 1
+ *  "0.5"     -> 1
+ */
+internal fun extractScale(normalizedValue: String): Int {
+    val dotIndex = normalizedValue.indexOf('.')
+    return if (dotIndex < 0) 0 else normalizedValue.length - dotIndex - 1
+}

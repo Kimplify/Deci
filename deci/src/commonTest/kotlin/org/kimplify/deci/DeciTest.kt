@@ -8,6 +8,7 @@ import org.kimplify.deci.exception.DeciParseException
 import org.kimplify.deci.exception.DeciScaleException
 import org.kimplify.deci.extension.precision
 import org.kimplify.deci.extension.scale
+import org.kimplify.deci.formatting.toScientificNotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -63,7 +64,7 @@ class DeciTest {
     @Test
     fun `div should divide with default scale`() {
         val result = Deci("5") / Deci("2")
-        assertEquals("2.5", result.toString())
+        assertEquals("2.50000000000000000000", result.toString())
     }
 
     @Test
@@ -255,10 +256,10 @@ class DeciTest {
         assertEquals(Deci("10"), Deci.TEN)
     }
 
-    @Test fun `toDouble and toPlainString roundtrip for simple values`() {
+    @Test fun `toDouble and toString roundtrip for simple values`() {
         listOf("0", "1.5", "-2.75").forEach { s ->
             val d = Deci(s)
-            assertEquals(s, d.toPlainString())
+            assertEquals(s, d.toString())
             assertEquals(s.toDouble(), d.toDouble())
         }
     }
@@ -282,18 +283,20 @@ class DeciTest {
         assertEquals(Deci.ZERO, Deci("-0"))
     }
 
-    @Test fun `trailing zeros are stripped by constructor`() {
-        assertEquals("1.23", Deci("1.2300").toPlainString())
+    @Test fun `trailing zeros are preserved by constructor`() {
+        assertEquals("1.2300", Deci("1.2300").toString())
     }
 
-    @Test fun `toPlainString never uses scientific notation`() {
-        assertEquals("100000000000000000000", Deci("100000000000000000000").toPlainString())
-        assertEquals("0.000000001", Deci("0.000000001").toPlainString())
+    @Test fun `toString never uses scientific notation`() {
+        assertEquals("100000000000000000000", Deci("100000000000000000000").toString())
+        assertEquals("0.000000001", Deci("0.000000001").toString())
+        assertEquals("0.00000000000001", Deci("0.00000000000001").toString())
     }
 
-    @Test fun `toString may use scientific notation for extreme values`() {
-        val large = Deci("100000000000000000000")
-        assertEquals(large, Deci(large.toPlainString()))
+    @Test fun `toString and toScientificNotation for very small values`() {
+        val small = Deci("0.00000000000001")
+        assertEquals("0.00000000000001", small.toString())
+        assertEquals("1E-14", small.toScientificNotation())
     }
 
     @Test fun `invalid string formats throw`() {

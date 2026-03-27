@@ -204,7 +204,7 @@ class DeciPropertyTest {
     fun `compareTo zero implies equality`() =
         runTest {
             checkAll(config, arbDeci()) { a ->
-                val copy = Deci(a.toPlainString())
+                val copy = Deci(a.toString())
                 assertTrue(a.compareTo(copy) == 0, "a=$a not equal to copy")
                 assertEquals(a, copy)
             }

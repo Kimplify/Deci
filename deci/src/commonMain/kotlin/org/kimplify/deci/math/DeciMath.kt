@@ -152,7 +152,7 @@ fun Deci.roundToSignificantDigits(digits: Int): Deci {
     if (this.isZero()) return Deci.ZERO
 
     val absValue = this.abs()
-    val str = absValue.toPlainString()
+    val str = absValue.toString()
 
     val firstSigDigitIndex = str.indexOfFirst { it.isDigit() && it != '0' }
     if (firstSigDigitIndex == -1) return Deci.ZERO

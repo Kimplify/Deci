@@ -264,7 +264,7 @@ class DeciBulkOperationsTest {
     @Test
     fun `divideAllBy uses default context when not specified`() {
         val result = listOf(Deci("10")).divideAllBy(Deci("3"))
-        assertTrue(result[0].toPlainString().length > 5)
+        assertTrue(result[0].toString().length > 5)
     }
 
     @Test

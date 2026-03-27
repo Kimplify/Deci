@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.exception.DeciScaleException
+import org.kimplify.deci.parser.extractScale
 import org.kimplify.deci.parser.validateAndNormalizeDecimalLiteral
 
 @Serializable(with = DeciSerializer::class)
@@ -13,6 +14,7 @@ actual class Deci private constructor(
 ) : Comparable<Deci> {
     actual constructor(value: String) : this(
         DecimalJs(validateAndNormalizeDecimalLiteral(value)),
+        extractScale(validateAndNormalizeDecimalLiteral(value)),
     )
 
     actual constructor(value: Long) : this(value.toString())
@@ -42,7 +44,7 @@ actual class Deci private constructor(
         val policy = DeciConfiguration.divisionPolicy
         val raw = internal.div(other.internal)
         val rounded = raw.toDecimalPlaces(policy.fractionalDigits, convert(policy.roundingMode))
-        return Deci(rounded)
+        return Deci(rounded, policy.fractionalDigits)
     }
 
     actual operator fun rem(other: Deci): Deci {
@@ -77,14 +79,8 @@ actual class Deci private constructor(
     }
 
     actual override fun toString(): String {
-        val scale = _scale ?: return internal.toString()
-        if (scale <= 0) return internal.toString()
-        return internal.toFixed(scale)
-    }
-
-    actual fun toPlainString(): String {
         val scale = _scale
-        return if (scale != null) internal.toFixed(scale) else internal.toFixed()
+        return if (scale != null && scale > 0) internal.toFixed(scale) else internal.toFixed()
     }
 
     actual fun toDouble(): Double = internal.toNumber()

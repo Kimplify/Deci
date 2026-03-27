@@ -31,7 +31,7 @@ fun Deci.toLong(): Long = toLongExact()
  */
 fun Deci.toLongOrNull(): Long? {
     val truncated = this.setScale(0, RoundingMode.DOWN)
-    val str = truncated.toPlainString()
+    val str = truncated.toString()
     return str.toLongOrNull()
 }
 
@@ -53,7 +53,7 @@ fun Deci.toLongExact(): Long =
  * @return the scale (number of fractional digits), or `0` if there is no decimal separator.
  */
 fun Deci.scale(): Int {
-    val text = toPlainString()
+    val text = toString()
     val separatorIndex = text.indexOf('.')
     if (separatorIndex < 0) return 0
     return text.length - separatorIndex - 1
@@ -65,7 +65,7 @@ fun Deci.scale(): Int {
  * @return the total number of digit characters in the canonical string representation.
  */
 fun Deci.precision(): Int {
-    val text = toPlainString()
+    val text = toString()
     return text.count { it.isDigit() }
 }
 

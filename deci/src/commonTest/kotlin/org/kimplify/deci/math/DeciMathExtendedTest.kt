@@ -265,7 +265,7 @@ class DeciMathExtendedTest {
     @Test
     fun `roundToSignificantDigits preserves more digits than available`() {
         val result = Deci("12").roundToSignificantDigits(5)
-        assertTrue(result.toPlainString().startsWith("12"))
+        assertTrue(result.toString().startsWith("12"))
     }
 
     @Test
