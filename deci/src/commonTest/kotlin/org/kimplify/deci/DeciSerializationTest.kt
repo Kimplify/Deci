@@ -80,7 +80,7 @@ class DeciSerializationTest {
             val encoded = json.encodeToString(Deci.serializer(), d)
             val restored = json.decodeFromString(Deci.serializer(), encoded)
             assertEquals(d, restored, "Round-trip failed for $s")
-            assertEquals(s, restored.toPlainString(), "String representation changed for $s")
+            assertEquals(s, restored.toString(), "String representation changed for $s")
         }
     }
 
