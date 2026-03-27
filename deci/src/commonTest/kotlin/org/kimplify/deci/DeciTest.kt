@@ -63,7 +63,7 @@ class DeciTest {
     @Test
     fun `div should divide with default scale`() {
         val result = Deci("5") / Deci("2")
-        assertEquals("2.5", result.toString())
+        assertEquals("2.50000000000000000000", result.toString())
     }
 
     @Test

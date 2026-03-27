@@ -129,7 +129,6 @@ expect class Deci : Comparable<Deci> {
         roundingMode: RoundingMode,
     ): Deci
 
-
     /**
      * Returns the string representation of this [Deci] without scientific notation,
      * preserving the scale (e.g. `"1.50"` stays `"1.50"`).

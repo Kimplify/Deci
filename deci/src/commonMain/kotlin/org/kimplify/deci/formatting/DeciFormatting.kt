@@ -66,7 +66,7 @@ fun Deci.formatAsPercentage(
 ): String {
     val percentage = this * DeciConstants.HUNDRED
     val rounded = percentage.setScale(scale, RoundingMode.HALF_UP)
-    return "${rounded.toString()}$symbol"
+    return "$rounded$symbol"
 }
 
 /**

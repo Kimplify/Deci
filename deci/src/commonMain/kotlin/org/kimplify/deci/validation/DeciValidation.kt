@@ -234,7 +234,7 @@ fun Deci.validateForForm(
         if (this < min) {
             return ValidationResult(
                 false,
-                "Value must be at least ${min.toString()}",
+                "Value must be at least $min",
             )
         }
     }
@@ -243,7 +243,7 @@ fun Deci.validateForForm(
         if (this > max) {
             return ValidationResult(
                 false,
-                "Value must be at most ${max.toString()}",
+                "Value must be at most $max",
             )
         }
     }
