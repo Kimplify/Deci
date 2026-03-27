@@ -103,9 +103,7 @@ actual class Deci(
         return Deci(internal.setScale(scale, convert(roundingMode)))
     }
 
-    actual override fun toString(): String = internal.toString()
-
-    actual fun toPlainString(): String = internal.toPlainString()
+    actual override fun toString(): String = internal.toPlainString()
 
     actual fun toDouble(): Double = internal.toDouble()
 
