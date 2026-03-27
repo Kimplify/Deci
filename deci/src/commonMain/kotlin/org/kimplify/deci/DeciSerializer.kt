@@ -15,6 +15,7 @@ import org.kimplify.deci.exception.DeciSerializationException
  * For example, `Deci("1.50")` is serialized as the JSON string `"1.50"`, not the
  * JSON number `1.5`.
  *
+ * Serialization uses [Deci.toString], which never produces scientific notation.
  * Deserialization parses the decoded string via the [Deci] string constructor.
  *
  * @throws [org.kimplify.deci.exception.DeciSerializationException] if the decoded string
@@ -27,7 +28,7 @@ object DeciSerializer : KSerializer<Deci> {
         encoder: Encoder,
         value: Deci,
     ) {
-        encoder.encodeString(value.toPlainString())
+        encoder.encodeString(value.toString())
     }
 
     override fun deserialize(decoder: Decoder): Deci {
