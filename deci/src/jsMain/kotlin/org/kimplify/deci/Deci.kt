@@ -77,14 +77,8 @@ actual class Deci private constructor(
     }
 
     actual override fun toString(): String {
-        val scale = _scale ?: return internal.toString()
-        if (scale <= 0) return internal.toString()
-        return internal.toFixed(scale)
-    }
-
-    actual fun toPlainString(): String {
         val scale = _scale
-        return if (scale != null) internal.toFixed(scale) else internal.toFixed()
+        return if (scale != null && scale > 0) internal.toFixed(scale) else internal.toFixed()
     }
 
     actual fun toDouble(): Double = internal.toNumber()
