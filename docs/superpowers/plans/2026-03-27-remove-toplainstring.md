@@ -104,19 +104,36 @@ git commit -m "Android: remove toPlainString, make toString use BigDecimal.toPla
 
 ---
 
-### Task 4: Update JS actual — remove `toPlainString()`
+### Task 4: Update JS actual — remove `toPlainString()`, fix `toString()`
 
 **Files:**
-- Modify: `deci/src/jsMain/kotlin/org/kimplify/deci/Deci.kt:85-88`
+- Modify: `deci/src/jsMain/kotlin/org/kimplify/deci/Deci.kt:79-88`
 
-- [ ] **Step 1: Remove `toPlainString()`**
+- [ ] **Step 1: Remove `toPlainString()` and fix `toString()` to never use scientific notation**
 
-Remove these lines:
+`DecimalJs.toString()` can use scientific notation for extreme values. Replace both methods with a single `toString()` that uses `toFixed()` (which never uses scientific notation):
+
+Replace:
 
 ```kotlin
+    actual override fun toString(): String {
+        val scale = _scale ?: return internal.toString()
+        if (scale <= 0) return internal.toString()
+        return internal.toFixed(scale)
+    }
+
     actual fun toPlainString(): String {
         val scale = _scale
         return if (scale != null) internal.toFixed(scale) else internal.toFixed()
+    }
+```
+
+With:
+
+```kotlin
+    actual override fun toString(): String {
+        val scale = _scale
+        return if (scale != null && scale > 0) internal.toFixed(scale) else internal.toFixed()
     }
 ```
 
@@ -124,24 +141,41 @@ Remove these lines:
 
 ```bash
 git add deci/src/jsMain/kotlin/org/kimplify/deci/Deci.kt
-git commit -m "JS: remove toPlainString"
+git commit -m "JS: remove toPlainString, fix toString to never use scientific notation"
 ```
 
 ---
 
-### Task 5: Update wasmJs actual — remove `toPlainString()`
+### Task 5: Update wasmJs actual — remove `toPlainString()`, fix `toString()`
 
 **Files:**
-- Modify: `deci/src/wasmJsMain/kotlin/org/kimplify/deci/Deci.kt:85-88`
+- Modify: `deci/src/wasmJsMain/kotlin/org/kimplify/deci/Deci.kt:79-88`
 
-- [ ] **Step 1: Remove `toPlainString()`**
+- [ ] **Step 1: Remove `toPlainString()` and fix `toString()` to never use scientific notation**
 
-Remove these lines:
+Same fix as JS — `DecimalJs.toString()` can use scientific notation. Replace both methods:
+
+Replace:
 
 ```kotlin
+    actual override fun toString(): String {
+        val scale = _scale ?: return internal.toString()
+        if (scale <= 0) return internal.toString()
+        return internal.toFixed(scale)
+    }
+
     actual fun toPlainString(): String {
         val scale = _scale
         return if (scale != null) internal.toFixed(scale) else internal.toFixed()
+    }
+```
+
+With:
+
+```kotlin
+    actual override fun toString(): String {
+        val scale = _scale
+        return if (scale != null && scale > 0) internal.toFixed(scale) else internal.toFixed()
     }
 ```
 
@@ -149,7 +183,7 @@ Remove these lines:
 
 ```bash
 git add deci/src/wasmJsMain/kotlin/org/kimplify/deci/Deci.kt
-git commit -m "wasmJs: remove toPlainString"
+git commit -m "wasmJs: remove toPlainString, fix toString to never use scientific notation"
 ```
 
 ---
