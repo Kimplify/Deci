@@ -8,6 +8,7 @@ import org.kimplify.deci.exception.DeciParseException
 import org.kimplify.deci.exception.DeciScaleException
 import org.kimplify.deci.extension.precision
 import org.kimplify.deci.extension.scale
+import org.kimplify.deci.formatting.toScientificNotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -289,6 +290,13 @@ class DeciTest {
     @Test fun `toString never uses scientific notation`() {
         assertEquals("100000000000000000000", Deci("100000000000000000000").toString())
         assertEquals("0.000000001", Deci("0.000000001").toString())
+        assertEquals("0.00000000000001", Deci("0.00000000000001").toString())
+    }
+
+    @Test fun `toString and toScientificNotation for very small values`() {
+        val small = Deci("0.00000000000001")
+        assertEquals("0.00000000000001", small.toString())
+        assertEquals("1E-14", small.toScientificNotation())
     }
 
     @Test fun `invalid string formats throw`() {
