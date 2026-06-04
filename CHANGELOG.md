@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.2] - 2026-06-05
+
+### Changed
+
+- **Dependency and toolchain updates** — no public API changes. Kotlin
+  `2.3.20` → `2.4.0`, Android Gradle Plugin `9.0.1` → `9.2.1`, Compose
+  `1.10.3` → `1.11.1`, kotlinx-coroutines `1.10.2` → `1.11.0`,
+  kotlinx-serialization `1.10.0` → `1.11.0`, Kotest `6.1.9` → `6.1.11`,
+  and the Gradle wrapper `9.1.0` → `9.5.1`.
+
 ## [0.2.1] - 2026-03-24
 
 ### Fixed
