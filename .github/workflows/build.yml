@@ -90,4 +90,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Build library
-        run: ./gradlew assemble --no-configuration-cache
+        run: ./gradlew :deci:assemble --no-configuration-cache
+
+      - name: Compile sample (smoke check)
+        run: ./gradlew :sample:composeApp:compileKotlinJvm --no-configuration-cache
