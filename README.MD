@@ -1,26 +1,28 @@
 <img src="deci-logo.svg" alt="Deci" width="430" />
 
 [![Maven Central](https://img.shields.io/maven-central/v/org.kimplify/deci)](https://central.sonatype.com/artifact/org.kimplify/deci)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20-7F52FF)](https://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.0-7F52FF)](https://kotlinlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Deci is a Kotlin Multiplatform library for high-precision decimal arithmetic. Built for money, taxes, invoicing, and any workload where `Float`/`Double` cannot be trusted.
 
 ## Features
 
-- **Multiplatform** -- Android, JVM, iOS, macOS, JS, WASM, Linux, Windows
+- **Multiplatform** -- Android, JVM, iOS, macOS, JS, WASM
 - **Exact decimal math** -- backed by `BigDecimal`, `NSDecimalNumber`, and `decimal.js`
 - **Predictable rounding** -- explicit rounding modes, no silent precision loss
 - **Serialization ready** -- `kotlinx.serialization` support out of the box
 
 ## Installation
 
+> Use the latest version shown in the Maven Central badge above.
+
 Kotlin Multiplatform:
 ```kotlin
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("org.kimplify:deci:0.2.0")
+            implementation("org.kimplify:deci:0.2.2")
         }
     }
 }
@@ -29,7 +31,7 @@ kotlin {
 Single-platform:
 ```kotlin
 dependencies {
-    implementation("org.kimplify:deci:0.2.0")
+    implementation("org.kimplify:deci:0.2.2")
 }
 ```
 
@@ -164,7 +166,6 @@ Values serialize as JSON **strings** to preserve trailing zeros and avoid lossy 
 | Android / JVM   | `java.math.BigDecimal`   |
 | iOS / macOS     | `NSDecimalNumber`        |
 | JS / WASM       | `decimal.js` v10.6.0     |
-| Linux / Windows | Pure Kotlin              |
 
 ## Configuration
 

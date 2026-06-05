@@ -1,5 +1,39 @@
 # Changelog
 
+## [Unreleased]
+
+### Removed
+
+- **Intel Apple targets dropped** — `iosX64` and `macosX64` klibs are no longer
+  published. Consumers targeting Intel macOS or the Intel iOS simulator must stay
+  on `0.2.2` or earlier. The Apple Silicon targets (`iosArm64`,
+  `iosSimulatorArm64`, `macosArm64`) are unaffected.
+
+### Changed
+
+- **Android `compileSdk` raised to 37** — projects depending on `deci` must now
+  compile against Android API level 37 or later.
+
+- **Build scripts modernized — no public API or runtime changes.** Migrated
+  deprecated Gradle/AGP/Kotlin/Compose DSL across all modules: the AGP KMP
+  `androidLibrary { }` block → `android { }`, `js(IR)` → `js`, the deprecated
+  `compose.*` dependency shortcuts → version-catalog coordinates, and the webpack
+  `devServer.static` property → the `static()` function. Removed unused build
+  dependencies and version-catalog entries (coroutines core/android/swing, plus
+  the `android-library`, `ktlint`, and `binary-compatibility-validator` plugin
+  aliases), and enabled Android host tests so the common test suite also runs on
+  the Android variant.
+
+## [0.2.2] - 2026-06-05
+
+### Changed
+
+- **Dependency and toolchain updates** — no public API changes. Kotlin
+  `2.3.20` → `2.4.0`, Android Gradle Plugin `9.0.1` → `9.2.1`, Compose
+  `1.10.3` → `1.11.1`, kotlinx-coroutines `1.10.2` → `1.11.0`,
+  kotlinx-serialization `1.10.0` → `1.11.0`, Kotest `6.1.9` → `6.1.11`,
+  and the Gradle wrapper `9.1.0` → `9.5.1`.
+
 ## [0.2.1] - 2026-03-24
 
 ### Fixed
