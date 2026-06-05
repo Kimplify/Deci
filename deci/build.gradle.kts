@@ -8,30 +8,22 @@ val libsCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 val deciVersion: String = libsCatalog.findVersion("version").get().requiredVersion
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "org.kimplify.deci"
-        compileSdk = 36
+        compileSdk = 37
         minSdk = 21
+        withHostTest {}
     }
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotest.property)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.kotlinx.coroutines.android)
-        }
-
-        jvmMain.dependencies {
-            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         jsMain.dependencies {
