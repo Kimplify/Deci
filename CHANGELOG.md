@@ -2,11 +2,13 @@
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-06-05
+
 ### Removed
 
 - **Intel Apple targets dropped** — `iosX64` and `macosX64` klibs are no longer
   published. Consumers targeting Intel macOS or the Intel iOS simulator must stay
-  on `0.2.2` or earlier. The Apple Silicon targets (`iosArm64`,
+  on `0.2.1` or earlier. The Apple Silicon targets (`iosArm64`,
   `iosSimulatorArm64`, `macosArm64`) are unaffected.
 
 ### Changed
@@ -23,10 +25,6 @@
   the `android-library`, `ktlint`, and `binary-compatibility-validator` plugin
   aliases), and enabled Android host tests so the common test suite also runs on
   the Android variant.
-
-## [0.2.2] - 2026-06-05
-
-### Changed
 
 - **Dependency and toolchain updates** — no public API changes. Kotlin
   `2.3.20` → `2.4.0`, Android Gradle Plugin `9.0.1` → `9.2.1`, Compose
