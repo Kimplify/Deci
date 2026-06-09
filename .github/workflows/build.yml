@@ -48,7 +48,7 @@ jobs:
         run: ./gradlew :deci:ktlintCheck
 
       - name: API compatibility check
-        run: ./gradlew :deci:apiCheck
+        run: ./gradlew :deci:checkKotlinAbi
 
       - name: Run JVM tests
         run: ./gradlew :deci:jvmTest

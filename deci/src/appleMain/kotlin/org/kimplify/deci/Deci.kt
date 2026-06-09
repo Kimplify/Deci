@@ -3,7 +3,6 @@ package org.kimplify.deci
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.serialization.Serializable
-import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.exception.DeciScaleException
 import org.kimplify.deci.parser.extractScale
@@ -108,21 +107,7 @@ actual class Deci private constructor(
 
     actual operator fun times(other: Deci): Deci = operate(other) { a, b, _ -> a.decimalNumberByMultiplyingBy(b) }
 
-    actual operator fun div(other: Deci): Deci {
-        if (other.isZero()) throw DeciDivisionByZeroException()
-        val raw = internal.decimalNumberByDividingBy(other.internal)
-        val policy = DeciConfiguration.divisionPolicy
-        val handler =
-            NSDecimalNumberHandler(
-                toNativeMode(policy.roundingMode),
-                scale = policy.fractionalDigits.toShort(),
-                raiseOnExactness = false,
-                raiseOnOverflow = false,
-                raiseOnUnderflow = false,
-                raiseOnDivideByZero = false,
-            )
-        return Deci(raw.decimalNumberByRoundingAccordingToBehavior(handler), policy.fractionalDigits)
-    }
+    actual operator fun div(other: Deci): Deci = divide(other, DeciContext.DEFAULT)
 
     actual fun divide(
         other: Deci,

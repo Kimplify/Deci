@@ -1,8 +1,6 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.json.Json
-import org.kimplify.deci.config.DeciConfiguration
-import org.kimplify.deci.config.DeciDivisionPolicy
 import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.exception.DeciParseException
 import org.kimplify.deci.exception.DeciScaleException
@@ -31,19 +29,9 @@ class DeciTest {
     }
 
     @Test
-    fun `division policy can be customized and reset`() {
-        DeciConfiguration.divisionPolicy =
-            DeciDivisionPolicy(
-                fractionalDigits = 2,
-                roundingMode = RoundingMode.DOWN,
-            )
-
+    fun `division operator uses the default context`() {
         val result = Deci("1") / Deci("3")
-        assertEquals("0.33", result.toString())
-
-        DeciConfiguration.resetDivisionPolicy()
-        val defaultResult = Deci("1") / Deci("3")
-        assertEquals("0.33333333333333333333", defaultResult.toString())
+        assertEquals("0.33333333333333333333", result.toString())
     }
 
     @Test

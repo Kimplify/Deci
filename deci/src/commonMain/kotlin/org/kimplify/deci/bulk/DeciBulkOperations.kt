@@ -14,26 +14,6 @@ import org.kimplify.deci.extension.sumDeci
 fun Iterable<Deci>.multiplyAll(): Deci = this.fold(Deci.ONE) { acc, value -> acc * value }
 
 /**
- * Calculates the average of the collection.
- *
- * Division is performed using the supplied [context] for scale and rounding.
- * By default, [DeciContext.DEFAULT] (20 fractional digits, [RoundingMode.HALF_UP]) is used.
- *
- * @param context The [DeciContext] controlling precision and rounding of the division.
- * @return The average value, or null if collection is empty.
- */
-@Deprecated(
-    message = "Use mean() from org.kimplify.deci.statistics instead",
-    replaceWith = ReplaceWith("mean(context)", "org.kimplify.deci.statistics.mean"),
-    level = DeprecationLevel.WARNING,
-)
-fun Iterable<Deci>.averageDeci(context: DeciContext = DeciContext.DEFAULT): Deci? {
-    val values = this.toList()
-    if (values.isEmpty()) return null
-    return values.sumDeci().divide(Deci(values.size), context)
-}
-
-/**
  * Applies the same operation to all values in the collection.
  *
  * @param operation The operation to apply to each value

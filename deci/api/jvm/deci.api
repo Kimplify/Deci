@@ -104,8 +104,6 @@ public final class org/kimplify/deci/bulk/DeciBulkOperationsKt {
 	public static final fun applyPercentageChange (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;)Ljava/util/List;
 	public static synthetic fun applyPercentageChange$default (Ljava/lang/Iterable;Lorg/kimplify/deci/Deci;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Ljava/util/List;
 	public static final fun applyToAll (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
-	public static final fun averageDeci (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;)Lorg/kimplify/deci/Deci;
-	public static synthetic fun averageDeci$default (Ljava/lang/Iterable;Lorg/kimplify/deci/DeciContext;ILjava/lang/Object;)Lorg/kimplify/deci/Deci;
 	public static final fun bottomN (Ljava/lang/Iterable;I)Ljava/util/List;
 	public static final fun cumulativeSum (Ljava/lang/Iterable;)Ljava/util/List;
 	public static final fun differences (Ljava/lang/Iterable;)Ljava/util/List;
@@ -132,24 +130,8 @@ public final class org/kimplify/deci/bulk/DeciBulkOperationsKt {
 public final class org/kimplify/deci/config/DeciConfiguration {
 	public static final field INSTANCE Lorg/kimplify/deci/config/DeciConfiguration;
 	public final fun disableLogging ()V
-	public final fun getDivisionPolicy ()Lorg/kimplify/deci/config/DeciDivisionPolicy;
 	public final fun getLogSink ()Lorg/kimplify/deci/logging/DeciLogSink;
-	public final fun resetDivisionPolicy ()V
-	public final fun setDivisionPolicy (Lorg/kimplify/deci/config/DeciDivisionPolicy;)V
 	public final fun setLogSink (Lorg/kimplify/deci/logging/DeciLogSink;)V
-}
-
-public final class org/kimplify/deci/config/DeciDivisionPolicy {
-	public fun <init> (ILorg/kimplify/deci/RoundingMode;)V
-	public final fun component1 ()I
-	public final fun component2 ()Lorg/kimplify/deci/RoundingMode;
-	public final fun copy (ILorg/kimplify/deci/RoundingMode;)Lorg/kimplify/deci/config/DeciDivisionPolicy;
-	public static synthetic fun copy$default (Lorg/kimplify/deci/config/DeciDivisionPolicy;ILorg/kimplify/deci/RoundingMode;ILjava/lang/Object;)Lorg/kimplify/deci/config/DeciDivisionPolicy;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getFractionalDigits ()I
-	public final fun getRoundingMode ()Lorg/kimplify/deci/RoundingMode;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public class org/kimplify/deci/exception/DeciArithmeticException : org/kimplify/deci/exception/DeciException {
@@ -164,7 +146,6 @@ public final class org/kimplify/deci/exception/DeciDivisionByZeroException : org
 }
 
 public abstract class org/kimplify/deci/exception/DeciException : java/lang/RuntimeException {
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 

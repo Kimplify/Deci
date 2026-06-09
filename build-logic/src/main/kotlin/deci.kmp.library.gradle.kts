@@ -1,14 +1,18 @@
-@file:OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+@file:OptIn(
+    org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class,
+    org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class,
+)
 
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("com.android.kotlin.multiplatform.library")
     id("org.jlleitschuh.gradle.ktlint")
-    id("org.jetbrains.kotlinx.binary-compatibility-validator")
 }
 
 kotlin {
     jvmToolchain(21)
+
+    abiValidation {}
 
     jvm()
     js { browser() }

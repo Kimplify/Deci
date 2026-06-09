@@ -10,4 +10,4 @@
 
 - [ ] All tests pass (`./gradlew allTests`)
 - [ ] Lint passes (`./gradlew ktlintCheck`)
-- [ ] API compatibility verified (`./gradlew apiCheck`)
+- [ ] API compatibility verified (`./gradlew checkKotlinAbi`)

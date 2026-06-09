@@ -169,17 +169,19 @@ Values serialize as JSON **strings** to preserve trailing zeros and avoid lossy 
 
 ## Configuration
 
+Division scale and rounding are chosen per call via `DeciContext` — there is no global
+mutable division policy. The `/` operator uses `DeciContext.DEFAULT` (20 fractional
+digits, `HALF_UP`); pass an explicit context or `scale`/`roundingMode` for anything else:
+
 ```kotlin
-DeciConfiguration.divisionPolicy = DeciDivisionPolicy(
-    fractionalDigits = 6,
-    roundingMode = RoundingMode.HALF_UP
-)
+Deci("10") / Deci("3")                                   // DeciContext.DEFAULT
+Deci("10").divide(Deci("3"), DeciContext.CURRENCY_USD)   // 2 digits, HALF_UP
+Deci("10").divide(Deci("3"), scale = 4, roundingMode = RoundingMode.HALF_EVEN)
 
 DeciConfiguration.logSink = DeciLogSink { tag, message ->
     println("[$tag] $message")
 }
 
-DeciConfiguration.resetDivisionPolicy()
 DeciConfiguration.disableLogging()
 ```
 

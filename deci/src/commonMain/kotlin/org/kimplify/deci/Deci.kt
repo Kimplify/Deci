@@ -67,9 +67,9 @@ expect class Deci : Comparable<Deci> {
     operator fun times(other: Deci): Deci
 
     /**
-     * Divides this value by [other] using the global [DeciConfiguration.divisionPolicy][org.kimplify.deci.config.DeciConfiguration.divisionPolicy].
+     * Divides this value by [other] using [DeciContext.DEFAULT].
      *
-     * By default the result is rounded to 20 fractional digits with [RoundingMode.HALF_UP].
+     * The result is rounded to 20 fractional digits with [RoundingMode.HALF_UP].
      * For explicit control over scale and rounding, use [divide] with a [DeciContext] or
      * explicit `scale`/`roundingMode` parameters instead.
      *

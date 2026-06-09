@@ -2,6 +2,38 @@
 
 ## [Unreleased]
 
+### Changed
+
+- **The `/` and `%` operators are now fixed to `DeciContext.DEFAULT`.** Behaviour
+  is unchanged for any code that never reassigned the (now-removed) global
+  `divisionPolicy`: bare division still yields 20 fractional digits with
+  `HALF_UP` rounding, and `%` (which is computed via `/`) is likewise unaffected.
+
+- **Migrated to the Kotlin Gradle plugin's built-in ABI validation — no public
+  API or runtime changes.** Dropped the deprecated standalone
+  `org.jetbrains.kotlinx:binary-compatibility-validator` plugin in favour of the
+  Kotlin Gradle plugin's `abiValidation { }` DSL. The `apiDump` / `apiCheck`
+  tasks are replaced by `updateKotlinAbi` / `checkKotlinAbi`, and the reference
+  dump now lives at `deci/api/jvm/deci.api` (JVM) plus `deci/api/deci.klib.api`
+  (Kotlin/Native, JS, and Wasm). Removed the `binary-compatibility-validator`
+  version and `bcv-gradle-plugin` version-catalog entries.
+
+### Removed
+
+- **Deprecated division-policy configuration removed (breaking).** Deleted
+  `DeciConfiguration.divisionPolicy`, `DeciConfiguration.resetDivisionPolicy()`,
+  and the `DeciDivisionPolicy` class. The `/` operator no longer reads a global
+  mutable policy; it always divides with `DeciContext.DEFAULT` (20 fractional
+  digits, `HALF_UP`) — identical to the previous out-of-the-box default. To
+  customise division scale or rounding, pass an explicit context per call:
+  `a.divide(b, DeciContext.CURRENCY_USD)` or
+  `a.divide(b, scale = 4, roundingMode = RoundingMode.HALF_EVEN)`.
+  `DeciConfiguration.logSink` / `disableLogging()` are unaffected.
+
+- **`Iterable<Deci>.averageDeci()` removed (breaking).** Use
+  `Iterable<Deci>.mean()` from `org.kimplify.deci.statistics` instead — a drop-in
+  replacement with the same signature and semantics: `values.mean(context)`.
+
 ## [0.2.2] - 2026-06-05
 
 ### Removed
