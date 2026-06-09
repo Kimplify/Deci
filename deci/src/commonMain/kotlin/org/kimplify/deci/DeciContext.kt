@@ -24,7 +24,7 @@ data class DeciContext(
     companion object {
         /**
          * Default context: 20 fractional digits with [RoundingMode.HALF_UP].
-         * Matches the default [org.kimplify.deci.config.DeciDivisionPolicy].
+         * Used by the [Deci] division operator (`/`) when no explicit context is supplied.
          */
         val DEFAULT =
             DeciContext(

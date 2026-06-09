@@ -1,7 +1,6 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
-import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.exception.DeciScaleException
 import org.kimplify.deci.parser.extractScale
@@ -39,13 +38,7 @@ actual class Deci private constructor(
 
     actual operator fun times(other: Deci): Deci = Deci(internal.mul(other.internal))
 
-    actual operator fun div(other: Deci): Deci {
-        if (other.isZero()) throw DeciDivisionByZeroException()
-        val policy = DeciConfiguration.divisionPolicy
-        val raw = internal.div(other.internal)
-        val rounded = raw.toDecimalPlaces(policy.fractionalDigits, convert(policy.roundingMode))
-        return Deci(rounded, policy.fractionalDigits)
-    }
+    actual operator fun div(other: Deci): Deci = divide(other, DeciContext.DEFAULT)
 
     actual operator fun rem(other: Deci): Deci {
         if (other.isZero()) throw DeciDivisionByZeroException()

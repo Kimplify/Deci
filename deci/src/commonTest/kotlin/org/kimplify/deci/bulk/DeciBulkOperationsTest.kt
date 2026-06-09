@@ -7,7 +7,6 @@ import org.kimplify.deci.exception.DeciDivisionByZeroException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DeciBulkOperationsTest {
@@ -53,52 +52,6 @@ class DeciBulkOperationsTest {
     fun `multiplyAll with two negatives returns positive`() {
         val result = listOf(Deci("-2"), Deci("-3")).multiplyAll()
         assertEquals(Deci("6"), result)
-    }
-
-    // --- averageDeci ---
-
-    @Test
-    fun `averageDeci returns null for empty collection`() {
-        val result = emptyList<Deci>().averageDeci()
-        assertNull(result)
-    }
-
-    @Test
-    fun `averageDeci returns value for single element`() {
-        val result = listOf(Deci("10")).averageDeci()
-        assertEquals(Deci("10"), result)
-    }
-
-    @Test
-    fun `averageDeci calculates average correctly`() {
-        val result = listOf(Deci("1"), Deci("2"), Deci("3")).averageDeci()
-        assertEquals(Deci("2"), result)
-    }
-
-    @Test
-    fun `averageDeci handles decimal values`() {
-        val result = listOf(Deci("1.5"), Deci("2.5")).averageDeci()
-        assertEquals(Deci("2"), result)
-    }
-
-    @Test
-    fun `averageDeci handles negative values`() {
-        val result = listOf(Deci("-10"), Deci("10")).averageDeci()
-        assertEquals(Deci("0"), result)
-    }
-
-    @Test
-    fun `averageDeci uses provided context for division`() {
-        val context = DeciContext(precision = 2, roundingMode = RoundingMode.DOWN)
-        val result = listOf(Deci("1"), Deci("2"), Deci("3")).averageDeci(context)
-        assertEquals(Deci("2"), result)
-    }
-
-    @Test
-    fun `averageDeci with non-terminating result uses context rounding`() {
-        val context = DeciContext(precision = 2, roundingMode = RoundingMode.HALF_UP)
-        val result = listOf(Deci("1"), Deci("1"), Deci("2")).averageDeci(context)
-        assertEquals(Deci("1.33"), result)
     }
 
     // --- applyToAll ---

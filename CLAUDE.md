@@ -113,19 +113,19 @@ val expected = 0.10.toDecimal()
 ./gradlew publishToMavenLocal
 
 # Generate API binary-compatibility dump
-./gradlew apiDump
+./gradlew updateKotlinAbi
 
 # Check for binary-compatibility regressions
-./gradlew apiCheck
+./gradlew checkKotlinAbi
 ```
 
 ---
 
 ## API Stability
 
-- This library uses [kotlin-binary-compatibility-validator](https://github.com/Kotlin/binary-compatibility-validator).
-- Run `./gradlew apiDump` after any public API change and commit the updated `.api` file.
-- `./gradlew apiCheck` runs in CI and will fail the build on unintentional API changes.
+- This library uses the Kotlin Gradle plugin's [built-in ABI validation](https://kotlinlang.org/docs/whatsnew2120.html#binary-compatibility-validation-in-the-kotlin-gradle-plugin) (`abiValidation`).
+- Run `./gradlew updateKotlinAbi` after any public API change and commit the updated dump files under `deci/api/` (`jvm/deci.api` for JVM, `deci.klib.api` for the Kotlin/Native, JS, and Wasm targets).
+- `./gradlew checkKotlinAbi` runs in CI and will fail the build on unintentional API changes.
 - Mark experimental APIs with `@ExperimentalDeciApi` and require opt-in.
 
 ---

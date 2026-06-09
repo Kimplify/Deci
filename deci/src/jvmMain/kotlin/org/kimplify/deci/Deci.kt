@@ -1,7 +1,6 @@
 package org.kimplify.deci
 
 import kotlinx.serialization.Serializable
-import org.kimplify.deci.config.DeciConfiguration
 import org.kimplify.deci.exception.DeciArithmeticException
 import org.kimplify.deci.exception.DeciDivisionByZeroException
 import org.kimplify.deci.exception.DeciScaleException
@@ -50,17 +49,7 @@ actual class Deci(
     actual operator fun times(other: Deci): Deci = operate(other) { a, b, _ -> a.multiply(b) }
 
     @Throws(DeciDivisionByZeroException::class, DeciArithmeticException::class)
-    actual operator fun div(other: Deci): Deci {
-        if (other.isZero()) throw DeciDivisionByZeroException()
-        return try {
-            operate(other) { a, b, _ ->
-                val policy = DeciConfiguration.divisionPolicy
-                a.divide(b, policy.fractionalDigits, convert(policy.roundingMode))
-            }
-        } catch (_: ArithmeticException) {
-            throw DeciArithmeticException("Division produced a non-terminating decimal expansion")
-        }
-    }
+    actual operator fun div(other: Deci): Deci = divide(other, DeciContext.DEFAULT)
 
     actual operator fun rem(other: Deci): Deci {
         if (other.isZero()) throw DeciDivisionByZeroException()
